@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>Relatorio do Dia - Seatrium</title>
+<link href="css/style.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="header">
+<div class="header-logo">
+<span style="font-size:24px">🏗️</span>
+<div><h1>GESTAO OPERACIONAL</h1><span>PROJETO SEATRIUM</span></div>
+</div>
+<nav class="nav">
+<a href="index.html">🏠 Inicio</a>
+<a href="planejamento.html">📋 Planejamento</a>
+<a href="dashboard.html">📊 Dashboard</a>
+<a href="comparativo.html">📈 Meta x Realizado</a>
+</nav>
+</header>
+<div class="container">
+<div class="page-title">📝 Relatorio do Dia <span class="badge" style="background:#1E7145">Realizado</span></div>
+<div id="alerta"></div>
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab('tProd',this)">📝 Producao</button>
+<button class="tab-btn" onclick="showTab('tOcorr',this)">⚠️ Ocorrencia</button>
+<button class="tab-btn" onclick="showTab('tEfet',this)">👥 Efetivo</button>
+<button class="tab-btn" onclick="showTab('tHist',this)">📋 Historico</button>
+</div>
+<!-- PRODUCAO -->
+<div class="tab-content active" id="tProd">
+<div class="form-card">
+<div class="form-header"><h2>📝 Registro de Producao</h2><p>Registre o que foi realizado por colaborador e container</p></div>
+<div class="form-body">
+<div class="form-section-title">📅 Identificacao</div>
+<div class="form-grid">
+<div class="form-group"><label>Data *</label><input id="pData" required="" type="date"/></div>
+<div class="form-group"><label>Turno *</label><select id="pTurno" required=""><option value="">Selecione...</option><option>07:00 AS 17:00</option><option>17:00 AS 23:00</option><option>23:00 AS 07:00</option></select></div>
+<div class="form-group"><label>Responsavel *</label><select id="pResp" required=""><option value="">Selecione...</option></select></div>
+<div class="form-group"><label>Container/Banheiro</label><select id="pAtivo"><option value="">Selecione...</option></select></div>
+</div>
+<hr class="form-divider"/>
+<div class="form-section-title">📊 Producao Realizada</div>
+<div id="metaInfo" style="background:#EEF7FF;border:1px solid #9DC3E6;border-radius:7px;padding:10px;margin-bottom:12px;font-size:13px;display:none">🎯 <strong>Meta do planejamento:</strong> <span id="metaTxt">-</span></div>
+<div class="form-grid">
+<div class="form-group"><label>🎯 Meta</label><input id="pMeta" min="0" oninput="calcEf()" style="background:#FFF9E6" type="number" value="0"/></div>
+<div class="form-group"><label>🧹 Limpezas</label><input id="pLimp" min="0" oninput="calcEf()" type="number" value="0"/></div>
+<div class="form-group"><label>🧹 Limp. Pesadas</label><input id="pLimpPes" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>💧 Succoes</label><input id="pSucc" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>🔧 Manutencoes</label><input id="pManut" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>⚠️ Ocorrencias</label><input id="pOcorr" min="0" type="number" value="0"/></div>
+</div>
+<div id="efBox" style="background:#F0F8F0;border:1px solid #A9D18E;border-radius:7px;padding:10px;margin-bottom:12px;display:none">
+<span id="efEmoji" style="font-size:20px">📊</span>
+<strong style="color:#1E7145"> Eficiencia: </strong>
+<span id="efVal" style="font-size:20px;font-weight:800;color:#1E7145">-</span>
+</div>
+<div class="form-group"><label>📝 Observacoes</label><textarea id="pObs" placeholder="Descreva o que foi realizado..."></textarea></div>
+<div class="btn-group">
+<button class="btn btn-success" onclick="salvarProd()">✓ Salvar Registro</button>
+<button class="btn btn-outline" onclick="limparProd()">🗑 Limpar</button>
+</div>
+</div>
+</div>
+</div>
+<!-- OCORRENCIA -->
+<div class="tab-content" id="tOcorr">
+<div class="form-card">
+<div class="form-header" style="background:linear-gradient(135deg,#C00000,#900000)"><h2>⚠️ Registro de Ocorrencia</h2><p>Registre ocorrencias, incidentes e nao conformidades</p></div>
+<div class="form-body">
+<div class="form-grid">
+<div class="form-group"><label>Data *</label><input id="oData" required="" type="date"/></div>
+<div class="form-group"><label>Tipo *</label><select id="oTipo" required=""><option value="">Selecione...</option><option>OPERACAO</option><option>ADMINISTRATIVA</option><option>FROTA</option><option>MAO DE OBRA</option><option>SEGURANCA</option><option>EQUIPAMENTO</option><option>OUTROS</option></select></div>
+<div class="form-group"><label>Container/Local</label><select id="oLocal"><option value="">Selecione...</option></select></div>
+<div class="form-group"><label>Criticidade *</label><select id="oCrit" required=""><option value="">Selecione...</option><option value="Alta">Alta</option><option value="Media">Media</option><option value="Baixa">Baixa</option></select></div>
+<div class="form-group"><label>Responsavel</label><select id="oResp"><option value="">Selecione...</option></select></div>
+<div class="form-group"><label>Status</label><select id="oStatus"><option value="Em andamento">Em andamento</option><option value="Pendente">Pendente</option><option value="Resolvido">Resolvido</option></select></div>
+</div>
+<div class="form-group"><label>Descricao *</label><textarea id="oDesc" placeholder="Descreva detalhadamente o que aconteceu..." required=""></textarea></div>
+<div class="form-group"><label>Acao Tomada</label><textarea id="oAcao" placeholder="Descreva as acoes tomadas..."></textarea></div>
+<div class="btn-group">
+<button class="btn btn-danger" onclick="salvarOcorr()">⚠️ Registrar Ocorrencia</button>
+<button class="btn btn-outline" onclick="limparOcorr()">🗑 Limpar</button>
+</div>
+</div>
+</div>
+</div>
+<!-- EFETIVO -->
+<div class="tab-content" id="tEfet">
+<div class="form-card">
+<div class="form-header" style="background:linear-gradient(135deg,#1E7145,#155a35)"><h2>👥 Efetivo do Dia</h2><p>Registre a presenca da equipe</p></div>
+<div class="form-body">
+<div class="form-grid">
+<div class="form-group"><label>Data *</label><input id="eData" required="" type="date"/></div>
+<div class="form-group"><label>Efetivo Previsto</label><input id="ePrev" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Efetivo Presente</label><input id="ePres" min="0" type="number" value="0"/></div>
+</div>
+<div class="form-section-title" style="margin-top:14px">📋 Presenca Individual</div>
+<div id="presenca"></div>
+<div class="btn-group"><button class="btn btn-success" onclick="salvarEfet()">✓ Salvar Efetivo</button></div>
+</div>
+</div>
+</div>
+<!-- HISTORICO -->
+<div class="tab-content" id="tHist">
+<div class="section">
+<div class="section-header verde">
+        📋 Registros
+        <div style="display:flex;gap:6px;align-items:center">
+<input id="filtro" style="padding:4px 7px;border-radius:5px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.15);color:#fff;font-size:11px" type="date"/>
+<button onclick="carregarHist()" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:4px 9px;border-radius:5px;cursor:pointer;font-size:11px">🔍</button>
+</div>
+</div>
+<div class="section-body">
+<div id="resumo" style="margin-bottom:10px"></div>
+<div style="overflow-x:auto">
+<table><thead><tr><th>Data</th><th>Turno</th><th>Responsavel</th><th>Container</th><th>Meta</th><th>Limpezas</th><th>Limp.Pes.</th><th>Succoes</th><th>Manut.</th><th>Ocorr.</th><th>Efic.</th><th>Obs.</th></tr></thead>
+<tbody id="tbHist"><tr><td class="loading" colspan="12"><div class="spinner"></div></td></tr></tbody></table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script src="js/config.js"></script>
+<script>
+var colaboradores=[],ativos=[];
+var hoje=dataHoje();
+['pData','oData','eData','filtro'].forEach(function(id){var el=document.getElementById(id);if(el)el.value=hoje;});
+
+function showTab(id,btn){
+  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='tHist')carregarHist();
+}
+
+function calcEf(){
+  var meta=parseInt(document.getElementById('pMeta').value)||0;
+  var limp=parseInt(document.getElementById('pLimp').value)||0;
+  if(meta>0){
+    var ef=Math.round((limp/meta)*100);
+    var box=document.getElementById('efBox');box.style.display='block';
+    document.getElementById('efVal').textContent=ef+'%';
+    document.getElementById('efEmoji').textContent=ef>=100?'&#127942;':ef>=70?'&#128202;':'&#9888;&#65039;';
+    box.style.background=ef>=100?'#F0F8F0':ef>=70?'#FFFBF0':'#FFF0F0';
+  }
+}
+
+async function init(){
+  try{
+    var d=await apiGet('dados');
+    colaboradores=d.colaboradores||[];
+    ativos=d.ativos||[];
+    ['pResp','oResp'].forEach(function(id){
+      var sel=document.getElementById(id);
+      if(sel)colaboradores.forEach(function(c){var o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});
+    });
+    ['pAtivo','oLocal'].forEach(function(id){
+      var sel=document.getElementById(id);
+      if(sel)ativos.forEach(function(a){var o=document.createElement('option');o.value=a;o.textContent=a;sel.appendChild(o);});
+    });
+    var pc=document.getElementById('presenca');
+    pc.innerHTML=colaboradores.map(function(c){
+      return '<div style="display:flex;align-items:center;gap:10px;padding:7px;border-bottom:1px solid #F0F0F0">'
+        +'<span style="min-width:140px;font-weight:600;font-size:13px">'+c+'</span>'
+        +'<select style="padding:5px;border:1.5px solid #DDD;border-radius:5px;font-size:12px" data-colab="'+c+'"><option value="Presenca">Presenca</option><option value="Falta">Falta</option><option value="Atestado">Atestado</option><option value="Folga">Folga</option><option value="Ferias">Ferias</option></select>'
+        +'<input type="text" placeholder="Observacao" style="flex:1;padding:5px;border:1.5px solid #DDD;border-radius:5px;font-size:12px" data-obs="'+c+'">'
+        +'</div>';
+    }).join('');
+    carregarHist();
+  }catch(e){alerta('error','Erro ao carregar dados.');}
+}
+
+async function salvarProd(){
+  var data=document.getElementById('pData').value;
+  var turno=document.getElementById('pTurno').value;
+  var resp=document.getElementById('pResp').value;
+  if(!data||!turno||!resp){alerta('warn','Preencha data, turno e responsavel.');return;}
+  var payload={data:data,turno:turno,responsavel:resp,ativo:document.getElementById('pAtivo').value,meta:parseInt(document.getElementById('pMeta').value)||0,limpezas:parseInt(document.getElementById('pLimp').value)||0,limpezas_pesadas:parseInt(document.getElementById('pLimpPes').value)||0,succoes:parseInt(document.getElementById('pSucc').value)||0,manutencoes:parseInt(document.getElementById('pManut').value)||0,ocorrencias:parseInt(document.getElementById('pOcorr').value)||0,observacoes:document.getElementById('pObs').value};
+  try{await apiPost('registro',payload);alerta('success','Registro salvo! '+resp+' - '+payload.limpezas+' limpezas');limparProd();}catch(e){alerta('error','Erro ao salvar.');}
+}
+
+async function salvarOcorr(){
+  var data=document.getElementById('oData').value;
+  var tipo=document.getElementById('oTipo').value;
+  var desc=document.getElementById('oDesc').value;
+  if(!data||!tipo||!desc){alerta('warn','Preencha data, tipo e descricao.');return;}
+  var payload={data:data,tipo_ocorrencia:tipo,local:document.getElementById('oLocal').value,criticidade:document.getElementById('oCrit').value,responsavel:document.getElementById('oResp').value,status:document.getElementById('oStatus').value,descricao:desc,acao:document.getElementById('oAcao').value};
+  try{await apiPost('ocorrencia',payload);alerta('success','Ocorrencia registrada!');limparOcorr();}catch(e){alerta('error','Erro ao salvar.');}
+}
+
+async function salvarEfet(){
+  var data=document.getElementById('eData').value;
+  var presencas=[];
+  document.querySelectorAll('[data-colab]').forEach(function(sel){
+    var colab=sel.dataset.colab;
+    var obs=document.querySelector('[data-obs="'+colab+'"]');
+    presencas.push({colaborador:colab,ocorrencia:sel.value,observacao:obs?obs.value:''});
+  });
+  try{await apiPost('efetivo',{data:data,efetivo_previsto:parseInt(document.getElementById('ePrev').value)||0,efetivo_presente:parseInt(document.getElementById('ePres').value)||0,presencas:presencas});alerta('success','Efetivo salvo!');}catch(e){alerta('error','Erro ao salvar.');}
+}
+
+async function carregarHist(){
+  var filtro=document.getElementById('filtro').value;
+  try{
+    var registros=await apiGet('registros',filtro?{data:filtro}:{});
+    var lista=Array.isArray(registros)?registros.slice(-50).reverse():[];
+    if(filtro&&lista.length>0){
+      var tot={limp:0,succ:0,meta:0,ocorr:0};
+      lista.forEach(function(r){tot.limp+=Number(r['Limpezas']||r.limpezas||0);tot.succ+=Number(r['Succoes']||r.succoes||0);tot.meta+=Number(r['Meta']||r.meta||0);tot.ocorr+=Number(r['Ocorrencias']||r.ocorrencias||0);});
+      var ef=tot.meta>0?Math.round((tot.limp/tot.meta)*100):null;
+      document.getElementById('resumo').innerHTML='<div class="cards" style="grid-template-columns:repeat(4,1fr);margin-bottom:10px">'
+        +'<div class="card" style="padding:10px"><div class="card-value" style="font-size:22px">'+tot.limp+'</div><div class="card-label">Limpezas</div></div>'
+        +'<div class="card" style="padding:10px"><div class="card-value" style="font-size:22px">'+tot.succ+'</div><div class="card-label">Succoes</div></div>'
+        +'<div class="card '+(ef!==null&&ef>=100?'verde':'amarelo')+'" style="padding:10px"><div class="card-value" style="font-size:22px">'+(ef!==null?ef+'%':'-')+'</div><div class="card-label">Eficiencia</div></div>'
+        +'<div class="card '+(tot.ocorr>0?'vermelho':'verde')+'" style="padding:10px"><div class="card-value" style="font-size:22px">'+tot.ocorr+'</div><div class="card-label">Ocorrencias</div></div>'
+        +'</div>';
+    }else{document.getElementById('resumo').innerHTML='';}
+    document.getElementById('tbHist').innerHTML=lista.length>0?lista.map(function(r){
+      var limp=Number(r['Limpezas']||r.limpezas||0),meta=Number(r['Meta']||r.meta||0);
+      var ef=meta>0?Math.round((limp/meta)*100):null;
+      var cor=ef===null?'badge-info':ef>=100?'badge-ok':ef>=70?'badge-warn':'badge-err';
+      return '<tr><td>'+(r['Data']||r.data||'-')+'</td><td style="font-size:11px">'+(r['Turno']||r.turno||'-')+'</td><td><strong>'+(r['Responsavel']||r.responsavel||'-')+'</strong></td><td>'+(r['Container/Banheiro']||r.ativo||'-')+'</td><td style="text-align:center">'+meta+'</td><td style="text-align:center;font-weight:700;color:#2E75B6">'+limp+'</td><td style="text-align:center">'+(r['Limpezas Pesadas']||r.limpezas_pesadas||0)+'</td><td style="text-align:center">'+(r['Succoes']||r.succoes||0)+'</td><td style="text-align:center">'+(r['Manutencoes']||r.manutencoes||0)+'</td><td style="text-align:center;color:'+((r['Ocorrencias']||r.ocorrencias||0)>0?'#C00000':'#1E7145')+';font-weight:700">'+(r['Ocorrencias']||r.ocorrencias||0)+'</td><td><span class="'+cor+'">'+(ef!==null?ef+'%':'-')+'</span></td><td style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px">'+(r['Observacoes']||r.observacoes||'-')+'</td></tr>';
+    }).join(''):'<tr><td colspan="12" class="empty">Nenhum registro encontrado</td></tr>';
+  }catch(e){console.error(e);}
+}
+
+function limparProd(){['pLimp','pLimpPes','pSucc','pManut','pOcorr'].forEach(function(id){document.getElementById(id).value=0;});document.getElementById('pObs').value='';document.getElementById('efBox').style.display='none';}
+function limparOcorr(){['oTipo','oLocal','oCrit','oResp'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('oDesc').value='';document.getElementById('oAcao').value='';}
+function alerta(tipo,msg){document.getElementById('alerta').innerHTML='<div class="alert alert-'+tipo+'">'+msg+'</div>';setTimeout(function(){document.getElementById('alerta').innerHTML='';},5000);}
+
+init();
+</script>
+</body>
+</html>

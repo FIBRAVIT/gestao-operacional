@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>Planejamento - Seatrium</title>
+<link href="css/style.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="header">
+<div class="header-logo">
+<span style="font-size:24px">🏗️</span>
+<div><h1>GESTAO OPERACIONAL</h1><span>PROJETO SEATRIUM</span></div>
+</div>
+<nav class="nav">
+<a href="index.html">🏠 Inicio</a>
+<a href="registro.html">📝 Relatorio</a>
+<a href="dashboard.html">📊 Dashboard</a>
+<a href="comparativo.html">📈 Meta x Realizado</a>
+</nav>
+</header>
+<div class="container">
+<div class="page-title">📋 Planejamento do Proximo Dia <span class="badge" style="background:#C9A84C">Proximo Dia</span></div>
+<div id="alerta"></div>
+<div class="form-card">
+<div class="form-header" style="background:linear-gradient(135deg,#C9A84C,#b8963e)">
+<h2>📋 Planejamento Operacional</h2>
+<p>Defina as metas e o efetivo previsto para o proximo dia</p>
+</div>
+<div class="form-body">
+<div class="form-section-title">📅 Data e Turno</div>
+<div class="form-grid">
+<div class="form-group"><label>Data *</label><input id="data" required="" type="date"/></div>
+<div class="form-group"><label>Turno *</label>
+<select id="turno" required="">
+<option value="">Selecione...</option>
+<option>07:00 AS 17:00</option><option>17:00 AS 23:00</option><option>23:00 AS 07:00</option>
+</select>
+</div>
+<div class="form-group"><label>Responsavel pelo Planejamento</label><input id="resp" placeholder="Nome do supervisor" type="text"/></div>
+<div class="form-group"><label>Efetivo Previsto</label><input id="efetivo" min="0" type="number" value="0"/></div>
+</div>
+<hr class="form-divider"/>
+<div class="form-section-title">🎯 Metas Gerais do Dia</div>
+<div class="form-grid">
+<div class="form-group"><label>🧹 Meta Limpezas</label><input id="mLimp" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>🧹 Meta Limp. Pesadas</label><input id="mLimpPes" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>💧 Meta Succoes</label><input id="mSucc" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>🔧 Meta Manutencoes</label><input id="mManut" min="0" type="number" value="0"/></div>
+</div>
+<hr class="form-divider"/>
+<div class="form-section-title">👥 Metas por Colaborador</div>
+<div id="colabs"><div class="loading"><div class="spinner"></div> Carregando...</div></div>
+<button class="btn btn-outline btn-sm" onclick="addColab()" style="margin-top:10px">+ Adicionar Colaborador</button>
+<hr class="form-divider"/>
+<div class="form-section-title">📝 Prioridades e Observacoes</div>
+<div class="form-grid" style="grid-template-columns:1fr">
+<div class="form-group"><label>Prioridades do Dia</label><textarea id="prior" placeholder="Ex: Foco nos containers C01-C05..."></textarea></div>
+<div class="form-group"><label>Observacoes Gerais</label><textarea id="obs" placeholder="Informacoes importantes para a equipe..."></textarea></div>
+</div>
+<div class="btn-group">
+<button class="btn btn-warning" onclick="salvar()">💾 Salvar Planejamento</button>
+<a class="btn btn-outline" href="index.html">← Voltar</a>
+</div>
+</div>
+</div>
+<div class="section">
+<div class="section-header amarelo">📋 Planejamentos Salvos <button onclick="carregar()" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:3px 10px;border-radius:5px;cursor:pointer;font-size:11px">🔄</button></div>
+<div class="section-body">
+<div style="overflow-x:auto">
+<table><thead><tr><th>Data</th><th>Turno</th><th>Responsavel</th><th>Efetivo</th><th>Meta Limpezas</th><th>Meta Succoes</th><th>Prioridades</th></tr></thead>
+<tbody id="tbPlan"><tr><td class="loading" colspan="7"><div class="spinner"></div></td></tr></tbody></table>
+</div>
+</div>
+</div>
+</div>
+<script src="js/config.js"></script>
+<script>
+var colaboradores=[], cnt=0;
+var amanha=new Date(); amanha.setDate(amanha.getDate()+1);
+document.getElementById('data').value=amanha.toISOString().split('T')[0];
+
+async function init(){
+  try{
+    var d=await apiGet('dados');
+    colaboradores=d.colaboradores||[];
+    document.getElementById('colabs').innerHTML='';
+    colaboradores.slice(0,8).forEach(function(c){addColab(c);});
+    carregar();
+  }catch(e){alerta('error','Erro ao carregar dados.');}
+}
+
+function addColab(nome){
+  cnt++;
+  var id='c'+cnt;
+  var div=document.createElement('div');
+  div.id=id;
+  div.style.cssText='background:#F8FAFF;border:1px solid #E0E8F0;border-radius:8px;padding:10px;margin-bottom:8px';
+  var opts=colaboradores.map(function(c){return '<option value="'+c+'"'+(c===nome?' selected':'')+'>'+c+'</option>';}).join('');
+  div.innerHTML='<div style="display:grid;grid-template-columns:170px 1fr 1fr 1fr 1fr 34px;gap:8px;align-items:end">'
+    +'<div class="form-group" style="margin:0"><label style="font-size:10px">Colaborador</label><select style="padding:7px;border:1.5px solid #DDD;border-radius:6px;font-size:12px;width:100%"><option value="">Selecione...</option>'+opts+'</select></div>'
+    +'<div class="form-group" style="margin:0"><label style="font-size:10px">Meta Limpezas</label><input type="number" min="0" value="2" style="padding:7px;border:1.5px solid #DDD;border-radius:6px;font-size:12px;width:100%;text-align:center"></div>'
+    +'<div class="form-group" style="margin:0"><label style="font-size:10px">Meta Limp.Pes.</label><input type="number" min="0" value="1" style="padding:7px;border:1.5px solid #DDD;border-radius:6px;font-size:12px;width:100%;text-align:center"></div>'
+    +'<div class="form-group" style="margin:0"><label style="font-size:10px">Meta Succoes</label><input type="number" min="0" value="0" style="padding:7px;border:1.5px solid #DDD;border-radius:6px;font-size:12px;width:100%;text-align:center"></div>'
+    +'<div class="form-group" style="margin:0"><label style="font-size:10px">Area/Container</label><input type="text" placeholder="Ex: C01-C04" style="padding:7px;border:1.5px solid #DDD;border-radius:6px;font-size:12px;width:100%"></div>'
+    +'<button onclick="document.getElementById(\''+id+'\').remove()" style="background:#FFC7CE;border:none;border-radius:6px;padding:7px;cursor:pointer;font-size:13px;height:32px">&#128465;</button>'
+    +'</div>';
+  document.getElementById('colabs').appendChild(div);
+}
+
+async function salvar(){
+  var data=document.getElementById('data').value;
+  var turno=document.getElementById('turno').value;
+  if(!data||!turno){alerta('warn','Preencha a data e o turno.');return;}
+  var rows=document.getElementById('colabs').children;
+  var colabs=[];
+  for(var i=0;i<rows.length;i++){
+    var inputs=rows[i].querySelectorAll('select,input');
+    var nome=inputs[0].value;
+    if(nome) colabs.push({responsavel:nome,meta_limpezas:parseInt(inputs[1].value)||0,meta_limpezas_pesadas:parseInt(inputs[2].value)||0,meta_succoes:parseInt(inputs[3].value)||0,area:inputs[4].value});
+  }
+  var payload={data:data,turno:turno,responsavel_planejamento:document.getElementById('resp').value,efetivo_previsto:parseInt(document.getElementById('efetivo').value)||0,meta_limpezas:parseInt(document.getElementById('mLimp').value)||0,meta_limpezas_pesadas:parseInt(document.getElementById('mLimpPes').value)||0,meta_succoes:parseInt(document.getElementById('mSucc').value)||0,meta_manutencoes:parseInt(document.getElementById('mManut').value)||0,prioridades:document.getElementById('prior').value,observacoes:document.getElementById('obs').value,colaboradores:colabs};
+  try{
+    await apiPost('planejamento',payload);
+    alerta('success','Planejamento salvo com sucesso!');
+    carregar();
+  }catch(e){alerta('error','Erro ao salvar.');}
+}
+
+async function carregar(){
+  try{
+    var plans=await apiGet('planejamento');
+    var lista=Array.isArray(plans)?plans.slice(-20).reverse():[];
+    document.getElementById('tbPlan').innerHTML=lista.length>0?lista.map(function(p){
+      return '<tr><td><strong>'+(p['Data']||p.data||'-')+'</strong></td><td>'+(p['Turno']||p.turno||'-')+'</td><td>'+(p['Responsavel Planejamento']||p.responsavel_planejamento||'-')+'</td><td style="text-align:center">'+(p['Efetivo Previsto']||p.efetivo_previsto||0)+'</td><td style="text-align:center;font-weight:700;color:#2E75B6">'+(p['Meta Limpezas']||p.meta_limpezas||0)+'</td><td style="text-align:center">'+(p['Meta Succoes']||p.meta_succoes||0)+'</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(p['Prioridades']||p.prioridades||'-')+'</td></tr>';
+    }).join(''):'<tr><td colspan="7" class="empty">Nenhum planejamento salvo ainda</td></tr>';
+  }catch(e){console.error(e);}
+}
+
+function alerta(tipo,msg){
+  document.getElementById('alerta').innerHTML='<div class="alert alert-'+tipo+'">'+msg+'</div>';
+  setTimeout(function(){document.getElementById('alerta').innerHTML='';},5000);
+}
+
+init();
+</script>
+</body>
+</html>

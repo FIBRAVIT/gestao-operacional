@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>Gestao Operacional Seatrium</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(135deg,#1F4E79 0%,#2E75B6 60%,#1E7145 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.logo{text-align:center;margin-bottom:40px;color:#fff}
+.logo-icon{font-size:56px;margin-bottom:10px}
+.logo h1{font-size:26px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+.logo p{font-size:14px;opacity:.8;margin-top:5px}
+.data-badge{display:inline-block;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);padding:5px 16px;border-radius:20px;font-size:12px;margin-top:10px;font-weight:600}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:720px;width:100%;margin-bottom:28px}
+.card{background:#fff;border-radius:18px;padding:36px 28px;text-align:center;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;box-shadow:0 8px 30px rgba(0,0,0,.15);display:flex;flex-direction:column;align-items:center;gap:14px;border-top:6px solid transparent}
+.card:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(0,0,0,.22)}
+.card.plan{border-top-color:#C9A84C}
+.card.real{border-top-color:#1E7145}
+.card-icon{font-size:52px;line-height:1}
+.card-title{font-size:19px;font-weight:800;color:#1F4E79;line-height:1.2}
+.card-sub{font-size:13px;color:#666;line-height:1.5}
+.card-btn{margin-top:6px;padding:12px 24px;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;width:100%}
+.card.plan .card-btn{background:#C9A84C;color:#fff}
+.card.real .card-btn{background:#1E7145;color:#fff}
+.links{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:20px}
+.link{color:rgba(255,255,255,.85);font-size:13px;text-decoration:none;padding:8px 18px;border:1px solid rgba(255,255,255,.3);border-radius:9px;font-weight:600;transition:background .2s}
+.link:hover{background:rgba(255,255,255,.15);color:#fff}
+.footer{color:rgba(255,255,255,.4);font-size:11px;text-align:center;margin-top:20px}
+@media(max-width:560px){.cards{grid-template-columns:1fr;gap:14px}.logo h1{font-size:20px}.card{padding:24px 18px}.card-icon{font-size:40px}.card-title{font-size:17px}}
+</style>
+</head>
+<body>
+<div class="logo">
+<div class="logo-icon">🏗️</div>
+<h1>Gestao Operacional</h1>
+<p>Projeto Seatrium</p>
+<div class="data-badge" id="dt">📅 ...</div>
+</div>
+<div class="cards">
+<a class="card plan" href="planejamento.html">
+<div class="card-icon">📋</div>
+<div class="card-title">Planejamento do Proximo Dia</div>
+<div class="card-sub">Defina metas, efetivo previsto e prioridades para o proximo dia de operacao</div>
+<button class="card-btn">📋 Abrir Planejamento</button>
+</a>
+<a class="card real" href="registro.html">
+<div class="card-icon">📝</div>
+<div class="card-title">Relatorio do Dia</div>
+<div class="card-sub">Registre o que foi realizado - limpezas, succoes, ocorrencias e efetivo</div>
+<button class="card-btn">📝 Abrir Relatorio</button>
+</a>
+</div>
+<div class="links">
+<a class="link" href="dashboard.html">📊 Dashboard</a>
+<a class="link" href="comparativo.html">📈 Meta x Realizado</a>
+</div>
+<div class="footer">Gestao Operacional Seatrium | Sistema de Controle Operacional</div>
+<script>
+var d=new Date();
+document.getElementById('dt').textContent='&#128197; '+d.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+</script>
+</body>
+</html>
