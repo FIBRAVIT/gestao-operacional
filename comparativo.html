@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1.0" name="viewport"/>
-<title>Meta x Realizado - Seatrium</title>
+<title>Meta x Realizado - Gestao Operacional Seatrium</title>
 <link href="css/style.css" rel="stylesheet"/>
 </head>
 <body>
@@ -67,6 +67,20 @@
 </div>
 </div>
 </div>
+<footer class="footer-everest">
+<div class="footer-inner">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="font-size:18px">🏗️</span>
+<div style="text-align:left"><div style="color:#fff;font-weight:700;font-size:12px">GESTAO OPERACIONAL — PROJETO SEATRIUM</div><div style="font-size:10px;opacity:.6">Sistema de Controle Operacional</div></div>
+</div>
+<div style="text-align:center">
+<div style="color:#C9A84C;font-weight:700;font-size:10px;letter-spacing:.8px;text-transform:uppercase">Desenvolvido por</div>
+<div style="color:#fff;font-weight:800;font-size:14px;letter-spacing:1.5px">EVEREST CONSULTORIA</div>
+<div style="color:rgba(255,255,255,.6);font-size:11px;font-style:italic">em Gestao Empresarial</div>
+</div>
+<div style="text-align:right;font-size:10px;opacity:.5"><div>© 2026 Todos os direitos reservados</div><div>Versao 1.0</div></div>
+</div>
+</footer>
 <script src="js/config.js"></script>
 <script>
 var dadosComp=[];
@@ -86,37 +100,12 @@ async function carregar(){
       +'<div class="card"><div class="card-icon">&#128167;</div><div class="card-value">'+totR.succ+'</div><div class="card-label">Succoes Realizadas</div><div class="card-sub">Meta: '+totM.succ+'</div></div>'
       +'<div class="card '+(efG!==null&&efG>=100?'verde':'amarelo')+'"><div class="card-icon">'+(efG!==null&&efG>=100?'&#127942;':'&#128202;')+'</div><div class="card-value">'+(efG!==null?efG+'%':'-')+'</div><div class="card-label">Eficiencia Geral</div><div class="card-sub">'+data+'</div></div>'
       +'<div class="card"><div class="card-icon">&#128101;</div><div class="card-value">'+dadosComp.length+'</div><div class="card-label">Colaboradores</div><div class="card-sub">Com registros</div></div>';
-
-    document.getElementById('porColab').innerHTML=dadosComp.length>0?dadosComp.map(function(c){
-      var ef=c.eficiencia;var pct=ef!==null?Math.min(100,ef):0;
-      var cor=ef===null?'amarelo':ef>=100?'verde':ef>=70?'amarelo':'vermelho';
-      return '<div style="margin-bottom:12px;padding:10px;background:#F8FAFF;border-radius:7px;border-left:4px solid '+(ef>=100?'#1E7145':ef>=70?'#C9A84C':'#C00000')+'">'
-        +'<div style="display:flex;justify-content:space-between;margin-bottom:6px"><strong>'+c.colaborador+'</strong><span class="'+(ef>=100?'badge-ok':ef>=70?'badge-warn':'badge-err')+'">'+(ef!==null?ef+'%':'Sem meta')+'</span></div>'
-        +'<div style="font-size:12px;color:#666;margin-bottom:5px">Limpezas: <strong>'+(c.realizado?c.realizado.limpezas||0:0)+'</strong> / Meta: '+(c.planejado?c.planejado.limpezas||'-':'-')+'</div>'
-        +'<div class="progress-wrap"><div class="progress-bar"><div class="progress-fill '+cor+'" style="width:'+pct+'%"></div></div><span class="progress-pct">'+(ef!==null?ef+'%':'-')+'</span></div>'
-        +'</div>';
-    }).join(''):'<div class="empty">Sem registros para esta data</div>';
-
+    document.getElementById('porColab').innerHTML=dadosComp.length>0?dadosComp.map(function(c){var ef=c.eficiencia,pct=ef!==null?Math.min(100,ef):0,cor=ef===null?'amarelo':ef>=100?'verde':ef>=70?'amarelo':'vermelho';return '<div style="margin-bottom:12px;padding:10px;background:#F8FAFF;border-radius:7px;border-left:4px solid '+(ef>=100?'#1E7145':ef>=70?'#C9A84C':'#C00000')+'"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><strong>'+c.colaborador+'</strong><span class="'+(ef>=100?'badge-ok':ef>=70?'badge-warn':'badge-err')+'">'+(ef!==null?ef+'%':'Sem meta')+'</span></div><div style="font-size:12px;color:#666;margin-bottom:5px">Limpezas: <strong>'+(c.realizado?c.realizado.limpezas||0:0)+'</strong> / Meta: '+(c.planejado?c.planejado.limpezas||'-':'-')+'</div><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill '+cor+'" style="width:'+pct+'%"></div></div><span class="progress-pct">'+(ef!==null?ef+'%':'-')+'</span></div></div>';}).join(''):'<div class="empty">Sem registros para esta data</div>';
     var maxEf=Math.max.apply(null,dadosComp.map(function(c){return c.eficiencia||0;}).concat([100]));
-    document.getElementById('grafico').innerHTML=dadosComp.length>0?
-      '<div class="chart-wrap">'+dadosComp.map(function(c){var ef=c.eficiencia||0;var ht=Math.max(4,Math.round((ef/maxEf)*140));var cor=ef>=100?'#1E7145':ef>=70?'#C9A84C':'#C00000';return '<div class="bar" style="height:'+ht+'px;background:'+cor+'"><div class="tip">'+c.colaborador+'<br>'+ef+'%</div></div>';}).join('')+'</div>'
-      +'<div class="chart-labels">'+dadosComp.map(function(c){return '<div class="chart-label" style="font-size:9px">'+c.colaborador.split(' ')[0]+'</div>';}).join('')+'</div>'
-      +'<div style="margin-top:7px;font-size:11px;display:flex;gap:10px"><span style="color:#1E7145">&#128994; >=100%</span><span style="color:#C9A84C">&#128993; 70-99%</span><span style="color:#C00000">&#128308; <70%</span></div>':
-      '<div class="empty">Sem dados</div>';
-
-    document.getElementById('tbComp').innerHTML=dadosComp.length>0?dadosComp.map(function(c){
-      var efL=c.planejado&&c.planejado.limpezas>0?Math.round(((c.realizado?c.realizado.limpezas||0:0)/c.planejado.limpezas)*100):null;
-      var cor=c.eficiencia===null?'badge-info':c.eficiencia>=100?'badge-ok':c.eficiencia>=70?'badge-warn':'badge-err';
-      return '<tr><td><strong>'+c.colaborador+'</strong></td><td style="text-align:center">'+(c.planejado?c.planejado.limpezas||'-':'-')+'</td><td style="text-align:center;font-weight:700;color:#2E75B6">'+(c.realizado?c.realizado.limpezas||0:0)+'</td><td><span class="'+(efL>=100?'badge-ok':efL>=70?'badge-warn':'badge-err')+'">'+(efL!==null?efL+'%':'-')+'</span></td><td style="text-align:center">'+(c.planejado?c.planejado.succoes||'-':'-')+'</td><td style="text-align:center">'+(c.realizado?c.realizado.succoes||0:0)+'</td><td style="text-align:center">'+(c.realizado?c.realizado.manutencoes||0:0)+'</td><td style="text-align:center;color:'+((c.realizado?c.realizado.ocorrencias||0:0)>0?'#C00000':'#1E7145')+'">'+(c.realizado?c.realizado.ocorrencias||0:0)+'</td><td><span class="'+cor+'">'+(c.eficiencia!==null?c.eficiencia+'%':'Sem meta')+'</span></td></tr>';
-    }).join(''):'<tr><td colspan="9" class="empty">Sem dados para esta data</td></tr>';
-
+    document.getElementById('grafico').innerHTML=dadosComp.length>0?'<div class="chart-wrap">'+dadosComp.map(function(c){var ef=c.eficiencia||0,ht=Math.max(4,Math.round((ef/maxEf)*140)),cor=ef>=100?'#1E7145':ef>=70?'#C9A84C':'#C00000';return '<div class="bar" style="height:'+ht+'px;background:'+cor+'"><div class="tip">'+c.colaborador+'<br>'+ef+'%</div></div>';}).join('')+'</div><div class="chart-labels">'+dadosComp.map(function(c){return '<div class="chart-label" style="font-size:9px">'+c.colaborador.split(' ')[0]+'</div>';}).join('')+'</div><div style="margin-top:7px;font-size:11px;display:flex;gap:10px"><span style="color:#1E7145">&#128994; >=100%</span><span style="color:#C9A84C">&#128993; 70-99%</span><span style="color:#C00000">&#128308; <70%</span></div>':'<div class="empty">Sem dados</div>';
+    document.getElementById('tbComp').innerHTML=dadosComp.length>0?dadosComp.map(function(c){var efL=c.planejado&&c.planejado.limpezas>0?Math.round(((c.realizado?c.realizado.limpezas||0:0)/c.planejado.limpezas)*100):null,cor=c.eficiencia===null?'badge-info':c.eficiencia>=100?'badge-ok':c.eficiencia>=70?'badge-warn':'badge-err';return '<tr><td><strong>'+c.colaborador+'</strong></td><td style="text-align:center">'+(c.planejado?c.planejado.limpezas||'-':'-')+'</td><td style="text-align:center;font-weight:700;color:#2E75B6">'+(c.realizado?c.realizado.limpezas||0:0)+'</td><td><span class="'+(efL>=100?'badge-ok':efL>=70?'badge-warn':'badge-err')+'">'+(efL!==null?efL+'%':'-')+'</span></td><td style="text-align:center">'+(c.planejado?c.planejado.succoes||'-':'-')+'</td><td style="text-align:center">'+(c.realizado?c.realizado.succoes||0:0)+'</td><td style="text-align:center">'+(c.realizado?c.realizado.manutencoes||0:0)+'</td><td style="text-align:center;color:'+((c.realizado?c.realizado.ocorrencias||0:0)>0?'#C00000':'#1E7145')+'">'+(c.realizado?c.realizado.ocorrencias||0:0)+'</td><td><span class="'+cor+'">'+(c.eficiencia!==null?c.eficiencia+'%':'Sem meta')+'</span></td></tr>';}).join(''):'<tr><td colspan="9" class="empty">Sem dados para esta data</td></tr>';
     var hist=(d.historico_diario||[]).slice(0,20);
-    document.getElementById('tbHist').innerHTML=hist.length>0?hist.map(function(h){
-      var ef=h.meta>0?Math.round((h.limpezas/h.meta)*100):null;
-      var cor=ef===null?'badge-info':ef>=100?'badge-ok':ef>=70?'badge-warn':'badge-err';
-      return '<tr><td><strong>'+h.data+'</strong></td><td style="text-align:center">'+h.registros+'</td><td style="text-align:center;font-weight:700;color:#2E75B6">'+h.limpezas+'</td><td style="text-align:center">'+h.succoes+'</td><td style="text-align:center">'+h.manutencoes+'</td><td style="text-align:center;color:'+(h.ocorrencias>0?'#C00000':'#1E7145')+'">'+h.ocorrencias+'</td><td style="text-align:center">'+(h.meta||'-')+'</td><td><span class="'+cor+'">'+(ef!==null?ef+'%':'-')+'</span></td></tr>';
-    }).join(''):'<tr><td colspan="8" class="empty">Nenhum registro ainda</td></tr>';
-
+    document.getElementById('tbHist').innerHTML=hist.length>0?hist.map(function(h){var ef=h.meta>0?Math.round((h.limpezas/h.meta)*100):null,cor=ef===null?'badge-info':ef>=100?'badge-ok':ef>=70?'badge-warn':'badge-err';return '<tr><td><strong>'+h.data+'</strong></td><td style="text-align:center">'+h.registros+'</td><td style="text-align:center;font-weight:700;color:#2E75B6">'+h.limpezas+'</td><td style="text-align:center">'+h.succoes+'</td><td style="text-align:center">'+h.manutencoes+'</td><td style="text-align:center;color:'+(h.ocorrencias>0?'#C00000':'#1E7145')+'">'+h.ocorrencias+'</td><td style="text-align:center">'+(h.meta||'-')+'</td><td><span class="'+cor+'">'+(ef!==null?ef+'%':'-')+'</span></td></tr>';}).join(''):'<tr><td colspan="8" class="empty">Nenhum registro ainda</td></tr>';
   }catch(e){console.error(e);alert('Erro ao carregar dados.');}
 }
 
@@ -129,7 +118,6 @@ function exportar(){
   var blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
   var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='comparativo_'+data+'.csv';a.click();
 }
-
 carregar();
 </script>
 </body>

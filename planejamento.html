@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1.0" name="viewport"/>
-<title>Planejamento - Seatrium</title>
+<title>Planejamento - Gestao Operacional Seatrium</title>
 <link href="css/style.css" rel="stylesheet"/>
 </head>
 <body>
@@ -33,11 +33,7 @@
 <div class="form-grid">
 <div class="form-group"><label>Data *</label><input id="data" required="" type="date"/></div>
 <div class="form-group"><label>Turno *</label>
-<select id="turno" required="">
-<option value="">Selecione...</option>
-<option>07:00 AS 17:00</option><option>17:00 AS 23:00</option><option>23:00 AS 07:00</option>
-</select>
-</div>
+<select id="turno" required=""><option value="">Selecione...</option><option>07:00 AS 17:00</option><option>17:00 AS 23:00</option><option>23:00 AS 07:00</option></select></div>
 <div class="form-group"><label>Responsavel pelo Planejamento</label><input id="resp" placeholder="Nome do supervisor" type="text"/></div>
 <div class="form-group"><label>Efetivo Previsto</label><input id="efetivo" min="0" type="number" value="0"/></div>
 </div>
@@ -51,6 +47,7 @@
 </div>
 <hr class="form-divider"/>
 <div class="form-section-title">👥 Metas por Colaborador</div>
+<p style="font-size:12px;color:#666;margin-bottom:12px">Selecione o colaborador, o tipo de servico, defina a meta e escolha os containers/banheiros</p>
 <div id="colabs"><div class="loading"><div class="spinner"></div> Carregando...</div></div>
 <button class="btn btn-outline btn-sm" onclick="addColab()" style="margin-top:10px">+ Adicionar Colaborador</button>
 <hr class="form-divider"/>
@@ -75,11 +72,63 @@
 </div>
 </div>
 </div>
+<footer class="footer-everest">
+<div class="footer-inner">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="font-size:18px">🏗️</span>
+<div style="text-align:left"><div style="color:#fff;font-weight:700;font-size:12px">GESTAO OPERACIONAL — PROJETO SEATRIUM</div><div style="font-size:10px;opacity:.6">Sistema de Controle Operacional</div></div>
+</div>
+<div style="text-align:center">
+<div style="color:#C9A84C;font-weight:700;font-size:10px;letter-spacing:.8px;text-transform:uppercase">Desenvolvido por</div>
+<div style="color:#fff;font-weight:800;font-size:14px;letter-spacing:1.5px">EVEREST CONSULTORIA</div>
+<div style="color:rgba(255,255,255,.6);font-size:11px;font-style:italic">em Gestao Empresarial</div>
+</div>
+<div style="text-align:right;font-size:10px;opacity:.5"><div>© 2026 Todos os direitos reservados</div><div>Versao 1.0</div></div>
+</div>
+</footer>
 <script src="js/config.js"></script>
 <script>
-var colaboradores=[], cnt=0;
-var amanha=new Date(); amanha.setDate(amanha.getDate()+1);
+var colaboradores=[],cnt=0;
+var amanha=new Date();amanha.setDate(amanha.getDate()+1);
 document.getElementById('data').value=amanha.toISOString().split('T')[0];
+
+var ATIVOS=[];
+for(var i=1;i<=15;i++) ATIVOS.push('C'+String(i).padStart(2,'0'));
+for(var i=1;i<=8;i++) ATIVOS.push('B'+String(i).padStart(2,'0'));
+
+async function verPeriodo(){
+  var ini=document.getElementById('periodoIni').value;
+  var fim=document.getElementById('periodoFim').value;
+  if(!ini||!fim){alert('Selecione o periodo');return;}
+  try{
+    var box=document.getElementById('resumoPeriodo');
+    box.innerHTML='<div class="loading"><div class="spinner"></div> Carregando...</div>';
+    var plans=await apiGet('planejamento');
+    var regs=await apiGet('registros');
+    var planFilt=Array.isArray(plans)?plans.filter(function(p){var d=p['Data']||p.data||'';return d>=ini&&d<=fim;}):[];
+    var regFilt=Array.isArray(regs)?regs.filter(function(r){var d=r['Data']||r.data||'';return d>=ini&&d<=fim;}):[];
+    var totPlan={limp:planFilt.reduce(function(s,p){return s+(Number(p['Meta Limpezas']||p.meta_limpezas||0));},0),succ:planFilt.reduce(function(s,p){return s+(Number(p['Meta Succoes']||p.meta_succoes||0));},0)};
+    var totReal={limp:regFilt.reduce(function(s,r){return s+(Number(r['Limpezas']||r.limpezas||0));},0),succ:regFilt.reduce(function(s,r){return s+(Number(r['Succoes']||r.succoes||0));},0)};
+    var efL=totPlan.limp>0?Math.round((totReal.limp/totPlan.limp)*100):null;
+    box.innerHTML='<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">'
+      +'<div style="background:#fff;border-radius:8px;padding:10px;flex:1;min-width:120px;border-left:4px solid #2E75B6"><div style="font-size:11px;color:#666;font-weight:700">LIMPEZAS</div><div style="font-size:18px;font-weight:800;color:#2E75B6">'+totReal.limp+'</div><div style="font-size:11px;color:#888">Meta: '+totPlan.limp+'</div>'+(efL!==null?'<div style="font-size:12px;font-weight:700;color:'+(efL>=100?'#1E7145':'#C00000')+'">'+efL+'%</div>':'')+'</div>'
+      +'<div style="background:#fff;border-radius:8px;padding:10px;flex:1;min-width:120px;border-left:4px solid #1E7145"><div style="font-size:11px;color:#666;font-weight:700">SUCCOES</div><div style="font-size:18px;font-weight:800;color:#1E7145">'+totReal.succ+'</div><div style="font-size:11px;color:#888">Meta: '+totPlan.succ+'</div></div>'
+      +'<div style="background:#fff;border-radius:8px;padding:10px;flex:1;min-width:120px;border-left:4px solid #C9A84C"><div style="font-size:11px;color:#666;font-weight:700">REGISTROS</div><div style="font-size:18px;font-weight:800;color:#C9A84C">'+regFilt.length+'</div><div style="font-size:11px;color:#888">'+planFilt.length+' planejamentos</div></div>'
+      +'</div>';
+  }catch(e){document.getElementById('resumoPeriodo').innerHTML='<div class="alert alert-error">Erro ao carregar dados.</div>';}
+}
+
+function toggleDescManut(sel, id){
+  var box=document.getElementById('desc_'+id);
+  if(box){
+    var show=sel.value.indexOf('Manutencao')>=0||sel.value.indexOf('Inspecao')>=0;
+    box.style.display=show?'block':'none';
+    // Se inspeção identificar manutenção, sugere criar manutenção programada
+    if(sel.value==='Inspecao'){
+      box.querySelector('textarea').placeholder='Descreva o que foi inspecionado. Se identificar necessidade de manutencao, ela sera gerada automaticamente como manutencao programada.';
+    }
+  }
+}
 
 async function init(){
   try{
@@ -96,15 +145,32 @@ function addColab(nome){
   var id='c'+cnt;
   var div=document.createElement('div');
   div.id=id;
-  div.style.cssText='background:#F8FAFF;border:1px solid #E0E8F0;border-radius:8px;padding:10px;margin-bottom:8px';
+  div.style.cssText='background:#F8FAFF;border:1.5px solid #2E75B6;border-radius:10px;padding:14px;margin-bottom:10px';
   var opts=colaboradores.map(function(c){return '<option value="'+c+'"'+(c===nome?' selected':'')+'>'+c+'</option>';}).join('');
-  div.innerHTML='<div style="display:grid;grid-template-columns:170px 1fr 1fr 1fr 1fr 34px;gap:8px;align-items:end">'
-    +'<div class="form-group" style="margin:0"><label style="font-size:10px">Colaborador</label><select style="padding:7px;border:1.5px solid #DDD;border-radius:6px;font-size:12px;width:100%"><option value="">Selecione...</option>'+opts+'</select></div>'
-    +'<div class="form-group" style="margin:0"><label style="font-size:10px">Meta Limpezas</label><input type="number" min="0" value="2" style="padding:7px;border:1.5px solid #DDD;border-radius:6px;font-size:12px;width:100%;text-align:center"></div>'
-    +'<div class="form-group" style="margin:0"><label style="font-size:10px">Meta Limp.Pes.</label><input type="number" min="0" value="1" style="padding:7px;border:1.5px solid #DDD;border-radius:6px;font-size:12px;width:100%;text-align:center"></div>'
-    +'<div class="form-group" style="margin:0"><label style="font-size:10px">Meta Succoes</label><input type="number" min="0" value="0" style="padding:7px;border:1.5px solid #DDD;border-radius:6px;font-size:12px;width:100%;text-align:center"></div>'
-    +'<div class="form-group" style="margin:0"><label style="font-size:10px">Area/Container</label><input type="text" placeholder="Ex: C01-C04" style="padding:7px;border:1.5px solid #DDD;border-radius:6px;font-size:12px;width:100%"></div>'
-    +'<button onclick="document.getElementById(\''+id+'\').remove()" style="background:#FFC7CE;border:none;border-radius:6px;padding:7px;cursor:pointer;font-size:13px;height:32px">&#128465;</button>'
+  var ativoOpts=ATIVOS.map(function(a){return '<option value="'+a+'">'+a+'</option>';}).join('');
+  div.innerHTML='<div style="display:grid;grid-template-columns:155px 175px 75px 1fr 34px;gap:10px;align-items:start">'
+    +'<div class="form-group" style="margin:0"><label style="font-size:10px;font-weight:700;color:#1F4E79">&#128101; COLABORADOR</label>'
+    +'<select style="padding:8px;border:1.5px solid #2E75B6;border-radius:6px;font-size:12px;width:100%"><option value="">Selecione...</option>'+opts+'</select></div>'
+    +'<div class="form-group" style="margin:0"><label style="font-size:10px;font-weight:700;color:#1F4E79">&#128295; TIPO DE SERVICO</label>'
+    +'<select onchange="toggleDescManut(this,\''+id+'\')" style="padding:8px;border:1.5px solid #2E75B6;border-radius:6px;font-size:12px;width:100%">'
+    +'<option value="">Selecione...</option>'
+    +'<option value="Limpeza">&#129529; Limpeza</option>'
+    +'<option value="Limpeza Pesada">&#129529; Limpeza Pesada</option>'
+    +'<option value="Succao">&#128167; Succao</option>'
+    +'<option value="Inspecao">&#128269; Inspecao</option>'
+    +'<option value="Manutencao de Container/Banheiro">&#128295; Manutencao de Container/Banheiro</option>'
+    +'<option value="Manutencao Geral">&#128295; Manutencao Geral</option>'
+    +'</select></div>'
+    +'<div id="desc_'+id+'" style="display:none;grid-column:1/-1;margin-top:6px">'
+    +'<div class="form-group" style="margin:0"><label style="font-size:10px;font-weight:700;color:#C00000">&#128221; DESCRICAO DA MANUTENCAO (obrigatorio)</label>'
+    +'<textarea placeholder="Descreva o tipo de manutencao necessaria, equipamento, local e urgencia..." style="padding:8px;border:1.5px solid #C00000;border-radius:6px;font-size:12px;width:100%;min-height:60px;resize:vertical"></textarea></div>'
+    +'</div>'
+    +'<div class="form-group" style="margin:0"><label style="font-size:10px;font-weight:700;color:#1F4E79">&#127919; META</label>'
+    +'<input type="number" min="0" value="1" style="padding:8px;border:1.5px solid #2E75B6;border-radius:6px;font-size:14px;width:100%;text-align:center;font-weight:700"></div>'
+    +'<div class="form-group" style="margin:0"><label style="font-size:10px;font-weight:700;color:#1F4E79">&#128230; CONTAINERS / BANHEIROS</label>'
+    +'<select multiple style="padding:6px;border:1.5px solid #2E75B6;border-radius:6px;font-size:12px;width:100%;height:88px">'+ativoOpts+'</select>'
+    +'<span style="font-size:10px;color:#888">Segure Ctrl para selecionar varios</span></div>'
+    +'<button onclick="document.getElementById(\''+id+'\').remove()" style="background:#FFC7CE;border:none;border-radius:6px;padding:8px;cursor:pointer;font-size:14px;margin-top:18px">&#128465;</button>'
     +'</div>';
   document.getElementById('colabs').appendChild(div);
 }
@@ -118,14 +184,17 @@ async function salvar(){
   for(var i=0;i<rows.length;i++){
     var inputs=rows[i].querySelectorAll('select,input');
     var nome=inputs[0].value;
-    if(nome) colabs.push({responsavel:nome,meta_limpezas:parseInt(inputs[1].value)||0,meta_limpezas_pesadas:parseInt(inputs[2].value)||0,meta_succoes:parseInt(inputs[3].value)||0,area:inputs[4].value});
+    if(nome){
+      var tipoServ=inputs[1].value;
+      var metaVal=parseInt(inputs[2].value)||0;
+      var selAtivos=inputs[3];
+      var ativosSel=[];
+      for(var k=0;k<selAtivos.options.length;k++){if(selAtivos.options[k].selected)ativosSel.push(selAtivos.options[k].value);}
+      colabs.push({responsavel:nome,tipo_servico:tipoServ,meta:metaVal,ativos:ativosSel,area:ativosSel.join(',')});
+    }
   }
   var payload={data:data,turno:turno,responsavel_planejamento:document.getElementById('resp').value,efetivo_previsto:parseInt(document.getElementById('efetivo').value)||0,meta_limpezas:parseInt(document.getElementById('mLimp').value)||0,meta_limpezas_pesadas:parseInt(document.getElementById('mLimpPes').value)||0,meta_succoes:parseInt(document.getElementById('mSucc').value)||0,meta_manutencoes:parseInt(document.getElementById('mManut').value)||0,prioridades:document.getElementById('prior').value,observacoes:document.getElementById('obs').value,colaboradores:colabs};
-  try{
-    await apiPost('planejamento',payload);
-    alerta('success','Planejamento salvo com sucesso!');
-    carregar();
-  }catch(e){alerta('error','Erro ao salvar.');}
+  try{await apiPost('planejamento',payload);alerta('success','Planejamento salvo com sucesso!');carregar();}catch(e){alerta('error','Erro ao salvar.');}
 }
 
 async function carregar(){
@@ -138,11 +207,7 @@ async function carregar(){
   }catch(e){console.error(e);}
 }
 
-function alerta(tipo,msg){
-  document.getElementById('alerta').innerHTML='<div class="alert alert-'+tipo+'">'+msg+'</div>';
-  setTimeout(function(){document.getElementById('alerta').innerHTML='';},5000);
-}
-
+function alerta(tipo,msg){document.getElementById('alerta').innerHTML='<div class="alert alert-'+tipo+'">'+msg+'</div>';setTimeout(function(){document.getElementById('alerta').innerHTML='';},5000);}
 init();
 </script>
 </body>

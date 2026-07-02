@@ -16,9 +16,7 @@ async function apiPost(action, body) {
       body: JSON.stringify(body)
     });
     return await res.json();
-  } catch(e) {
-    return { success: true };
-  }
+  } catch(e) { return { success: true }; }
 }
 
 function dataHoje() {

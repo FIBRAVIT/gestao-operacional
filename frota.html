@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>Controle de Frota - Gestao Operacional Seatrium</title>
+<link href="css/style.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="header">
+<div class="header-logo">
+<span style="font-size:24px">🏗️</span>
+<div><h1>GESTAO OPERACIONAL</h1><span>PROJETO SEATRIUM</span></div>
+</div>
+<nav class="nav">
+<a href="index.html">🏠 Inicio</a>
+<a href="planejamento.html">📋 Planejamento</a>
+<a href="registro.html">📝 Relatorio</a>
+<a href="dashboard.html">📊 Dashboard</a>
+<a href="comparativo.html">📈 Meta x Realizado</a>
+</nav>
+</header>
+<div class="container">
+<div class="page-title">🚗 Controle de Frota <span class="badge" style="background:#2E75B6">Gestao de Veiculos</span></div>
+<div id="alerta"></div>
+<!-- DASHBOARD FROTA -->
+<div class="cards" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
+<div class="card verde"><div class="card-icon">🚗</div><div class="card-value" id="totalVeiculos">-</div><div class="card-label">Veiculos Ativos</div></div>
+<div class="card vermelho"><div class="card-icon">🔴</div><div class="card-value" id="manutVencidas">-</div><div class="card-label">Manut. Vencidas</div></div>
+<div class="card amarelo"><div class="card-icon">🟡</div><div class="card-value" id="manutProximas">-</div><div class="card-label">Manut. Proximas</div></div>
+<div class="card"><div class="card-icon">⛽</div><div class="card-value" id="totalAbast">-</div><div class="card-label">Abastecimentos</div></div>
+</div>
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab('tAbast',this)">⛽ Abastecimento</button>
+<button class="tab-btn" onclick="showTab('tLavagem',this)">💧 Lavagem/Lubrif.</button>
+<button class="tab-btn" onclick="showTab('tManut',this)">🔧 Manutencoes</button>
+<button class="tab-btn" onclick="showTab('tCadastro',this)">🚗 Cadastro Frota</button>
+</div>
+<!-- ABASTECIMENTO -->
+<div class="tab-content active" id="tAbast">
+<div class="form-card">
+<div class="form-header" style="background:linear-gradient(135deg,#1E7145,#155a35)"><h2>⛽ Controle de Abastecimento</h2><p>Registre os abastecimentos da frota</p></div>
+<div class="form-body">
+<div class="form-grid">
+<div class="form-group"><label>Data *</label><input id="aData" required="" type="date"/></div>
+<div class="form-group"><label>Veiculo/Placa *</label><input id="aVeiculo" placeholder="Ex: ABC-1234 ou Caminhao 01" type="text"/></div>
+<div class="form-group"><label>Combustivel</label>
+<select id="aCombust"><option value="">Selecione...</option><option>Diesel</option><option>Gasolina</option><option>Etanol</option><option>GNV</option><option>Flex (Gasolina)</option><option>Flex (Etanol)</option></select></div>
+<div class="form-group"><label>Litros</label><input id="aLitros" min="0" step="0.1" type="number" value="0"/></div>
+<div class="form-group"><label>KM Atual</label><input id="aKm" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Posto</label><input id="aPosto" placeholder="Nome do posto" type="text"/></div>
+<div class="form-group"><label>Responsavel</label><input id="aResp" placeholder="Nome do motorista" type="text"/></div>
+<div class="form-group"><label>Observacoes</label><input id="aObs" placeholder="Observacoes..." type="text"/></div>
+</div>
+<div class="btn-group">
+<button class="btn btn-success" onclick="salvarAbast()">⛽ Registrar Abastecimento</button>
+</div>
+</div>
+</div>
+<div class="section">
+<div class="section-header verde">⛽ Historico de Abastecimentos <button onclick="carregarAbast()" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:3px 10px;border-radius:5px;cursor:pointer;font-size:11px">🔄</button></div>
+<div class="section-body">
+<div style="overflow-x:auto">
+<table><thead><tr><th>Data</th><th>Veiculo</th><th>Combustivel</th><th>Litros</th><th>KM</th><th>KM/L</th><th>Posto</th><th>Responsavel</th></tr></thead>
+<tbody id="tbAbast"><tr><td class="loading" colspan="8"><div class="spinner"></div></td></tr></tbody></table>
+</div>
+</div>
+</div>
+</div>
+<!-- LAVAGEM/LUBRIFICACAO -->
+<div class="tab-content" id="tLavagem">
+<div class="form-card">
+<div class="form-header" style="background:linear-gradient(135deg,#2E75B6,#1F4E79)"><h2>💧 Lavagem e Lubrificacao</h2><p>Planejamento e controle de lavagem e lubrificacao</p></div>
+<div class="form-body">
+<div class="form-grid">
+<div class="form-group"><label>Veiculo/Placa *</label><input id="lVeiculo" placeholder="Ex: ABC-1234" type="text"/></div>
+<div class="form-group"><label>Tipo de Servico</label>
+<select id="lTipo"><option value="">Selecione...</option><option>Lavagem Simples</option><option>Lavagem Completa</option><option>Lavagem Motor</option><option>Lubrificacao</option><option>Lavagem + Lubrificacao</option><option>Polimento</option><option>Higienizacao Interna</option></select></div>
+<div class="form-group"><label>Data Prevista</label><input id="lDataPrev" type="date"/></div>
+<div class="form-group"><label>Data Realizada</label><input id="lDataReal" type="date"/></div>
+<div class="form-group"><label>Proxima Previsao</label><input id="lProxima" type="date"/></div>
+<div class="form-group"><label>Responsavel</label><input id="lResp" placeholder="Nome do responsavel" type="text"/></div>
+<div class="form-group"><label>Status</label>
+<select id="lStatus"><option value="Programado">Programado</option><option value="Realizado">Realizado</option><option value="Pendente">Pendente</option></select></div>
+<div class="form-group"><label>Observacoes</label><input id="lObs" placeholder="Observacoes..." type="text"/></div>
+</div>
+<div class="btn-group">
+<button class="btn btn-primary" onclick="salvarLavagem()">💧 Registrar Lavagem/Lubrificacao</button>
+</div>
+</div>
+</div>
+<div class="section">
+<div class="section-header">💧 Historico de Lavagem/Lubrificacao</div>
+<div class="section-body">
+<div style="overflow-x:auto">
+<table><thead><tr><th>Veiculo</th><th>Tipo</th><th>Data Prevista</th><th>Data Realizada</th><th>Proxima</th><th>Status</th><th>Responsavel</th></tr></thead>
+<tbody id="tbLavagem"><tr><td class="loading" colspan="7"><div class="spinner"></div></td></tr></tbody></table>
+</div>
+</div>
+</div>
+</div>
+<!-- MANUTENCOES -->
+<div class="tab-content" id="tManut">
+<div class="form-card">
+<div class="form-header" style="background:linear-gradient(135deg,#C55A11,#a04a0e)"><h2>🔧 Controle de Manutencoes</h2><p>Preventivas, corretivas e revisoes programadas</p></div>
+<div class="form-body">
+<div class="form-grid">
+<div class="form-group"><label>Veiculo/Placa *</label><input id="mVeiculo" placeholder="Ex: ABC-1234" type="text"/></div>
+<div class="form-group"><label>Tipo de Manutencao *</label>
+<select id="mTipo" required=""><option value="">Selecione...</option><option>Preventiva</option><option>Corretiva</option><option>Revisao Geral</option><option>Troca de Oleo</option><option>Troca de Filtro</option><option>Troca de Pneu</option><option>Freios</option><option>Eletrica</option><option>Funilaria/Pintura</option><option>Suspensao</option><option>Transmissao</option><option>Outros</option></select></div>
+<div class="form-group"><label>Descricao *</label><input id="mDesc" placeholder="Descreva a manutencao necessaria" type="text"/></div>
+<div class="form-group"><label>KM Previsto</label><input id="mKmPrev" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Data Prevista</label><input id="mDataPrev" type="date"/></div>
+<div class="form-group"><label>KM Realizado</label><input id="mKmReal" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Data Realizada</label><input id="mDataReal" type="date"/></div>
+<div class="form-group"><label>Proxima Manut. (KM)</label><input id="mProxKm" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Proxima Manut. (Data)</label><input id="mProxData" type="date"/></div>
+<div class="form-group"><label>Responsavel</label><input id="mResp" placeholder="Mecanico/Responsavel" type="text"/></div>
+<div class="form-group"><label>Status</label>
+<select id="mStatus"><option value="Programado">Programado</option><option value="Em andamento">Em andamento</option><option value="Concluido">Concluido</option><option value="Pendente">Pendente</option></select></div>
+</div>
+<div class="btn-group">
+<button class="btn btn-warning" onclick="salvarManut()">🔧 Registrar Manutencao</button>
+</div>
+</div>
+</div>
+<div class="section">
+<div class="section-header amarelo">🔧 Historico de Manutencoes</div>
+<div class="section-body">
+<div style="overflow-x:auto">
+<table><thead><tr><th>Veiculo</th><th>Tipo</th><th>Descricao</th><th>KM Prev.</th><th>Data Prev.</th><th>Data Real.</th><th>Prox. Data</th><th>Status</th><th>Responsavel</th></tr></thead>
+<tbody id="tbManut"><tr><td class="loading" colspan="9"><div class="spinner"></div></td></tr></tbody></table>
+</div>
+</div>
+</div>
+</div>
+<!-- CADASTRO FROTA -->
+<div class="tab-content" id="tCadastro">
+<div class="form-card">
+<div class="form-header"><h2>🚗 Cadastro de Veiculos</h2><p>Cadastre os veiculos e equipamentos da frota</p></div>
+<div class="form-body">
+<div class="form-grid">
+<div class="form-group"><label>Placa/ID *</label><input id="cPlaca" placeholder="Ex: ABC-1234 ou Equip-01" type="text"/></div>
+<div class="form-group"><label>Descricao *</label><input id="cDesc" placeholder="Ex: Caminhao Pipa, Van, Trator" type="text"/></div>
+<div class="form-group"><label>Tipo</label>
+<select id="cTipo"><option value="">Selecione...</option><option>Caminhao</option><option>Van</option><option>Carro</option><option>Caminhonete</option><option>Moto</option><option>Trator</option><option>Empilhadeira</option><option>Gerador</option><option>Compressor</option><option>Equipamento</option><option>Outros</option></select></div>
+<div class="form-group"><label>Marca/Modelo</label><input id="cModelo" placeholder="Ex: Ford Cargo 1723" type="text"/></div>
+<div class="form-group"><label>Ano</label><input id="cAno" max="2030" min="1990" placeholder="2024" type="number"/></div>
+<div class="form-group"><label>KM Atual</label><input id="cKm" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Status</label>
+<select id="cStatus"><option value="Ativo">Ativo</option><option value="Em Manutencao">Em Manutencao</option><option value="Inativo">Inativo</option><option value="Aguardando Peca">Aguardando Peca</option></select></div>
+<div class="form-group"><label>Responsavel</label><input id="cResp" placeholder="Motorista/Operador" type="text"/></div>
+</div>
+<div class="btn-group">
+<button class="btn btn-primary" onclick="salvarCadastro()">🚗 Cadastrar Veiculo</button>
+</div>
+</div>
+</div>
+<div class="section">
+<div class="section-header">🚗 Frota Cadastrada</div>
+<div class="section-body">
+<div style="overflow-x:auto">
+<table><thead><tr><th>Placa/ID</th><th>Descricao</th><th>Tipo</th><th>Marca/Modelo</th><th>Ano</th><th>KM</th><th>Status</th><th>Responsavel</th></tr></thead>
+<tbody id="tbCadastro"><tr><td class="loading" colspan="8"><div class="spinner"></div></td></tr></tbody></table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer class="footer-everest">
+<div class="footer-inner">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="font-size:18px">🏗️</span>
+<div style="text-align:left"><div style="color:#fff;font-weight:700;font-size:12px">GESTAO OPERACIONAL — PROJETO SEATRIUM</div><div style="font-size:10px;opacity:.6">Sistema de Controle Operacional</div></div>
+</div>
+<div style="text-align:center">
+<div style="color:#C9A84C;font-weight:700;font-size:10px;letter-spacing:.8px;text-transform:uppercase">Desenvolvido por</div>
+<div style="color:#fff;font-weight:800;font-size:14px;letter-spacing:1.5px">EVEREST CONSULTORIA</div>
+<div style="color:rgba(255,255,255,.6);font-size:11px;font-style:italic">em Gestao Empresarial</div>
+</div>
+<div style="text-align:right;font-size:10px;opacity:.5"><div>© 2026 Todos os direitos reservados</div><div>Versao 1.0</div></div>
+</div>
+</footer>
+<script src="js/config.js"></script>
+<script>
+var hoje=dataHoje();
+['aData','lDataPrev','mDataPrev'].forEach(function(id){var el=document.getElementById(id);if(el)el.value=hoje;});
+
+function showTab(id,btn){
+  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById(id).classList.add('active');btn.classList.add('active');
+}
+
+function alerta(tipo,msg){document.getElementById('alerta').innerHTML='<div class="alert alert-'+tipo+'">'+msg+'</div>';setTimeout(function(){document.getElementById('alerta').innerHTML='';},5000);}
+
+// Salva no Google Sheets via Apps Script
+async function salvarFrota(tipo, dados){
+  try{
+    await apiPost('frota_'+tipo, dados);
+    alerta('success','Registro salvo com sucesso!');
+    return true;
+  }catch(e){alerta('error','Erro ao salvar. Verifique a conexao.');return false;}
+}
+
+async function salvarAbast(){
+  var veiculo=document.getElementById('aVeiculo').value;
+  if(!veiculo){alerta('warn','Informe o veiculo.');return;}
+  var litros=parseFloat(document.getElementById('aLitros').value)||0;
+  var km=parseInt(document.getElementById('aKm').value)||0;
+  var dados={data:document.getElementById('aData').value,veiculo:veiculo,combustivel:document.getElementById('aCombust').value,litros:litros,km:km,posto:document.getElementById('aPosto').value,responsavel:document.getElementById('aResp').value,observacoes:document.getElementById('aObs').value};
+  if(await salvarFrota('abastecimento',dados)){
+    // Limpa campos
+    ['aLitros','aKm'].forEach(function(id){document.getElementById(id).value=0;});
+    ['aPosto','aResp','aObs'].forEach(function(id){document.getElementById(id).value='';});
+    carregarAbast();
+  }
+}
+
+async function salvarLavagem(){
+  var veiculo=document.getElementById('lVeiculo').value;
+  if(!veiculo){alerta('warn','Informe o veiculo.');return;}
+  var dados={veiculo:veiculo,tipo:document.getElementById('lTipo').value,data_prevista:document.getElementById('lDataPrev').value,data_realizada:document.getElementById('lDataReal').value,proxima:document.getElementById('lProxima').value,responsavel:document.getElementById('lResp').value,status:document.getElementById('lStatus').value,observacoes:document.getElementById('lObs').value};
+  if(await salvarFrota('lavagem',dados)) carregarLavagem();
+}
+
+async function salvarManut(){
+  var veiculo=document.getElementById('mVeiculo').value;
+  var tipo=document.getElementById('mTipo').value;
+  var desc=document.getElementById('mDesc').value;
+  if(!veiculo||!tipo||!desc){alerta('warn','Preencha veiculo, tipo e descricao.');return;}
+  var dados={veiculo:veiculo,tipo:tipo,descricao:desc,km_previsto:parseInt(document.getElementById('mKmPrev').value)||0,data_prevista:document.getElementById('mDataPrev').value,km_realizado:parseInt(document.getElementById('mKmReal').value)||0,data_realizada:document.getElementById('mDataReal').value,proxima_km:parseInt(document.getElementById('mProxKm').value)||0,proxima_data:document.getElementById('mProxData').value,responsavel:document.getElementById('mResp').value,status:document.getElementById('mStatus').value};
+  if(await salvarFrota('manutencao',dados)) carregarManut();
+}
+
+async function salvarCadastro(){
+  var placa=document.getElementById('cPlaca').value;
+  var desc=document.getElementById('cDesc').value;
+  if(!placa||!desc){alerta('warn','Preencha placa e descricao.');return;}
+  var dados={placa:placa,descricao:desc,tipo:document.getElementById('cTipo').value,modelo:document.getElementById('cModelo').value,ano:document.getElementById('cAno').value,km:parseInt(document.getElementById('cKm').value)||0,status:document.getElementById('cStatus').value,responsavel:document.getElementById('cResp').value};
+  if(await salvarFrota('cadastro',dados)) carregarCadastro();
+}
+
+// Carrega dados (simulado - em produção viria do Apps Script)
+async function carregarAbast(){
+  try{
+    var dados=await apiGet('frota_abastecimento');
+    var lista=Array.isArray(dados)?dados.slice(-30).reverse():[];
+    document.getElementById('tbAbast').innerHTML=lista.length>0?lista.map(function(r){
+      var kmL=r.litros>0&&r.km>0?'~'+(r.km/r.litros).toFixed(1):'—';
+      return '<tr><td>'+(r.data||'-')+'</td><td><strong>'+(r.veiculo||'-')+'</strong></td><td>'+(r.combustivel||'-')+'</td><td style="text-align:center">'+(r.litros||0)+'L</td><td style="text-align:center">'+(r.km||0)+' km</td><td style="text-align:center;font-weight:700;color:#1E7145">'+kmL+'</td><td>'+(r.posto||'-')+'</td><td>'+(r.responsavel||'-')+'</td></tr>';
+    }).join(''):'<tr><td colspan="8" class="empty">Nenhum abastecimento registrado ainda</td></tr>';
+    document.getElementById('totalAbast').textContent=lista.length;
+  }catch(e){document.getElementById('tbAbast').innerHTML='<tr><td colspan="8" class="empty">Conecte ao Apps Script para ver os dados</td></tr>';}
+}
+
+async function carregarLavagem(){
+  try{
+    var dados=await apiGet('frota_lavagem');
+    var lista=Array.isArray(dados)?dados.slice(-20).reverse():[];
+    document.getElementById('tbLavagem').innerHTML=lista.length>0?lista.map(function(r){
+      var cor=r.status==='Realizado'?'badge-ok':r.status==='Pendente'?'badge-err':'badge-warn';
+      return '<tr><td><strong>'+(r.veiculo||'-')+'</strong></td><td>'+(r.tipo||'-')+'</td><td>'+(r.data_prevista||'-')+'</td><td>'+(r.data_realizada||'-')+'</td><td>'+(r.proxima||'-')+'</td><td><span class="'+cor+'">'+(r.status||'-')+'</span></td><td>'+(r.responsavel||'-')+'</td></tr>';
+    }).join(''):'<tr><td colspan="7" class="empty">Nenhum registro ainda</td></tr>';
+  }catch(e){document.getElementById('tbLavagem').innerHTML='<tr><td colspan="7" class="empty">Conecte ao Apps Script para ver os dados</td></tr>';}
+}
+
+async function carregarManut(){
+  try{
+    var dados=await apiGet('frota_manutencao');
+    var lista=Array.isArray(dados)?dados.slice(-20).reverse():[];
+    var vencidas=0,proximas=0;
+    lista.forEach(function(r){
+      if(r.proxima_data){
+        var d=new Date(r.proxima_data);var hoje2=new Date();
+        if(d<hoje2) vencidas++;
+        else if((d-hoje2)/(1000*60*60*24)<=15) proximas++;
+      }
+    });
+    document.getElementById('manutVencidas').textContent=vencidas;
+    document.getElementById('manutProximas').textContent=proximas;
+    document.getElementById('tbManut').innerHTML=lista.length>0?lista.map(function(r){
+      var cor=r.status==='Concluido'?'badge-ok':r.status==='Pendente'?'badge-err':'badge-warn';
+      return '<tr><td><strong>'+(r.veiculo||'-')+'</strong></td><td>'+(r.tipo||'-')+'</td><td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.descricao||'-')+'</td><td style="text-align:center">'+(r.km_previsto||'-')+'</td><td>'+(r.data_prevista||'-')+'</td><td>'+(r.data_realizada||'-')+'</td><td>'+(r.proxima_data||'-')+'</td><td><span class="'+cor+'">'+(r.status||'-')+'</span></td><td>'+(r.responsavel||'-')+'</td></tr>';
+    }).join(''):'<tr><td colspan="9" class="empty">Nenhuma manutencao registrada ainda</td></tr>';
+  }catch(e){document.getElementById('tbManut').innerHTML='<tr><td colspan="9" class="empty">Conecte ao Apps Script para ver os dados</td></tr>';}
+}
+
+async function carregarCadastro(){
+  try{
+    var dados=await apiGet('frota_cadastro');
+    var lista=Array.isArray(dados)?dados:[];
+    var ativos=lista.filter(function(r){return r.status==='Ativo';}).length;
+    document.getElementById('totalVeiculos').textContent=ativos||lista.length;
+    document.getElementById('tbCadastro').innerHTML=lista.length>0?lista.map(function(r){
+      var cor=r.status==='Ativo'?'badge-ok':r.status==='Em Manutencao'?'badge-warn':'badge-err';
+      return '<tr><td><strong>'+(r.placa||'-')+'</strong></td><td>'+(r.descricao||'-')+'</td><td>'+(r.tipo||'-')+'</td><td>'+(r.modelo||'-')+'</td><td style="text-align:center">'+(r.ano||'-')+'</td><td style="text-align:center">'+(r.km||0)+' km</td><td><span class="'+cor+'">'+(r.status||'-')+'</span></td><td>'+(r.responsavel||'-')+'</td></tr>';
+    }).join(''):'<tr><td colspan="8" class="empty">Nenhum veiculo cadastrado ainda</td></tr>';
+  }catch(e){document.getElementById('tbCadastro').innerHTML='<tr><td colspan="8" class="empty">Conecte ao Apps Script para ver os dados</td></tr>';}
+}
+
+// Inicializa
+carregarAbast();
+carregarLavagem();
+carregarManut();
+carregarCadastro();
+</script>
+</body>
+</html>
