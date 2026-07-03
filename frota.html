@@ -10,7 +10,7 @@
 <body>
 <header class="header">
 <div class="header-logo">
-<span style="font-size:24px">🏗️</span>
+<span style="font-size:22px">🏗️</span>
 <div><h1>GESTAO OPERACIONAL</h1><span>PROJETO SEATRIUM</span></div>
 </div>
 <nav class="nav">
@@ -24,286 +24,323 @@
 <div class="container">
 <div class="page-title">🚗 Controle de Frota <span class="badge" style="background:#2E75B6">Gestao de Veiculos</span></div>
 <div id="alerta"></div>
-<!-- DASHBOARD FROTA -->
-<div class="cards" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
-<div class="card verde"><div class="card-icon">🚗</div><div class="card-value" id="totalVeiculos">-</div><div class="card-label">Veiculos Ativos</div></div>
-<div class="card vermelho"><div class="card-icon">🔴</div><div class="card-value" id="manutVencidas">-</div><div class="card-label">Manut. Vencidas</div></div>
-<div class="card amarelo"><div class="card-icon">🟡</div><div class="card-value" id="manutProximas">-</div><div class="card-label">Manut. Proximas</div></div>
-<div class="card"><div class="card-icon">⛽</div><div class="card-value" id="totalAbast">-</div><div class="card-label">Abastecimentos</div></div>
+<!-- KPI CARDS -->
+<div class="cards" style="grid-template-columns:repeat(5,1fr)">
+<div class="card verde"><div class="card-icon">🚗</div><div class="card-value" id="dVeicAtivos">—</div><div class="card-label">Veiculos Ativos</div></div>
+<div class="card vermelho"><div class="card-icon">🔴</div><div class="card-value" id="dManutVenc">—</div><div class="card-label">Manut. Vencidas</div></div>
+<div class="card amarelo"><div class="card-icon">🟡</div><div class="card-value" id="dManutProx">—</div><div class="card-label">Manut. Proximas</div></div>
+<div class="card"><div class="card-icon">⛽</div><div class="card-value" id="dTotalAbast">—</div><div class="card-label">Abastecimentos</div></div>
+<div class="card"><div class="card-icon">💧</div><div class="card-value" id="dLavagens">—</div><div class="card-label">Lavagens</div></div>
 </div>
+<!-- TABS PRINCIPAIS -->
 <div class="tabs">
-<button class="tab-btn active" onclick="showTab('tAbast',this)">⛽ Abastecimento</button>
-<button class="tab-btn" onclick="showTab('tLavagem',this)">💧 Lavagem/Lubrif.</button>
-<button class="tab-btn" onclick="showTab('tManut',this)">🔧 Manutencoes</button>
-<button class="tab-btn" onclick="showTab('tCadastro',this)">🚗 Cadastro Frota</button>
+<button class="tab-btn active" onclick="showMainTab('tAbast',this)">⛽ Abastecimento</button>
+<button class="tab-btn" onclick="showMainTab('tLavagem',this)">💧 Lavagem/Lubrif.</button>
+<button class="tab-btn" onclick="showMainTab('tManut',this)">🔧 Manutencoes</button>
+<button class="tab-btn" onclick="showMainTab('tCadastro',this)">🚗 Cadastro Frota</button>
+<button class="tab-btn" onclick="showMainTab('tDashFrota',this)">📊 Dashboard Frota</button>
 </div>
 <!-- ABASTECIMENTO -->
 <div class="tab-content active" id="tAbast">
+<div class="grid2">
 <div class="form-card">
-<div class="form-header" style="background:linear-gradient(135deg,#1E7145,#155a35)"><h2>⛽ Controle de Abastecimento</h2><p>Registre os abastecimentos da frota</p></div>
+<div class="form-header" style="background:linear-gradient(135deg,#1E7145,#155a35)"><h2>⛽ Registrar Abastecimento</h2><p>Registre o abastecimento realizado</p></div>
 <div class="form-body">
 <div class="form-grid">
-<div class="form-group"><label>Data *</label><input id="aData" required="" type="date"/></div>
-<div class="form-group"><label>Veiculo/Placa *</label><input id="aVeiculo" placeholder="Ex: ABC-1234 ou Caminhao 01" type="text"/></div>
-<div class="form-group"><label>Combustivel</label>
-<select id="aCombust"><option value="">Selecione...</option><option>Diesel</option><option>Gasolina</option><option>Etanol</option><option>GNV</option><option>Flex (Gasolina)</option><option>Flex (Etanol)</option></select></div>
+<div class="form-group"><label>Data *</label><input id="aData" type="date"/></div>
+<div class="form-group"><label>Veiculo/Placa *</label><input id="aVeiculo" placeholder="Ex: ABC-1234" type="text"/></div>
+<div class="form-group"><label>Combustivel</label><select id="aCombust"><option value="">Selecione...</option><option>Diesel</option><option>Gasolina</option><option>Etanol</option><option>GNV</option><option>Flex (Gasolina)</option><option>Flex (Etanol)</option></select></div>
 <div class="form-group"><label>Litros</label><input id="aLitros" min="0" step="0.1" type="number" value="0"/></div>
 <div class="form-group"><label>KM Atual</label><input id="aKm" min="0" type="number" value="0"/></div>
 <div class="form-group"><label>Posto</label><input id="aPosto" placeholder="Nome do posto" type="text"/></div>
-<div class="form-group"><label>Responsavel</label><input id="aResp" placeholder="Nome do motorista" type="text"/></div>
-<div class="form-group"><label>Observacoes</label><input id="aObs" placeholder="Observacoes..." type="text"/></div>
+<div class="form-group"><label>Responsavel</label><input id="aResp" placeholder="Motorista" type="text"/></div>
+<div class="form-group"><label>Observacoes</label><input id="aObs" placeholder="Obs..." type="text"/></div>
 </div>
-<div class="btn-group">
-<button class="btn btn-success" onclick="salvarAbast()">⛽ Registrar Abastecimento</button>
-</div>
+<div class="btn-group"><button class="btn btn-success" onclick="salvarAbast()">⛽ Registrar Abastecimento</button></div>
 </div>
 </div>
 <div class="section">
-<div class="section-header verde">⛽ Historico de Abastecimentos <button onclick="carregarAbast()" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:3px 10px;border-radius:5px;cursor:pointer;font-size:11px">🔄</button></div>
-<div class="section-body">
-<div style="overflow-x:auto">
-<table><thead><tr><th>Data</th><th>Veiculo</th><th>Combustivel</th><th>Litros</th><th>KM</th><th>KM/L</th><th>Posto</th><th>Responsavel</th></tr></thead>
-<tbody id="tbAbast"><tr><td class="loading" colspan="8"><div class="spinner"></div></td></tr></tbody></table>
+<div class="section-header verde">⛽ Historico de Abastecimentos</div>
+<div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Veiculo</th><th>Combustivel</th><th>Litros</th><th>KM</th><th>KM/L</th><th>Posto</th></tr></thead><tbody id="tbAbast"><tr><td class="loading" colspan="7"><div class="spinner"></div></td></tr></tbody></table></div></div>
 </div>
 </div>
 </div>
-</div>
-<!-- LAVAGEM/LUBRIFICACAO -->
+<!-- LAVAGEM -->
 <div class="tab-content" id="tLavagem">
+<div class="tabs" style="margin-bottom:14px">
+<button class="tab-btn active" onclick="showSubTab('tLavPlan',this,'lavSub')">📋 Planejamento</button>
+<button class="tab-btn" onclick="showSubTab('tLavReal',this,'lavSub')">✓ Realizado</button>
+<button class="tab-btn" onclick="showSubTab('tLavComp',this,'lavSub')">📈 Previsto x Realizado</button>
+</div>
+<div class="tab-content lavSub active" id="tLavPlan">
 <div class="form-card">
-<div class="form-header" style="background:linear-gradient(135deg,#2E75B6,#1F4E79)"><h2>💧 Lavagem e Lubrificacao</h2><p>Planejamento e controle de lavagem e lubrificacao</p></div>
+<div class="form-header" style="background:linear-gradient(135deg,#2E75B6,#1F4E79)"><h2>📋 Planejar Lavagem/Lubrificacao</h2><p>Defina o planejamento previsto</p></div>
 <div class="form-body">
 <div class="form-grid">
-<div class="form-group"><label>Veiculo/Placa *</label><input id="lVeiculo" placeholder="Ex: ABC-1234" type="text"/></div>
-<div class="form-group"><label>Tipo de Servico</label>
-<select id="lTipo"><option value="">Selecione...</option><option>Lavagem Simples</option><option>Lavagem Completa</option><option>Lavagem Motor</option><option>Lubrificacao</option><option>Lavagem + Lubrificacao</option><option>Polimento</option><option>Higienizacao Interna</option></select></div>
-<div class="form-group"><label>Data Prevista</label><input id="lDataPrev" type="date"/></div>
-<div class="form-group"><label>Data Realizada</label><input id="lDataReal" type="date"/></div>
-<div class="form-group"><label>Proxima Previsao</label><input id="lProxima" type="date"/></div>
-<div class="form-group"><label>Responsavel</label><input id="lResp" placeholder="Nome do responsavel" type="text"/></div>
-<div class="form-group"><label>Status</label>
-<select id="lStatus"><option value="Programado">Programado</option><option value="Realizado">Realizado</option><option value="Pendente">Pendente</option></select></div>
-<div class="form-group"><label>Observacoes</label><input id="lObs" placeholder="Observacoes..." type="text"/></div>
+<div class="form-group"><label>Veiculo/Placa *</label><input id="lpVeiculo" placeholder="Ex: ABC-1234" type="text"/></div>
+<div class="form-group"><label>Tipo de Servico</label><select id="lpTipo"><option value="">Selecione...</option><option>Lavagem Simples</option><option>Lavagem Completa</option><option>Lavagem Motor</option><option>Lubrificacao</option><option>Lavagem + Lubrificacao</option><option>Polimento</option><option>Higienizacao Interna</option></select></div>
+<div class="form-group"><label>Data Prevista *</label><input id="lpDataPrev" type="date"/></div>
+<div class="form-group"><label>Responsavel</label><input id="lpResp" placeholder="Responsavel" type="text"/></div>
+<div class="form-group"><label>Observacoes</label><input id="lpObs" placeholder="Obs..." type="text"/></div>
 </div>
-<div class="btn-group">
-<button class="btn btn-primary" onclick="salvarLavagem()">💧 Registrar Lavagem/Lubrificacao</button>
+<div class="btn-group"><button class="btn btn-primary" onclick="salvarLavPlan()">📋 Salvar Planejamento</button></div>
 </div>
 </div>
+<div class="section"><div class="section-header">📋 Lavagens Planejadas</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Veiculo</th><th>Tipo</th><th>Data Prevista</th><th>Responsavel</th><th>Status</th></tr></thead><tbody id="tbLavPlan"><tr><td class="loading" colspan="5"><div class="spinner"></div></td></tr></tbody></table></div></div></div>
 </div>
-<div class="section">
-<div class="section-header">💧 Historico de Lavagem/Lubrificacao</div>
-<div class="section-body">
-<div style="overflow-x:auto">
-<table><thead><tr><th>Veiculo</th><th>Tipo</th><th>Data Prevista</th><th>Data Realizada</th><th>Proxima</th><th>Status</th><th>Responsavel</th></tr></thead>
-<tbody id="tbLavagem"><tr><td class="loading" colspan="7"><div class="spinner"></div></td></tr></tbody></table>
+<div class="tab-content lavSub" id="tLavReal">
+<div class="form-card">
+<div class="form-header" style="background:linear-gradient(135deg,#1E7145,#155a35)"><h2>✓ Registrar Lavagem Realizada</h2><p>Registre o que foi efetivamente realizado</p></div>
+<div class="form-body">
+<div class="form-grid">
+<div class="form-group"><label>Veiculo/Placa *</label><input id="lrVeiculo" placeholder="Ex: ABC-1234" type="text"/></div>
+<div class="form-group"><label>Tipo de Servico</label><select id="lrTipo"><option value="">Selecione...</option><option>Lavagem Simples</option><option>Lavagem Completa</option><option>Lavagem Motor</option><option>Lubrificacao</option><option>Lavagem + Lubrificacao</option><option>Polimento</option><option>Higienizacao Interna</option></select></div>
+<div class="form-group"><label>Data Realizada *</label><input id="lrDataReal" type="date"/></div>
+<div class="form-group"><label>Proxima Previsao</label><input id="lrProxima" type="date"/></div>
+<div class="form-group"><label>Responsavel</label><input id="lrResp" placeholder="Responsavel" type="text"/></div>
+<div class="form-group"><label>Observacoes</label><input id="lrObs" placeholder="Obs..." type="text"/></div>
+</div>
+<div class="btn-group"><button class="btn btn-success" onclick="salvarLavReal()">✓ Registrar Realizado</button></div>
 </div>
 </div>
+<div class="section"><div class="section-header verde">✓ Lavagens Realizadas</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Veiculo</th><th>Tipo</th><th>Data Realizada</th><th>Proxima</th><th>Responsavel</th></tr></thead><tbody id="tbLavReal"><tr><td class="loading" colspan="5"><div class="spinner"></div></td></tr></tbody></table></div></div></div>
+</div>
+<div class="tab-content lavSub" id="tLavComp">
+<div class="section"><div class="section-header">📈 Previsto x Realizado — Lavagem/Lubrificacao</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Veiculo</th><th>Tipo</th><th>Data Prevista</th><th>Data Realizada</th><th>Proxima</th><th>Status</th></tr></thead><tbody id="tbLavComp"><tr><td class="loading" colspan="6"><div class="spinner"></div></td></tr></tbody></table></div></div></div>
 </div>
 </div>
-<!-- MANUTENCOES -->
+<!-- MANUTENCAO -->
 <div class="tab-content" id="tManut">
+<div class="tabs" style="margin-bottom:14px">
+<button class="tab-btn active" onclick="showSubTab('tMPlan',this,'manutSub')">📋 Planejamento</button>
+<button class="tab-btn" onclick="showSubTab('tMReal',this,'manutSub')">✓ Realizado</button>
+<button class="tab-btn" onclick="showSubTab('tMComp',this,'manutSub')">📈 Previsto x Realizado</button>
+</div>
+<div class="tab-content manutSub active" id="tMPlan">
 <div class="form-card">
-<div class="form-header" style="background:linear-gradient(135deg,#C55A11,#a04a0e)"><h2>🔧 Controle de Manutencoes</h2><p>Preventivas, corretivas e revisoes programadas</p></div>
+<div class="form-header" style="background:linear-gradient(135deg,#C55A11,#a04a0e)"><h2>📋 Planejar Manutencao</h2><p>Defina a manutencao prevista</p></div>
 <div class="form-body">
 <div class="form-grid">
-<div class="form-group"><label>Veiculo/Placa *</label><input id="mVeiculo" placeholder="Ex: ABC-1234" type="text"/></div>
-<div class="form-group"><label>Tipo de Manutencao *</label>
-<select id="mTipo" required=""><option value="">Selecione...</option><option>Preventiva</option><option>Corretiva</option><option>Revisao Geral</option><option>Troca de Oleo</option><option>Troca de Filtro</option><option>Troca de Pneu</option><option>Freios</option><option>Eletrica</option><option>Funilaria/Pintura</option><option>Suspensao</option><option>Transmissao</option><option>Outros</option></select></div>
-<div class="form-group"><label>Descricao *</label><input id="mDesc" placeholder="Descreva a manutencao necessaria" type="text"/></div>
-<div class="form-group"><label>KM Previsto</label><input id="mKmPrev" min="0" type="number" value="0"/></div>
-<div class="form-group"><label>Data Prevista</label><input id="mDataPrev" type="date"/></div>
-<div class="form-group"><label>KM Realizado</label><input id="mKmReal" min="0" type="number" value="0"/></div>
-<div class="form-group"><label>Data Realizada</label><input id="mDataReal" type="date"/></div>
-<div class="form-group"><label>Proxima Manut. (KM)</label><input id="mProxKm" min="0" type="number" value="0"/></div>
-<div class="form-group"><label>Proxima Manut. (Data)</label><input id="mProxData" type="date"/></div>
-<div class="form-group"><label>Responsavel</label><input id="mResp" placeholder="Mecanico/Responsavel" type="text"/></div>
-<div class="form-group"><label>Status</label>
-<select id="mStatus"><option value="Programado">Programado</option><option value="Em andamento">Em andamento</option><option value="Concluido">Concluido</option><option value="Pendente">Pendente</option></select></div>
+<div class="form-group"><label>Veiculo/Placa *</label><input id="mpVeiculo" placeholder="Ex: ABC-1234" type="text"/></div>
+<div class="form-group"><label>Tipo *</label><select id="mpTipo"><option value="">Selecione...</option><option>Preventiva</option><option>Revisao Geral</option><option>Troca de Oleo</option><option>Troca de Filtro</option><option>Troca de Pneu</option><option>Freios</option><option>Eletrica</option><option>Funilaria/Pintura</option><option>Suspensao</option><option>Transmissao</option><option>Outros</option></select></div>
+<div class="form-group"><label>Descricao *</label><input id="mpDesc" placeholder="Descreva a manutencao" type="text"/></div>
+<div class="form-group"><label>KM Previsto</label><input id="mpKmPrev" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Data Prevista *</label><input id="mpDataPrev" type="date"/></div>
+<div class="form-group"><label>Responsavel</label><input id="mpResp" placeholder="Mecanico/Responsavel" type="text"/></div>
 </div>
-<div class="btn-group">
-<button class="btn btn-warning" onclick="salvarManut()">🔧 Registrar Manutencao</button>
+<div class="btn-group"><button class="btn btn-warning" onclick="salvarMPlan()">📋 Salvar Planejamento</button></div>
 </div>
 </div>
+<div class="section"><div class="section-header amarelo">📋 Manutencoes Planejadas</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Veiculo</th><th>Tipo</th><th>Descricao</th><th>KM Prev.</th><th>Data Prev.</th><th>Responsavel</th><th>Status</th></tr></thead><tbody id="tbMPlan"><tr><td class="loading" colspan="7"><div class="spinner"></div></td></tr></tbody></table></div></div></div>
 </div>
-<div class="section">
-<div class="section-header amarelo">🔧 Historico de Manutencoes</div>
-<div class="section-body">
-<div style="overflow-x:auto">
-<table><thead><tr><th>Veiculo</th><th>Tipo</th><th>Descricao</th><th>KM Prev.</th><th>Data Prev.</th><th>Data Real.</th><th>Prox. Data</th><th>Status</th><th>Responsavel</th></tr></thead>
-<tbody id="tbManut"><tr><td class="loading" colspan="9"><div class="spinner"></div></td></tr></tbody></table>
+<div class="tab-content manutSub" id="tMReal">
+<div class="form-card">
+<div class="form-header" style="background:linear-gradient(135deg,#1E7145,#155a35)"><h2>✓ Registrar Manutencao Realizada</h2><p>Registre o que foi efetivamente executado</p></div>
+<div class="form-body">
+<div class="form-grid">
+<div class="form-group"><label>Veiculo/Placa *</label><input id="mrVeiculo" placeholder="Ex: ABC-1234" type="text"/></div>
+<div class="form-group"><label>Tipo *</label><select id="mrTipo"><option value="">Selecione...</option><option>Preventiva</option><option>Corretiva</option><option>Revisao Geral</option><option>Troca de Oleo</option><option>Troca de Filtro</option><option>Troca de Pneu</option><option>Freios</option><option>Eletrica</option><option>Funilaria/Pintura</option><option>Suspensao</option><option>Transmissao</option><option>Outros</option></select></div>
+<div class="form-group"><label>Descricao *</label><input id="mrDesc" placeholder="Descreva o que foi feito" type="text"/></div>
+<div class="form-group"><label>KM Realizado</label><input id="mrKmReal" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Data Realizada *</label><input id="mrDataReal" type="date"/></div>
+<div class="form-group"><label>Proxima Manut. (KM)</label><input id="mrProxKm" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Proxima Manut. (Data)</label><input id="mrProxData" type="date"/></div>
+<div class="form-group"><label>Responsavel</label><input id="mrResp" placeholder="Mecanico/Responsavel" type="text"/></div>
+</div>
+<div class="btn-group"><button class="btn btn-success" onclick="salvarMReal()">✓ Registrar Realizado</button></div>
 </div>
 </div>
+<div class="section"><div class="section-header verde">✓ Manutencoes Realizadas</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Veiculo</th><th>Tipo</th><th>Descricao</th><th>KM Real.</th><th>Data Real.</th><th>Prox. KM</th><th>Prox. Data</th><th>Responsavel</th></tr></thead><tbody id="tbMReal"><tr><td class="loading" colspan="8"><div class="spinner"></div></td></tr></tbody></table></div></div></div>
+</div>
+<div class="tab-content manutSub" id="tMComp">
+<div class="section"><div class="section-header">📈 Previsto x Realizado — Manutencoes</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Veiculo</th><th>Tipo</th><th>Descricao</th><th>KM Prev.</th><th>Data Prev.</th><th>KM Real.</th><th>Data Real.</th><th>Prox. Data</th><th>Status</th></tr></thead><tbody id="tbMComp"><tr><td class="loading" colspan="9"><div class="spinner"></div></td></tr></tbody></table></div></div></div>
 </div>
 </div>
-<!-- CADASTRO FROTA -->
+<!-- CADASTRO -->
 <div class="tab-content" id="tCadastro">
 <div class="form-card">
 <div class="form-header"><h2>🚗 Cadastro de Veiculos</h2><p>Cadastre os veiculos e equipamentos da frota</p></div>
 <div class="form-body">
 <div class="form-grid">
-<div class="form-group"><label>Placa/ID *</label><input id="cPlaca" placeholder="Ex: ABC-1234 ou Equip-01" type="text"/></div>
-<div class="form-group"><label>Descricao *</label><input id="cDesc" placeholder="Ex: Caminhao Pipa, Van, Trator" type="text"/></div>
-<div class="form-group"><label>Tipo</label>
-<select id="cTipo"><option value="">Selecione...</option><option>Caminhao</option><option>Van</option><option>Carro</option><option>Caminhonete</option><option>Moto</option><option>Trator</option><option>Empilhadeira</option><option>Gerador</option><option>Compressor</option><option>Equipamento</option><option>Outros</option></select></div>
+<div class="form-group"><label>Placa/ID *</label><input id="cPlaca" placeholder="Ex: ABC-1234" type="text"/></div>
+<div class="form-group"><label>Descricao *</label><input id="cDesc" placeholder="Ex: Caminhao Pipa" type="text"/></div>
+<div class="form-group"><label>Tipo</label><select id="cTipo"><option value="">Selecione...</option><option>Caminhao</option><option>Van</option><option>Carro</option><option>Caminhonete</option><option>Moto</option><option>Trator</option><option>Empilhadeira</option><option>Gerador</option><option>Compressor</option><option>Equipamento</option><option>Outros</option></select></div>
 <div class="form-group"><label>Marca/Modelo</label><input id="cModelo" placeholder="Ex: Ford Cargo 1723" type="text"/></div>
 <div class="form-group"><label>Ano</label><input id="cAno" max="2030" min="1990" placeholder="2024" type="number"/></div>
 <div class="form-group"><label>KM Atual</label><input id="cKm" min="0" type="number" value="0"/></div>
-<div class="form-group"><label>Status</label>
-<select id="cStatus"><option value="Ativo">Ativo</option><option value="Em Manutencao">Em Manutencao</option><option value="Inativo">Inativo</option><option value="Aguardando Peca">Aguardando Peca</option></select></div>
+<div class="form-group"><label>Status</label><select id="cStatus"><option value="Ativo">Ativo</option><option value="Em Manutencao">Em Manutencao</option><option value="Inativo">Inativo</option><option value="Aguardando Peca">Aguardando Peca</option></select></div>
 <div class="form-group"><label>Responsavel</label><input id="cResp" placeholder="Motorista/Operador" type="text"/></div>
 </div>
-<div class="btn-group">
-<button class="btn btn-primary" onclick="salvarCadastro()">🚗 Cadastrar Veiculo</button>
+<div class="btn-group"><button class="btn btn-primary" onclick="salvarCadastro()">🚗 Cadastrar Veiculo</button></div>
 </div>
 </div>
+<div class="section"><div class="section-header">🚗 Frota Cadastrada</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Placa/ID</th><th>Descricao</th><th>Tipo</th><th>Marca/Modelo</th><th>Ano</th><th>KM</th><th>Status</th><th>Responsavel</th></tr></thead><tbody id="tbCadastro"><tr><td class="loading" colspan="8"><div class="spinner"></div></td></tr></tbody></table></div></div></div>
 </div>
-<div class="section">
-<div class="section-header">🚗 Frota Cadastrada</div>
-<div class="section-body">
-<div style="overflow-x:auto">
-<table><thead><tr><th>Placa/ID</th><th>Descricao</th><th>Tipo</th><th>Marca/Modelo</th><th>Ano</th><th>KM</th><th>Status</th><th>Responsavel</th></tr></thead>
-<tbody id="tbCadastro"><tr><td class="loading" colspan="8"><div class="spinner"></div></td></tr></tbody></table>
+<!-- DASHBOARD FROTA -->
+<div class="tab-content" id="tDashFrota">
+<div class="grid2">
+<div class="section"><div class="section-header">📈 Previsto x Realizado — Lavagem</div><div class="section-body" id="dashLavagem"><div class="loading"><div class="spinner"></div></div></div></div>
+<div class="section"><div class="section-header">📈 Previsto x Realizado — Manutencao</div><div class="section-body" id="dashManut"><div class="loading"><div class="spinner"></div></div></div></div>
 </div>
-</div>
-</div>
+<div class="section"><div class="section-header vermelho">⚠️ Alertas — Manutencoes Vencidas ou Proximas</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Veiculo</th><th>Tipo</th><th>Descricao</th><th>Data Prevista</th><th>Dias</th><th>Alerta</th></tr></thead><tbody id="tbAlertas"><tr><td class="loading" colspan="6"><div class="spinner"></div></td></tr></tbody></table></div></div></div>
 </div>
 </div>
 <footer class="footer-everest">
 <div class="footer-inner">
-<div style="display:flex;align-items:center;gap:10px">
-<span style="font-size:18px">🏗️</span>
-<div style="text-align:left"><div style="color:#fff;font-weight:700;font-size:12px">GESTAO OPERACIONAL — PROJETO SEATRIUM</div><div style="font-size:10px;opacity:.6">Sistema de Controle Operacional</div></div>
-</div>
-<div style="text-align:center">
-<div style="color:#C9A84C;font-weight:700;font-size:10px;letter-spacing:.8px;text-transform:uppercase">Desenvolvido por</div>
-<div style="color:#fff;font-weight:800;font-size:14px;letter-spacing:1.5px">EVEREST CONSULTORIA</div>
-<div style="color:rgba(255,255,255,.6);font-size:11px;font-style:italic">em Gestao Empresarial</div>
-</div>
-<div style="text-align:right;font-size:10px;opacity:.5"><div>© 2026 Todos os direitos reservados</div><div>Versao 1.0</div></div>
+<div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">🏗️</span><div><div style="color:#fff;font-weight:700;font-size:11px">GESTAO OPERACIONAL — PROJETO SEATRIUM</div><div style="font-size:9px;opacity:.6">Sistema de Controle Operacional</div></div></div>
+<div style="text-align:center"><div style="color:#C9A84C;font-weight:700;font-size:9px;letter-spacing:.8px;text-transform:uppercase">Desenvolvido por</div><div style="color:#fff;font-weight:800;font-size:13px;letter-spacing:1.5px">EVEREST CONSULTORIA</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-style:italic">em Gestao Empresarial</div></div>
+<div style="text-align:right;font-size:9px;opacity:.5"><div>© 2026 Todos os direitos reservados</div><div>Versao 1.0</div></div>
 </div>
 </footer>
 <script src="js/config.js"></script>
 <script>
 var hoje=dataHoje();
-['aData','lDataPrev','mDataPrev'].forEach(function(id){var el=document.getElementById(id);if(el)el.value=hoje;});
-
-function showTab(id,btn){
-  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
-  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
-  document.getElementById(id).classList.add('active');btn.classList.add('active');
-}
+document.getElementById('aData').value=hoje;
+document.getElementById('lpDataPrev').value=hoje;
+document.getElementById('lrDataReal').value=hoje;
+document.getElementById('mpDataPrev').value=hoje;
+document.getElementById('mrDataReal').value=hoje;
 
 function alerta(tipo,msg){document.getElementById('alerta').innerHTML='<div class="alert alert-'+tipo+'">'+msg+'</div>';setTimeout(function(){document.getElementById('alerta').innerHTML='';},5000);}
 
-// Salva no Google Sheets via Apps Script
-async function salvarFrota(tipo, dados){
-  try{
-    await apiPost('frota_'+tipo, dados);
-    alerta('success','Registro salvo com sucesso!');
-    return true;
-  }catch(e){alerta('error','Erro ao salvar. Verifique a conexao.');return false;}
+function showMainTab(id,btn){
+  document.querySelectorAll('#tAbast,#tLavagem,#tManut,#tCadastro,#tDashFrota').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.tabs:first-of-type .tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById(id).classList.add('active');btn.classList.add('active');
+  if(id==='tDashFrota')carregarDashFrota();
 }
 
+function showSubTab(id,btn,cls){
+  document.querySelectorAll('.'+cls).forEach(function(t){t.classList.remove('active');});
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById(id).classList.add('active');btn.classList.add('active');
+  if(id==='tLavComp')carregarLavComp();
+  if(id==='tMComp')carregarMComp();
+}
+
+async function salvarFrota(tipo,dados){
+  try{await apiPost('frota_'+tipo,dados);alerta('success','Registro salvo!');return true;}
+  catch(e){alerta('error','Erro ao salvar.');return false;}
+}
+
+// ABASTECIMENTO
 async function salvarAbast(){
-  var veiculo=document.getElementById('aVeiculo').value;
-  if(!veiculo){alerta('warn','Informe o veiculo.');return;}
-  var litros=parseFloat(document.getElementById('aLitros').value)||0;
-  var km=parseInt(document.getElementById('aKm').value)||0;
-  var dados={data:document.getElementById('aData').value,veiculo:veiculo,combustivel:document.getElementById('aCombust').value,litros:litros,km:km,posto:document.getElementById('aPosto').value,responsavel:document.getElementById('aResp').value,observacoes:document.getElementById('aObs').value};
-  if(await salvarFrota('abastecimento',dados)){
-    // Limpa campos
-    ['aLitros','aKm'].forEach(function(id){document.getElementById(id).value=0;});
-    ['aPosto','aResp','aObs'].forEach(function(id){document.getElementById(id).value='';});
-    carregarAbast();
-  }
+  var v=document.getElementById('aVeiculo').value;if(!v){alerta('warn','Informe o veiculo.');return;}
+  var dados={data:document.getElementById('aData').value,veiculo:v,combustivel:document.getElementById('aCombust').value,litros:parseFloat(document.getElementById('aLitros').value)||0,km:parseInt(document.getElementById('aKm').value)||0,posto:document.getElementById('aPosto').value,responsavel:document.getElementById('aResp').value,observacoes:document.getElementById('aObs').value};
+  if(await salvarFrota('abastecimento',dados)){['aLitros','aKm'].forEach(function(id){document.getElementById(id).value=0;});['aPosto','aResp','aObs'].forEach(function(id){document.getElementById(id).value='';});carregarAbast();}
 }
-
-async function salvarLavagem(){
-  var veiculo=document.getElementById('lVeiculo').value;
-  if(!veiculo){alerta('warn','Informe o veiculo.');return;}
-  var dados={veiculo:veiculo,tipo:document.getElementById('lTipo').value,data_prevista:document.getElementById('lDataPrev').value,data_realizada:document.getElementById('lDataReal').value,proxima:document.getElementById('lProxima').value,responsavel:document.getElementById('lResp').value,status:document.getElementById('lStatus').value,observacoes:document.getElementById('lObs').value};
-  if(await salvarFrota('lavagem',dados)) carregarLavagem();
-}
-
-async function salvarManut(){
-  var veiculo=document.getElementById('mVeiculo').value;
-  var tipo=document.getElementById('mTipo').value;
-  var desc=document.getElementById('mDesc').value;
-  if(!veiculo||!tipo||!desc){alerta('warn','Preencha veiculo, tipo e descricao.');return;}
-  var dados={veiculo:veiculo,tipo:tipo,descricao:desc,km_previsto:parseInt(document.getElementById('mKmPrev').value)||0,data_prevista:document.getElementById('mDataPrev').value,km_realizado:parseInt(document.getElementById('mKmReal').value)||0,data_realizada:document.getElementById('mDataReal').value,proxima_km:parseInt(document.getElementById('mProxKm').value)||0,proxima_data:document.getElementById('mProxData').value,responsavel:document.getElementById('mResp').value,status:document.getElementById('mStatus').value};
-  if(await salvarFrota('manutencao',dados)) carregarManut();
-}
-
-async function salvarCadastro(){
-  var placa=document.getElementById('cPlaca').value;
-  var desc=document.getElementById('cDesc').value;
-  if(!placa||!desc){alerta('warn','Preencha placa e descricao.');return;}
-  var dados={placa:placa,descricao:desc,tipo:document.getElementById('cTipo').value,modelo:document.getElementById('cModelo').value,ano:document.getElementById('cAno').value,km:parseInt(document.getElementById('cKm').value)||0,status:document.getElementById('cStatus').value,responsavel:document.getElementById('cResp').value};
-  if(await salvarFrota('cadastro',dados)) carregarCadastro();
-}
-
-// Carrega dados (simulado - em produção viria do Apps Script)
 async function carregarAbast(){
-  try{
-    var dados=await apiGet('frota_abastecimento');
-    var lista=Array.isArray(dados)?dados.slice(-30).reverse():[];
-    document.getElementById('tbAbast').innerHTML=lista.length>0?lista.map(function(r){
-      var kmL=r.litros>0&&r.km>0?'~'+(r.km/r.litros).toFixed(1):'—';
-      return '<tr><td>'+(r.data||'-')+'</td><td><strong>'+(r.veiculo||'-')+'</strong></td><td>'+(r.combustivel||'-')+'</td><td style="text-align:center">'+(r.litros||0)+'L</td><td style="text-align:center">'+(r.km||0)+' km</td><td style="text-align:center;font-weight:700;color:#1E7145">'+kmL+'</td><td>'+(r.posto||'-')+'</td><td>'+(r.responsavel||'-')+'</td></tr>';
-    }).join(''):'<tr><td colspan="8" class="empty">Nenhum abastecimento registrado ainda</td></tr>';
-    document.getElementById('totalAbast').textContent=lista.length;
-  }catch(e){document.getElementById('tbAbast').innerHTML='<tr><td colspan="8" class="empty">Conecte ao Apps Script para ver os dados</td></tr>';}
+  try{var d=await apiGet('frota_abastecimento');var l=Array.isArray(d)?d.slice(-20).reverse():[];document.getElementById('dTotalAbast').textContent=l.length;
+  document.getElementById('tbAbast').innerHTML=l.length>0?l.map(function(r){var kml=r.litros>0&&r.km>0?(r.km/r.litros).toFixed(1)+'km/L':'—';return '<tr><td>'+fmtData(r.data)+'</td><td><strong>'+(r.veiculo||'—')+'</strong></td><td>'+(r.combustivel||'—')+'</td><td style="text-align:center">'+(r.litros||0)+'L</td><td style="text-align:center">'+(r.km||0)+'km</td><td style="text-align:center;font-weight:700;color:#1E7145">'+kml+'</td><td>'+(r.posto||'—')+'</td></tr>';}).join(''):'<tr><td colspan="7" class="empty">Nenhum abastecimento registrado</td></tr>';}
+  catch(e){document.getElementById('tbAbast').innerHTML='<tr><td colspan="7" class="empty">Conecte ao Apps Script para ver os dados</td></tr>';}
 }
 
-async function carregarLavagem(){
-  try{
-    var dados=await apiGet('frota_lavagem');
-    var lista=Array.isArray(dados)?dados.slice(-20).reverse():[];
-    document.getElementById('tbLavagem').innerHTML=lista.length>0?lista.map(function(r){
-      var cor=r.status==='Realizado'?'badge-ok':r.status==='Pendente'?'badge-err':'badge-warn';
-      return '<tr><td><strong>'+(r.veiculo||'-')+'</strong></td><td>'+(r.tipo||'-')+'</td><td>'+(r.data_prevista||'-')+'</td><td>'+(r.data_realizada||'-')+'</td><td>'+(r.proxima||'-')+'</td><td><span class="'+cor+'">'+(r.status||'-')+'</span></td><td>'+(r.responsavel||'-')+'</td></tr>';
-    }).join(''):'<tr><td colspan="7" class="empty">Nenhum registro ainda</td></tr>';
-  }catch(e){document.getElementById('tbLavagem').innerHTML='<tr><td colspan="7" class="empty">Conecte ao Apps Script para ver os dados</td></tr>';}
+// LAVAGEM PLAN
+async function salvarLavPlan(){
+  var v=document.getElementById('lpVeiculo').value;if(!v){alerta('warn','Informe o veiculo.');return;}
+  var dados={veiculo:v,tipo:document.getElementById('lpTipo').value,data_prevista:document.getElementById('lpDataPrev').value,responsavel:document.getElementById('lpResp').value,observacoes:document.getElementById('lpObs').value,status:'Planejado',registro:'planejamento'};
+  if(await salvarFrota('lavagem',dados))carregarLavPlan();
+}
+async function carregarLavPlan(){
+  try{var d=await apiGet('frota_lavagem');var l=Array.isArray(d)?d.filter(function(r){return r.registro==='planejamento'||!r.data_realizada;}).slice(-20).reverse():[];
+  document.getElementById('tbLavPlan').innerHTML=l.length>0?l.map(function(r){var cor=r.status==='Realizado'?'badge-ok':r.status==='Pendente'?'badge-err':'badge-warn';return '<tr><td><strong>'+(r.veiculo||'—')+'</strong></td><td>'+(r.tipo||'—')+'</td><td>'+fmtData(r.data_prevista)+'</td><td>'+(r.responsavel||'—')+'</td><td><span class="'+cor+'">'+(r.status||'Planejado')+'</span></td></tr>';}).join(''):'<tr><td colspan="5" class="empty">Nenhum planejamento registrado</td></tr>';}
+  catch(e){document.getElementById('tbLavPlan').innerHTML='<tr><td colspan="5" class="empty">Conecte ao Apps Script</td></tr>';}
 }
 
-async function carregarManut(){
-  try{
-    var dados=await apiGet('frota_manutencao');
-    var lista=Array.isArray(dados)?dados.slice(-20).reverse():[];
-    var vencidas=0,proximas=0;
-    lista.forEach(function(r){
-      if(r.proxima_data){
-        var d=new Date(r.proxima_data);var hoje2=new Date();
-        if(d<hoje2) vencidas++;
-        else if((d-hoje2)/(1000*60*60*24)<=15) proximas++;
-      }
-    });
-    document.getElementById('manutVencidas').textContent=vencidas;
-    document.getElementById('manutProximas').textContent=proximas;
-    document.getElementById('tbManut').innerHTML=lista.length>0?lista.map(function(r){
-      var cor=r.status==='Concluido'?'badge-ok':r.status==='Pendente'?'badge-err':'badge-warn';
-      return '<tr><td><strong>'+(r.veiculo||'-')+'</strong></td><td>'+(r.tipo||'-')+'</td><td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.descricao||'-')+'</td><td style="text-align:center">'+(r.km_previsto||'-')+'</td><td>'+(r.data_prevista||'-')+'</td><td>'+(r.data_realizada||'-')+'</td><td>'+(r.proxima_data||'-')+'</td><td><span class="'+cor+'">'+(r.status||'-')+'</span></td><td>'+(r.responsavel||'-')+'</td></tr>';
-    }).join(''):'<tr><td colspan="9" class="empty">Nenhuma manutencao registrada ainda</td></tr>';
-  }catch(e){document.getElementById('tbManut').innerHTML='<tr><td colspan="9" class="empty">Conecte ao Apps Script para ver os dados</td></tr>';}
+// LAVAGEM REAL
+async function salvarLavReal(){
+  var v=document.getElementById('lrVeiculo').value;if(!v){alerta('warn','Informe o veiculo.');return;}
+  var dados={veiculo:v,tipo:document.getElementById('lrTipo').value,data_realizada:document.getElementById('lrDataReal').value,proxima:document.getElementById('lrProxima').value,responsavel:document.getElementById('lrResp').value,observacoes:document.getElementById('lrObs').value,status:'Realizado',registro:'realizado'};
+  if(await salvarLavReal2=await salvarFrota('lavagem',dados))carregarLavReal();
+}
+async function carregarLavReal(){
+  try{var d=await apiGet('frota_lavagem');var l=Array.isArray(d)?d.filter(function(r){return r.registro==='realizado'||r.data_realizada;}).slice(-20).reverse():[];document.getElementById('dLavagens').textContent=l.length;
+  document.getElementById('tbLavReal').innerHTML=l.length>0?l.map(function(r){return '<tr><td><strong>'+(r.veiculo||'—')+'</strong></td><td>'+(r.tipo||'—')+'</td><td>'+fmtData(r.data_realizada)+'</td><td>'+fmtData(r.proxima)+'</td><td>'+(r.responsavel||'—')+'</td></tr>';}).join(''):'<tr><td colspan="5" class="empty">Nenhum realizado registrado</td></tr>';}
+  catch(e){document.getElementById('tbLavReal').innerHTML='<tr><td colspan="5" class="empty">Conecte ao Apps Script</td></tr>';}
+}
+async function carregarLavComp(){
+  try{var d=await apiGet('frota_lavagem');var l=Array.isArray(d)?d.slice(-30).reverse():[];
+  document.getElementById('tbLavComp').innerHTML=l.length>0?l.map(function(r){var cor=r.data_realizada?'badge-ok':r.data_prevista&&r.data_prevista<hoje?'badge-err':'badge-warn';return '<tr><td><strong>'+(r.veiculo||'—')+'</strong></td><td>'+(r.tipo||'—')+'</td><td>'+fmtData(r.data_prevista)+'</td><td>'+fmtData(r.data_realizada)+'</td><td>'+fmtData(r.proxima)+'</td><td><span class="'+cor+'">'+(r.data_realizada?'Realizado':r.data_prevista&&r.data_prevista<hoje?'Vencido':'Pendente')+'</span></td></tr>';}).join(''):'<tr><td colspan="6" class="empty">Sem registros</td></tr>';}
+  catch(e){}
 }
 
+// MANUTENCAO PLAN
+async function salvarMPlan(){
+  var v=document.getElementById('mpVeiculo').value,t=document.getElementById('mpTipo').value,desc=document.getElementById('mpDesc').value;
+  if(!v||!t||!desc){alerta('warn','Preencha veiculo, tipo e descricao.');return;}
+  var dados={veiculo:v,tipo:t,descricao:desc,km_previsto:parseInt(document.getElementById('mpKmPrev').value)||0,data_prevista:document.getElementById('mpDataPrev').value,responsavel:document.getElementById('mpResp').value,status:'Planejado',registro:'planejamento'};
+  if(await salvarFrota('manutencao',dados))carregarMPlan();
+}
+async function carregarMPlan(){
+  try{var d=await apiGet('frota_manutencao');var l=Array.isArray(d)?d.filter(function(r){return r.registro==='planejamento'||!r.data_realizada;}).slice(-20).reverse():[];
+  document.getElementById('tbMPlan').innerHTML=l.length>0?l.map(function(r){var cor=r.status==='Concluido'?'badge-ok':r.data_prevista&&r.data_prevista<hoje?'badge-err':'badge-warn';return '<tr><td><strong>'+(r.veiculo||'—')+'</strong></td><td>'+(r.tipo||'—')+'</td><td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.descricao||'—')+'</td><td style="text-align:center">'+(r.km_previsto||'—')+'</td><td>'+fmtData(r.data_prevista)+'</td><td>'+(r.responsavel||'—')+'</td><td><span class="'+cor+'">'+(r.status||'Planejado')+'</span></td></tr>';}).join(''):'<tr><td colspan="7" class="empty">Nenhum planejamento registrado</td></tr>';}
+  catch(e){document.getElementById('tbMPlan').innerHTML='<tr><td colspan="7" class="empty">Conecte ao Apps Script</td></tr>';}
+}
+
+// MANUTENCAO REAL
+async function salvarMReal(){
+  var v=document.getElementById('mrVeiculo').value,t=document.getElementById('mrTipo').value,desc=document.getElementById('mrDesc').value;
+  if(!v||!t||!desc){alerta('warn','Preencha veiculo, tipo e descricao.');return;}
+  var dados={veiculo:v,tipo:t,descricao:desc,km_realizado:parseInt(document.getElementById('mrKmReal').value)||0,data_realizada:document.getElementById('mrDataReal').value,proxima_km:parseInt(document.getElementById('mrProxKm').value)||0,proxima_data:document.getElementById('mrProxData').value,responsavel:document.getElementById('mrResp').value,status:'Concluido',registro:'realizado'};
+  if(await salvarFrota('manutencao',dados))carregarMReal();
+}
+async function carregarMReal(){
+  try{var d=await apiGet('frota_manutencao');var l=Array.isArray(d)?d.filter(function(r){return r.registro==='realizado'||r.data_realizada;}).slice(-20).reverse():[];
+  document.getElementById('tbMReal').innerHTML=l.length>0?l.map(function(r){return '<tr><td><strong>'+(r.veiculo||'—')+'</strong></td><td>'+(r.tipo||'—')+'</td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.descricao||'—')+'</td><td style="text-align:center">'+(r.km_realizado||'—')+'</td><td>'+fmtData(r.data_realizada)+'</td><td style="text-align:center">'+(r.proxima_km||'—')+'</td><td>'+fmtData(r.proxima_data)+'</td><td>'+(r.responsavel||'—')+'</td></tr>';}).join(''):'<tr><td colspan="8" class="empty">Nenhum realizado registrado</td></tr>';}
+  catch(e){document.getElementById('tbMReal').innerHTML='<tr><td colspan="8" class="empty">Conecte ao Apps Script</td></tr>';}
+}
+async function carregarMComp(){
+  try{var d=await apiGet('frota_manutencao');var l=Array.isArray(d)?d.slice(-30).reverse():[];
+  document.getElementById('tbMComp').innerHTML=l.length>0?l.map(function(r){var cor=r.data_realizada?'badge-ok':r.data_prevista&&r.data_prevista<hoje?'badge-err':'badge-warn';return '<tr><td><strong>'+(r.veiculo||'—')+'</strong></td><td>'+(r.tipo||'—')+'</td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.descricao||'—')+'</td><td style="text-align:center">'+(r.km_previsto||'—')+'</td><td>'+fmtData(r.data_prevista)+'</td><td style="text-align:center">'+(r.km_realizado||'—')+'</td><td>'+fmtData(r.data_realizada)+'</td><td>'+fmtData(r.proxima_data)+'</td><td><span class="'+cor+'">'+(r.data_realizada?'Concluido':r.data_prevista&&r.data_prevista<hoje?'Vencido':'Pendente')+'</span></td></tr>';}).join(''):'<tr><td colspan="9" class="empty">Sem registros</td></tr>';}
+  catch(e){}
+}
+
+// CADASTRO
+async function salvarCadastro(){
+  var p=document.getElementById('cPlaca').value,desc=document.getElementById('cDesc').value;if(!p||!desc){alerta('warn','Preencha placa e descricao.');return;}
+  var dados={placa:p,descricao:desc,tipo:document.getElementById('cTipo').value,modelo:document.getElementById('cModelo').value,ano:document.getElementById('cAno').value,km:parseInt(document.getElementById('cKm').value)||0,status:document.getElementById('cStatus').value,responsavel:document.getElementById('cResp').value};
+  if(await salvarFrota('cadastro',dados))carregarCadastro();
+}
 async function carregarCadastro(){
-  try{
-    var dados=await apiGet('frota_cadastro');
-    var lista=Array.isArray(dados)?dados:[];
-    var ativos=lista.filter(function(r){return r.status==='Ativo';}).length;
-    document.getElementById('totalVeiculos').textContent=ativos||lista.length;
-    document.getElementById('tbCadastro').innerHTML=lista.length>0?lista.map(function(r){
-      var cor=r.status==='Ativo'?'badge-ok':r.status==='Em Manutencao'?'badge-warn':'badge-err';
-      return '<tr><td><strong>'+(r.placa||'-')+'</strong></td><td>'+(r.descricao||'-')+'</td><td>'+(r.tipo||'-')+'</td><td>'+(r.modelo||'-')+'</td><td style="text-align:center">'+(r.ano||'-')+'</td><td style="text-align:center">'+(r.km||0)+' km</td><td><span class="'+cor+'">'+(r.status||'-')+'</span></td><td>'+(r.responsavel||'-')+'</td></tr>';
-    }).join(''):'<tr><td colspan="8" class="empty">Nenhum veiculo cadastrado ainda</td></tr>';
-  }catch(e){document.getElementById('tbCadastro').innerHTML='<tr><td colspan="8" class="empty">Conecte ao Apps Script para ver os dados</td></tr>';}
+  try{var d=await apiGet('frota_cadastro');var l=Array.isArray(d)?d:[];var ativos=l.filter(function(r){return r.status==='Ativo';}).length;document.getElementById('dVeicAtivos').textContent=ativos||l.length;
+  document.getElementById('tbCadastro').innerHTML=l.length>0?l.map(function(r){var cor=r.status==='Ativo'?'badge-ok':r.status==='Em Manutencao'?'badge-warn':'badge-err';return '<tr><td><strong>'+(r.placa||'—')+'</strong></td><td>'+(r.descricao||'—')+'</td><td>'+(r.tipo||'—')+'</td><td>'+(r.modelo||'—')+'</td><td style="text-align:center">'+(r.ano||'—')+'</td><td style="text-align:center">'+(r.km||0)+'km</td><td><span class="'+cor+'">'+(r.status||'—')+'</span></td><td>'+(r.responsavel||'—')+'</td></tr>';}).join(''):'<tr><td colspan="8" class="empty">Nenhum veiculo cadastrado</td></tr>';}
+  catch(e){document.getElementById('tbCadastro').innerHTML='<tr><td colspan="8" class="empty">Conecte ao Apps Script</td></tr>';}
 }
 
-// Inicializa
+// DASHBOARD FROTA
+async function carregarDashFrota(){
+  try{
+    var [lavs,mauts]=await Promise.all([apiGet('frota_lavagem'),apiGet('frota_manutencao')]);
+    var lavPlan=Array.isArray(lavs)?lavs.filter(function(r){return !r.data_realizada;}):[];
+    var lavReal=Array.isArray(lavs)?lavs.filter(function(r){return r.data_realizada;}):[];
+    var pend=Math.max(0,lavPlan.length-lavReal.length);
+    document.getElementById('dashLavagem').innerHTML=
+      '<div style="display:flex;gap:10px;margin-bottom:12px">'
+      +'<div style="flex:1;background:#EEF7FF;border-radius:8px;padding:12px;text-align:center"><div style="font-size:11px;color:#666;font-weight:700">PLANEJADAS</div><div style="font-size:24px;font-weight:800;color:#2E75B6">'+lavPlan.length+'</div></div>'
+      +'<div style="flex:1;background:#F0F8F0;border-radius:8px;padding:12px;text-align:center"><div style="font-size:11px;color:#666;font-weight:700">REALIZADAS</div><div style="font-size:24px;font-weight:800;color:#1E7145">'+lavReal.length+'</div></div>'
+      +'<div style="flex:1;background:'+(pend>0?'#FFF0F0':'#F0F8F0')+';border-radius:8px;padding:12px;text-align:center"><div style="font-size:11px;color:#666;font-weight:700">PENDENTES</div><div style="font-size:24px;font-weight:800;color:'+(pend>0?'#C00000':'#1E7145')+'">'+pend+'</div></div>'
+      +'</div>';
+    var mPlan=Array.isArray(mauts)?mauts.filter(function(r){return !r.data_realizada;}):[];
+    var mReal=Array.isArray(mauts)?mauts.filter(function(r){return r.data_realizada;}):[];
+    var mVenc=mPlan.filter(function(r){return r.data_prevista&&r.data_prevista<hoje;}).length;
+    var mProx=mPlan.filter(function(r){if(!r.data_prevista)return false;var d=new Date(r.data_prevista),h=new Date();return d>=h&&(d-h)/(1000*60*60*24)<=15;}).length;
+    document.getElementById('dManutVenc').textContent=mVenc;
+    document.getElementById('dManutProx').textContent=mProx;
+    document.getElementById('dashManut').innerHTML=
+      '<div style="display:flex;gap:10px;margin-bottom:12px">'
+      +'<div style="flex:1;background:#EEF7FF;border-radius:8px;padding:12px;text-align:center"><div style="font-size:11px;color:#666;font-weight:700">PLANEJADAS</div><div style="font-size:24px;font-weight:800;color:#2E75B6">'+mPlan.length+'</div></div>'
+      +'<div style="flex:1;background:#F0F8F0;border-radius:8px;padding:12px;text-align:center"><div style="font-size:11px;color:#666;font-weight:700">REALIZADAS</div><div style="font-size:24px;font-weight:800;color:#1E7145">'+mReal.length+'</div></div>'
+      +'<div style="flex:1;background:#FFF0F0;border-radius:8px;padding:12px;text-align:center"><div style="font-size:11px;color:#666;font-weight:700">VENCIDAS</div><div style="font-size:24px;font-weight:800;color:#C00000">'+mVenc+'</div></div>'
+      +'<div style="flex:1;background:#FFFBF0;border-radius:8px;padding:12px;text-align:center"><div style="font-size:11px;color:#666;font-weight:700">PROXIMAS 15d</div><div style="font-size:24px;font-weight:800;color:#C9A84C">'+mProx+'</div></div>'
+      +'</div>';
+    var alertas=mPlan.filter(function(r){return r.data_prevista;}).map(function(r){var d=new Date(r.data_prevista),h=new Date(),dias=Math.round((d-h)/(1000*60*60*24));return Object.assign({},r,{dias:dias});}).sort(function(a,b){return a.dias-b.dias;}).slice(0,10);
+    document.getElementById('tbAlertas').innerHTML=alertas.length>0?alertas.map(function(r){var cor=r.dias<0?'badge-err':r.dias<=7?'badge-warn':'badge-ok';var txt=r.dias<0?'Vencido '+Math.abs(r.dias)+'d':r.dias===0?'Hoje':r.dias+'d';return '<tr><td><strong>'+(r.veiculo||'—')+'</strong></td><td>'+(r.tipo||'—')+'</td><td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.descricao||'—')+'</td><td>'+fmtData(r.data_prevista)+'</td><td style="text-align:center;font-weight:700">'+txt+'</td><td><span class="'+cor+'">'+(r.dias<0?'VENCIDO':r.dias<=7?'URGENTE':'OK')+'</span></td></tr>';}).join(''):'<tr><td colspan="6" style="text-align:center;padding:14px;color:#1E7145;font-weight:600">&#10003; Nenhum alerta de manutencao</td></tr>';
+  }catch(e){console.error(e);}
+}
+
 carregarAbast();
-carregarLavagem();
-carregarManut();
+carregarLavPlan();
+carregarMPlan();
 carregarCadastro();
 </script>
 </body>

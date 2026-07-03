@@ -10,7 +10,7 @@
 <body>
 <header class="header">
 <div class="header-logo">
-<span style="font-size:24px">🏗️</span>
+<span style="font-size:22px">🏗️</span>
 <div><h1>GESTAO OPERACIONAL</h1><span>PROJETO SEATRIUM</span></div>
 </div>
 <nav class="nav">
@@ -18,197 +18,145 @@
 <a href="registro.html">📝 Relatorio</a>
 <a href="dashboard.html">📊 Dashboard</a>
 <a href="comparativo.html">📈 Meta x Realizado</a>
+<a href="frota.html">🚗 Frota</a>
 </nav>
 </header>
 <div class="container">
-<div class="page-title">📋 Planejamento do Proximo Dia <span class="badge" style="background:#C9A84C">Proximo Dia</span></div>
+<div class="page-title">📋 Planejamento do Proximo Dia <span class="badge" style="background:#2E75B6">Definicao de Metas</span></div>
 <div id="alerta"></div>
+<div class="section" style="margin-bottom:16px">
+<div class="section-header">📅 Periodo de Planejamento</div>
+<div class="section-body">
+<div class="form-grid" style="grid-template-columns:repeat(3,1fr);gap:12px">
+<div class="form-group"><label>Data Inicio</label><input id="pDataIni" type="date"/></div>
+<div class="form-group"><label>Data Fim</label><input id="pDataFim" type="date"/></div>
+<div class="form-group" style="display:flex;align-items:flex-end"><button class="btn btn-primary" onclick="carregarComparativo()" style="width:100%">📈 Ver Previsto x Realizado</button></div>
+</div>
+<div id="painelComparativo" style="display:none;margin-top:12px">
+<div class="section-header" style="background:#1F4E79;color:#fff;border-radius:6px;padding:8px 14px;margin-bottom:8px">📈 Previsto x Realizado no Periodo</div>
+<div style="overflow-x:auto"><table><thead><tr><th>Colaborador</th><th>Servico</th><th>Meta Prevista</th><th>Realizado</th><th>Eficiencia</th></tr></thead><tbody id="tbComparativo"></tbody></table></div>
+</div>
+</div>
+</div>
+<div class="grid2">
 <div class="form-card">
-<div class="form-header" style="background:linear-gradient(135deg,#C9A84C,#b8963e)">
-<h2>📋 Planejamento Operacional</h2>
-<p>Defina as metas e o efetivo previsto para o proximo dia</p>
-</div>
+<div class="form-header"><h2>📋 Novo Planejamento</h2><p>Defina metas e atribuicoes para o proximo dia</p></div>
 <div class="form-body">
-<div class="form-section-title">📅 Data e Turno</div>
-<div class="form-grid">
-<div class="form-group"><label>Data *</label><input id="data" required="" type="date"/></div>
-<div class="form-group"><label>Turno *</label>
-<select id="turno" required=""><option value="">Selecione...</option><option>07:00 AS 17:00</option><option>17:00 AS 23:00</option><option>23:00 AS 07:00</option></select></div>
-<div class="form-group"><label>Responsavel pelo Planejamento</label><input id="resp" placeholder="Nome do supervisor" type="text"/></div>
-<div class="form-group"><label>Efetivo Previsto</label><input id="efetivo" min="0" type="number" value="0"/></div>
+<div class="form-group">
+<label>Colaborador *</label>
+<select id="pColab">
+<option value="">Selecione...</option>
+<option>CELSO</option><option>MARCIO</option><option>FAGNER</option>
+<option>ELAINE</option><option>ERLANE</option><option>JULIANA</option>
+<option>LILIANE</option><option>ELIDA</option><option>MARIA</option>
+<option>SAMARA</option><option>OLAVO</option><option>DAVI</option>
+</select>
 </div>
-<hr class="form-divider"/>
-<div class="form-section-title">🎯 Metas Gerais do Dia</div>
-<div class="form-grid">
-<div class="form-group"><label>🧹 Meta Limpezas</label><input id="mLimp" min="0" type="number" value="0"/></div>
-<div class="form-group"><label>🧹 Meta Limp. Pesadas</label><input id="mLimpPes" min="0" type="number" value="0"/></div>
-<div class="form-group"><label>💧 Meta Succoes</label><input id="mSucc" min="0" type="number" value="0"/></div>
-<div class="form-group"><label>🔧 Meta Manutencoes</label><input id="mManut" min="0" type="number" value="0"/></div>
+<div class="form-group">
+<label>Tipo de Servico *</label>
+<select id="pServico" onchange="toggleManutDesc()">
+<option value="">Selecione...</option>
+<option>Limpeza</option><option>Limpeza Pesada</option><option>Succao</option>
+<option>Inspecao</option><option>Manutencao de Container/Banheiro</option><option>Manutencao Geral</option>
+</select>
 </div>
-<hr class="form-divider"/>
-<div class="form-section-title">👥 Metas por Colaborador</div>
-<p style="font-size:12px;color:#666;margin-bottom:12px">Selecione o colaborador, o tipo de servico, defina a meta e escolha os containers/banheiros</p>
-<div id="colabs"><div class="loading"><div class="spinner"></div> Carregando...</div></div>
-<button class="btn btn-outline btn-sm" onclick="addColab()" style="margin-top:10px">+ Adicionar Colaborador</button>
-<hr class="form-divider"/>
-<div class="form-section-title">📝 Prioridades e Observacoes</div>
-<div class="form-grid" style="grid-template-columns:1fr">
-<div class="form-group"><label>Prioridades do Dia</label><textarea id="prior" placeholder="Ex: Foco nos containers C01-C05..."></textarea></div>
-<div class="form-group"><label>Observacoes Gerais</label><textarea id="obs" placeholder="Informacoes importantes para a equipe..."></textarea></div>
+<div class="form-group" id="manutDescBox" style="display:none">
+<label>Descricao da Manutencao</label>
+<input id="pManutDesc" placeholder="Descreva a manutencao planejada..." type="text"/>
 </div>
+<div class="form-group"><label>Meta (quantidade)</label><input id="pMeta" min="0" type="number" value="2"/></div>
+<div class="form-group">
+<label>Containers / Banheiros</label>
+<div class="multi-select-box">
+<div style="font-size:11px;color:#666;margin-bottom:6px;font-weight:600">CONTAINERS</div>
+<div class="multi-select-grid" id="gridContainers"></div>
+<div style="font-size:11px;color:#666;margin:8px 0 6px;font-weight:600">BANHEIROS</div>
+<div class="multi-select-grid" id="gridBanheiros"></div>
+</div>
+</div>
+<div class="form-group"><label>Observacoes</label><input id="pObs" placeholder="Observacoes adicionais..." type="text"/></div>
 <div class="btn-group">
-<button class="btn btn-warning" onclick="salvar()">💾 Salvar Planejamento</button>
-<a class="btn btn-outline" href="index.html">← Voltar</a>
+<button class="btn btn-success" onclick="salvarPlanejamento()">📋 Salvar Planejamento</button>
+<button class="btn" onclick="limparForm()" style="background:#6c757d;color:#fff">✖ Limpar</button>
 </div>
 </div>
 </div>
 <div class="section">
-<div class="section-header amarelo">📋 Planejamentos Salvos <button onclick="carregar()" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:3px 10px;border-radius:5px;cursor:pointer;font-size:11px">🔄</button></div>
+<div class="section-header">📋 Planejamentos Salvos</div>
 <div class="section-body">
+<div style="margin-bottom:10px;display:flex;gap:8px">
+<input id="filtroData" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px" type="date"/>
+<button class="btn btn-primary" onclick="carregarPlanejamentos()" style="padding:6px 14px;font-size:12px">🔍 Filtrar</button>
+</div>
 <div style="overflow-x:auto">
-<table><thead><tr><th>Data</th><th>Turno</th><th>Responsavel</th><th>Efetivo</th><th>Meta Limpezas</th><th>Meta Succoes</th><th>Prioridades</th></tr></thead>
-<tbody id="tbPlan"><tr><td class="loading" colspan="7"><div class="spinner"></div></td></tr></tbody></table>
+<table><thead><tr><th>Data</th><th>Colaborador</th><th>Servico</th><th>Meta</th><th>Locais</th></tr></thead>
+<tbody id="tbPlanejamentos"><tr><td class="loading" colspan="5"><div class="spinner"></div></td></tr></tbody></table>
+</div>
 </div>
 </div>
 </div>
 </div>
 <footer class="footer-everest">
 <div class="footer-inner">
-<div style="display:flex;align-items:center;gap:10px">
-<span style="font-size:18px">🏗️</span>
-<div style="text-align:left"><div style="color:#fff;font-weight:700;font-size:12px">GESTAO OPERACIONAL — PROJETO SEATRIUM</div><div style="font-size:10px;opacity:.6">Sistema de Controle Operacional</div></div>
-</div>
-<div style="text-align:center">
-<div style="color:#C9A84C;font-weight:700;font-size:10px;letter-spacing:.8px;text-transform:uppercase">Desenvolvido por</div>
-<div style="color:#fff;font-weight:800;font-size:14px;letter-spacing:1.5px">EVEREST CONSULTORIA</div>
-<div style="color:rgba(255,255,255,.6);font-size:11px;font-style:italic">em Gestao Empresarial</div>
-</div>
-<div style="text-align:right;font-size:10px;opacity:.5"><div>© 2026 Todos os direitos reservados</div><div>Versao 1.0</div></div>
+<div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">🏗️</span><div><div style="color:#fff;font-weight:700;font-size:11px">GESTAO OPERACIONAL — PROJETO SEATRIUM</div><div style="font-size:9px;opacity:.6">Sistema de Controle Operacional</div></div></div>
+<div style="text-align:center"><div style="color:#C9A84C;font-weight:700;font-size:9px;letter-spacing:.8px;text-transform:uppercase">Desenvolvido por</div><div style="color:#fff;font-weight:800;font-size:13px;letter-spacing:1.5px">EVEREST CONSULTORIA</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-style:italic">em Gestao Empresarial</div></div>
+<div style="text-align:right;font-size:9px;opacity:.5"><div>© 2026 Todos os direitos reservados</div><div>Versao 1.0</div></div>
 </div>
 </footer>
 <script src="js/config.js"></script>
 <script>
-var colaboradores=[],cnt=0;
+(function(){
+  var gc=document.getElementById('gridContainers'),gb=document.getElementById('gridBanheiros');
+  for(var i=1;i<=15;i++){var b=document.createElement('button');b.className='loc-btn';b.type='button';b.textContent='C'+String(i).padStart(2,'0');b.dataset.val='C'+String(i).padStart(2,'0');b.onclick=function(){this.classList.toggle('selected');};gc.appendChild(b);}
+  for(var j=1;j<=8;j++){var b2=document.createElement('button');b2.className='loc-btn';b2.type='button';b2.textContent='B'+String(j).padStart(2,'0');b2.dataset.val='B'+String(j).padStart(2,'0');b2.onclick=function(){this.classList.toggle('selected');};gb.appendChild(b2);}
+})();
+
 var amanha=new Date();amanha.setDate(amanha.getDate()+1);
-document.getElementById('data').value=amanha.toISOString().split('T')[0];
+document.getElementById('pDataIni').value=dataHoje();
+document.getElementById('pDataFim').value=dataHoje();
+document.getElementById('filtroData').value=amanha.toISOString().split('T')[0];
 
-var ATIVOS=[];
-for(var i=1;i<=15;i++) ATIVOS.push('C'+String(i).padStart(2,'0'));
-for(var i=1;i<=8;i++) ATIVOS.push('B'+String(i).padStart(2,'0'));
-
-async function verPeriodo(){
-  var ini=document.getElementById('periodoIni').value;
-  var fim=document.getElementById('periodoFim').value;
-  if(!ini||!fim){alert('Selecione o periodo');return;}
-  try{
-    var box=document.getElementById('resumoPeriodo');
-    box.innerHTML='<div class="loading"><div class="spinner"></div> Carregando...</div>';
-    var plans=await apiGet('planejamento');
-    var regs=await apiGet('registros');
-    var planFilt=Array.isArray(plans)?plans.filter(function(p){var d=p['Data']||p.data||'';return d>=ini&&d<=fim;}):[];
-    var regFilt=Array.isArray(regs)?regs.filter(function(r){var d=r['Data']||r.data||'';return d>=ini&&d<=fim;}):[];
-    var totPlan={limp:planFilt.reduce(function(s,p){return s+(Number(p['Meta Limpezas']||p.meta_limpezas||0));},0),succ:planFilt.reduce(function(s,p){return s+(Number(p['Meta Succoes']||p.meta_succoes||0));},0)};
-    var totReal={limp:regFilt.reduce(function(s,r){return s+(Number(r['Limpezas']||r.limpezas||0));},0),succ:regFilt.reduce(function(s,r){return s+(Number(r['Succoes']||r.succoes||0));},0)};
-    var efL=totPlan.limp>0?Math.round((totReal.limp/totPlan.limp)*100):null;
-    box.innerHTML='<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">'
-      +'<div style="background:#fff;border-radius:8px;padding:10px;flex:1;min-width:120px;border-left:4px solid #2E75B6"><div style="font-size:11px;color:#666;font-weight:700">LIMPEZAS</div><div style="font-size:18px;font-weight:800;color:#2E75B6">'+totReal.limp+'</div><div style="font-size:11px;color:#888">Meta: '+totPlan.limp+'</div>'+(efL!==null?'<div style="font-size:12px;font-weight:700;color:'+(efL>=100?'#1E7145':'#C00000')+'">'+efL+'%</div>':'')+'</div>'
-      +'<div style="background:#fff;border-radius:8px;padding:10px;flex:1;min-width:120px;border-left:4px solid #1E7145"><div style="font-size:11px;color:#666;font-weight:700">SUCCOES</div><div style="font-size:18px;font-weight:800;color:#1E7145">'+totReal.succ+'</div><div style="font-size:11px;color:#888">Meta: '+totPlan.succ+'</div></div>'
-      +'<div style="background:#fff;border-radius:8px;padding:10px;flex:1;min-width:120px;border-left:4px solid #C9A84C"><div style="font-size:11px;color:#666;font-weight:700">REGISTROS</div><div style="font-size:18px;font-weight:800;color:#C9A84C">'+regFilt.length+'</div><div style="font-size:11px;color:#888">'+planFilt.length+' planejamentos</div></div>'
-      +'</div>';
-  }catch(e){document.getElementById('resumoPeriodo').innerHTML='<div class="alert alert-error">Erro ao carregar dados.</div>';}
-}
-
-function toggleDescManut(sel, id){
-  var box=document.getElementById('desc_'+id);
-  if(box){
-    var show=sel.value.indexOf('Manutencao')>=0||sel.value.indexOf('Inspecao')>=0;
-    box.style.display=show?'block':'none';
-    // Se inspeção identificar manutenção, sugere criar manutenção programada
-    if(sel.value==='Inspecao'){
-      box.querySelector('textarea').placeholder='Descreva o que foi inspecionado. Se identificar necessidade de manutencao, ela sera gerada automaticamente como manutencao programada.';
-    }
-  }
-}
-
-async function init(){
-  try{
-    var d=await apiGet('dados');
-    colaboradores=d.colaboradores||[];
-    document.getElementById('colabs').innerHTML='';
-    colaboradores.slice(0,8).forEach(function(c){addColab(c);});
-    carregar();
-  }catch(e){alerta('error','Erro ao carregar dados.');}
-}
-
-function addColab(nome){
-  cnt++;
-  var id='c'+cnt;
-  var div=document.createElement('div');
-  div.id=id;
-  div.style.cssText='background:#F8FAFF;border:1.5px solid #2E75B6;border-radius:10px;padding:14px;margin-bottom:10px';
-  var opts=colaboradores.map(function(c){return '<option value="'+c+'"'+(c===nome?' selected':'')+'>'+c+'</option>';}).join('');
-  var ativoOpts=ATIVOS.map(function(a){return '<option value="'+a+'">'+a+'</option>';}).join('');
-  div.innerHTML='<div style="display:grid;grid-template-columns:155px 175px 75px 1fr 34px;gap:10px;align-items:start">'
-    +'<div class="form-group" style="margin:0"><label style="font-size:10px;font-weight:700;color:#1F4E79">&#128101; COLABORADOR</label>'
-    +'<select style="padding:8px;border:1.5px solid #2E75B6;border-radius:6px;font-size:12px;width:100%"><option value="">Selecione...</option>'+opts+'</select></div>'
-    +'<div class="form-group" style="margin:0"><label style="font-size:10px;font-weight:700;color:#1F4E79">&#128295; TIPO DE SERVICO</label>'
-    +'<select onchange="toggleDescManut(this,\''+id+'\')" style="padding:8px;border:1.5px solid #2E75B6;border-radius:6px;font-size:12px;width:100%">'
-    +'<option value="">Selecione...</option>'
-    +'<option value="Limpeza">&#129529; Limpeza</option>'
-    +'<option value="Limpeza Pesada">&#129529; Limpeza Pesada</option>'
-    +'<option value="Succao">&#128167; Succao</option>'
-    +'<option value="Inspecao">&#128269; Inspecao</option>'
-    +'<option value="Manutencao de Container/Banheiro">&#128295; Manutencao de Container/Banheiro</option>'
-    +'<option value="Manutencao Geral">&#128295; Manutencao Geral</option>'
-    +'</select></div>'
-    +'<div id="desc_'+id+'" style="display:none;grid-column:1/-1;margin-top:6px">'
-    +'<div class="form-group" style="margin:0"><label style="font-size:10px;font-weight:700;color:#C00000">&#128221; DESCRICAO DA MANUTENCAO (obrigatorio)</label>'
-    +'<textarea placeholder="Descreva o tipo de manutencao necessaria, equipamento, local e urgencia..." style="padding:8px;border:1.5px solid #C00000;border-radius:6px;font-size:12px;width:100%;min-height:60px;resize:vertical"></textarea></div>'
-    +'</div>'
-    +'<div class="form-group" style="margin:0"><label style="font-size:10px;font-weight:700;color:#1F4E79">&#127919; META</label>'
-    +'<input type="number" min="0" value="1" style="padding:8px;border:1.5px solid #2E75B6;border-radius:6px;font-size:14px;width:100%;text-align:center;font-weight:700"></div>'
-    +'<div class="form-group" style="margin:0"><label style="font-size:10px;font-weight:700;color:#1F4E79">&#128230; CONTAINERS / BANHEIROS</label>'
-    +'<select multiple style="padding:6px;border:1.5px solid #2E75B6;border-radius:6px;font-size:12px;width:100%;height:88px">'+ativoOpts+'</select>'
-    +'<span style="font-size:10px;color:#888">Segure Ctrl para selecionar varios</span></div>'
-    +'<button onclick="document.getElementById(\''+id+'\').remove()" style="background:#FFC7CE;border:none;border-radius:6px;padding:8px;cursor:pointer;font-size:14px;margin-top:18px">&#128465;</button>'
-    +'</div>';
-  document.getElementById('colabs').appendChild(div);
-}
-
-async function salvar(){
-  var data=document.getElementById('data').value;
-  var turno=document.getElementById('turno').value;
-  if(!data||!turno){alerta('warn','Preencha a data e o turno.');return;}
-  var rows=document.getElementById('colabs').children;
-  var colabs=[];
-  for(var i=0;i<rows.length;i++){
-    var inputs=rows[i].querySelectorAll('select,input');
-    var nome=inputs[0].value;
-    if(nome){
-      var tipoServ=inputs[1].value;
-      var metaVal=parseInt(inputs[2].value)||0;
-      var selAtivos=inputs[3];
-      var ativosSel=[];
-      for(var k=0;k<selAtivos.options.length;k++){if(selAtivos.options[k].selected)ativosSel.push(selAtivos.options[k].value);}
-      colabs.push({responsavel:nome,tipo_servico:tipoServ,meta:metaVal,ativos:ativosSel,area:ativosSel.join(',')});
-    }
-  }
-  var payload={data:data,turno:turno,responsavel_planejamento:document.getElementById('resp').value,efetivo_previsto:parseInt(document.getElementById('efetivo').value)||0,meta_limpezas:parseInt(document.getElementById('mLimp').value)||0,meta_limpezas_pesadas:parseInt(document.getElementById('mLimpPes').value)||0,meta_succoes:parseInt(document.getElementById('mSucc').value)||0,meta_manutencoes:parseInt(document.getElementById('mManut').value)||0,prioridades:document.getElementById('prior').value,observacoes:document.getElementById('obs').value,colaboradores:colabs};
-  try{await apiPost('planejamento',payload);alerta('success','Planejamento salvo com sucesso!');carregar();}catch(e){alerta('error','Erro ao salvar.');}
-}
-
-async function carregar(){
-  try{
-    var plans=await apiGet('planejamento');
-    var lista=Array.isArray(plans)?plans.slice(-20).reverse():[];
-    document.getElementById('tbPlan').innerHTML=lista.length>0?lista.map(function(p){
-      return '<tr><td><strong>'+(p['Data']||p.data||'-')+'</strong></td><td>'+(p['Turno']||p.turno||'-')+'</td><td>'+(p['Responsavel Planejamento']||p.responsavel_planejamento||'-')+'</td><td style="text-align:center">'+(p['Efetivo Previsto']||p.efetivo_previsto||0)+'</td><td style="text-align:center;font-weight:700;color:#2E75B6">'+(p['Meta Limpezas']||p.meta_limpezas||0)+'</td><td style="text-align:center">'+(p['Meta Succoes']||p.meta_succoes||0)+'</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(p['Prioridades']||p.prioridades||'-')+'</td></tr>';
-    }).join(''):'<tr><td colspan="7" class="empty">Nenhum planejamento salvo ainda</td></tr>';
-  }catch(e){console.error(e);}
-}
-
+function toggleManutDesc(){var s=document.getElementById('pServico').value;document.getElementById('manutDescBox').style.display=(s.indexOf('Manutencao')>=0)?'block':'none';}
+function getLocais(){return Array.from(document.querySelectorAll('.loc-btn.selected')).map(function(b){return b.dataset.val;}).join(', ');}
 function alerta(tipo,msg){document.getElementById('alerta').innerHTML='<div class="alert alert-'+tipo+'">'+msg+'</div>';setTimeout(function(){document.getElementById('alerta').innerHTML='';},5000);}
-init();
+
+async function salvarPlanejamento(){
+  var colab=document.getElementById('pColab').value,servico=document.getElementById('pServico').value;
+  if(!colab||!servico){alerta('warn','Selecione colaborador e tipo de servico.');return;}
+  var dados={data:document.getElementById('filtroData').value,colaborador:colab,servico:servico,descricao_manut:document.getElementById('pManutDesc').value,meta:parseInt(document.getElementById('pMeta').value)||0,locais:getLocais(),observacoes:document.getElementById('pObs').value};
+  try{await apiPost('planejamento',dados);alerta('success','Planejamento salvo!');limparForm();carregarPlanejamentos();}
+  catch(e){alerta('error','Erro ao salvar. Verifique a conexao com o Apps Script.');}
+}
+
+function limparForm(){
+  document.getElementById('pColab').value='';document.getElementById('pServico').value='';
+  document.getElementById('pManutDesc').value='';document.getElementById('pMeta').value=2;
+  document.getElementById('pObs').value='';document.getElementById('manutDescBox').style.display='none';
+  document.querySelectorAll('.loc-btn.selected').forEach(function(b){b.classList.remove('selected');});
+}
+
+async function carregarPlanejamentos(){
+  var data=document.getElementById('filtroData').value;
+  try{var d=await apiGet('planejamento',{data:data});var l=Array.isArray(d)?d:[];
+  document.getElementById('tbPlanejamentos').innerHTML=l.length>0?l.map(function(r){return '<tr><td>'+fmtData(r.data)+'</td><td><strong>'+(r.colaborador||'—')+'</strong></td><td>'+(r.servico||'—')+'</td><td style="text-align:center;font-weight:700;color:#2E75B6">'+(r.meta||0)+'</td><td style="font-size:11px;color:#555">'+(r.locais||'—')+'</td></tr>';}).join(''):'<tr><td colspan="5" class="empty">Nenhum planejamento para esta data</td></tr>';}
+  catch(e){document.getElementById('tbPlanejamentos').innerHTML='<tr><td colspan="5" class="empty">Conecte ao Apps Script para ver os dados</td></tr>';}
+}
+
+async function carregarComparativo(){
+  var ini=document.getElementById('pDataIni').value,fim=document.getElementById('pDataFim').value;
+  if(!ini||!fim){alerta('warn','Selecione o periodo.');return;}
+  document.getElementById('painelComparativo').style.display='block';
+  try{
+    var [plan,regs]=await Promise.all([apiGet('planejamento',{data_ini:ini,data_fim:fim}),apiGet('registros',{data_ini:ini,data_fim:fim})]);
+    var lp=Array.isArray(plan)?plan:[],lr=Array.isArray(regs)?regs:[],mapa={};
+    lp.forEach(function(r){var k=(r.colaborador||'')+'|'+(r.servico||'');if(!mapa[k])mapa[k]={colaborador:r.colaborador,servico:r.servico,meta:0,realizado:0};mapa[k].meta+=(parseInt(r.meta)||0);});
+    lr.forEach(function(r){var k=(r.colaborador||'')+'|'+(r.servico||'');if(!mapa[k])mapa[k]={colaborador:r.colaborador,servico:r.servico,meta:0,realizado:0};mapa[k].realizado+=(parseInt(r.quantidade)||1);});
+    var rows=Object.values(mapa);
+    document.getElementById('tbComparativo').innerHTML=rows.length>0?rows.map(function(r){var ef=r.meta>0?Math.round(r.realizado/r.meta*100):0;var cor=ef>=96?'#1E7145':ef>=75?'#C9A84C':'#C00000';return '<tr><td><strong>'+(r.colaborador||'—')+'</strong></td><td>'+(r.servico||'—')+'</td><td style="text-align:center">'+r.meta+'</td><td style="text-align:center">'+r.realizado+'</td><td style="text-align:center;font-weight:700;color:'+cor+'">'+ef+'%</td></tr>';}).join(''):'<tr><td colspan="5" class="empty">Sem dados no periodo</td></tr>';
+  }catch(e){document.getElementById('tbComparativo').innerHTML='<tr><td colspan="5" class="empty">Conecte ao Apps Script</td></tr>';}
+}
+
+carregarPlanejamentos();
 </script>
 </body>
 </html>

@@ -1,68 +1,83 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Gestao Operacional Seatrium</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(135deg,#1F4E79 0%,#2E75B6 60%,#1E7145 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
-.logo{text-align:center;margin-bottom:36px;color:#fff}
-.logo-icon{font-size:56px;margin-bottom:10px}
-.logo h1{font-size:26px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
-.logo p{font-size:14px;opacity:.8;margin-top:5px}
-.data-badge{display:inline-block;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);padding:5px 16px;border-radius:20px;font-size:12px;margin-top:10px;font-weight:600}
-.cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:720px;width:100%;margin-bottom:24px}
-.card{background:#fff;border-radius:18px;padding:36px 28px;text-align:center;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;box-shadow:0 8px 30px rgba(0,0,0,.15);display:flex;flex-direction:column;align-items:center;gap:14px;border-top:6px solid transparent}
-.card:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(0,0,0,.22)}
-.card.plan{border-top-color:#C9A84C}.card.real{border-top-color:#1E7145}
-.card-icon{font-size:52px;line-height:1}
-.card-title{font-size:19px;font-weight:800;color:#1F4E79;line-height:1.2}
-.card-sub{font-size:13px;color:#666;line-height:1.5}
-.card-btn{margin-top:6px;padding:12px 24px;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;width:100%}
-.card.plan .card-btn{background:#C9A84C;color:#fff}.card.real .card-btn{background:#1E7145;color:#fff}
-.links{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:20px}
-.link{color:rgba(255,255,255,.85);font-size:13px;text-decoration:none;padding:8px 18px;border:1px solid rgba(255,255,255,.3);border-radius:9px;font-weight:600;transition:background .2s}
-.link:hover{background:rgba(255,255,255,.15);color:#fff}
-.footer-idx{margin-top:24px;text-align:center;padding:16px}
-@media(max-width:560px){.cards{grid-template-columns:1fr;gap:14px}.logo h1{font-size:20px}.card{padding:24px 18px}}
-</style>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>Gestao Operacional - Projeto Seatrium</title>
+<link href="css/style.css" rel="stylesheet"/>
 </head>
 <body>
-<div class="logo">
-  <div class="logo-icon">&#127959;&#65039;</div>
-  <h1>Gestao Operacional</h1>
-  <p>Projeto Seatrium</p>
-  <div class="data-badge" id="dt">&#128197; ...</div>
+<header class="header">
+<div class="header-logo">
+<span style="font-size:22px">🏗️</span>
+<div><h1>GESTAO OPERACIONAL</h1><span>PROJETO SEATRIUM</span></div>
 </div>
-<div class="cards">
-  <a href="planejamento.html" class="card plan">
-    <div class="card-icon">&#128203;</div>
-    <div class="card-title">Planejamento do Proximo Dia</div>
-    <div class="card-sub">Defina metas, efetivo previsto e prioridades para o proximo dia de operacao</div>
-    <button class="card-btn">&#128203; Abrir Planejamento</button>
-  </a>
-  <a href="registro.html" class="card real">
-    <div class="card-icon">&#128221;</div>
-    <div class="card-title">Relatorio do Dia</div>
-    <div class="card-sub">Registre o que foi realizado - limpezas, succoes, ocorrencias e efetivo</div>
-    <button class="card-btn">&#128221; Abrir Relatorio</button>
-  </a>
+<nav class="nav">
+<a href="planejamento.html">📋 Planejamento</a>
+<a href="registro.html">📝 Relatorio</a>
+<a href="dashboard.html">📊 Dashboard</a>
+<a href="comparativo.html">📈 Meta x Realizado</a>
+<a href="frota.html">🚗 Frota</a>
+</nav>
+</header>
+<div class="container">
+<div class="hero">
+<div style="font-size:48px;margin-bottom:12px">🏗️</div>
+<h2>GESTAO OPERACIONAL</h2>
+<p style="font-size:16px;font-weight:700;margin-bottom:8px;opacity:1">PROJETO SEATRIUM</p>
+<p>Sistema completo de controle operacional — planejamento, registro diario, KPIs, frota e muito mais.</p>
 </div>
-<div class="links">
-  <a href="dashboard.html" class="link">&#128202; Dashboard</a>
-  <a href="comparativo.html" class="link">&#128200; Meta x Realizado</a>
-  <a href="frota.html" class="link">&#128663; Frota</a>
+<div class="main-actions">
+<a class="action-card" href="planejamento.html">
+<div class="icon">📋</div>
+<h3>Planejamento do Dia</h3>
+<p>Defina metas, atribua colaboradores e selecione containers/banheiros para o proximo dia</p>
+</a>
+<a class="action-card" href="registro.html">
+<div class="icon">📝</div>
+<h3>Relatorio do Dia</h3>
+<p>Registre a producao realizada, ocorrencias e efetivo do turno com comparativo do planejado</p>
+</a>
 </div>
-<div class="footer-idx">
-  <div style="color:rgba(255,255,255,.45);font-size:10px;margin-bottom:4px;letter-spacing:.8px;text-transform:uppercase">Desenvolvido por</div>
-  <div style="color:#C9A84C;font-weight:800;font-size:16px;letter-spacing:1.5px">EVEREST CONSULTORIA</div>
-  <div style="color:rgba(255,255,255,.6);font-size:12px;font-style:italic;margin-top:2px">em Gestao Empresarial</div>
-  <div style="color:rgba(255,255,255,.3);font-size:10px;margin-top:6px">&#169; 2026 &mdash; Todos os direitos reservados</div>
+<div class="quick-links">
+<a class="quick-link" href="dashboard.html">
+<div class="ql-icon">📊</div>
+      Dashboard
+    </a>
+<a class="quick-link" href="comparativo.html">
+<div class="ql-icon">📈</div>
+      Meta x Realizado
+    </a>
+<a class="quick-link" href="frota.html">
+<div class="ql-icon">🚗</div>
+      Controle de Frota
+    </a>
 </div>
-<script>
-var d=new Date();
-document.getElementById('dt').textContent='&#128197; '+d.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
-</script>
+<div style="margin-top:20px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.08)">
+<div style="font-size:12px;font-weight:700;color:#1F4E79;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">👥 Equipe Operacional</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">CELSO</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">MARCIO</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">FAGNER</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">ELAINE</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">ERLANE</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">JULIANA</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">LILIANE</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">ELIDA</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">MARIA</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">SAMARA</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">OLAVO</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">DAVI</span>
+</div>
+</div>
+</div>
+<footer class="footer-everest">
+<div class="footer-inner">
+<div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">🏗️</span><div><div style="color:#fff;font-weight:700;font-size:11px">GESTAO OPERACIONAL — PROJETO SEATRIUM</div><div style="font-size:9px;opacity:.6">Sistema de Controle Operacional</div></div></div>
+<div style="text-align:center"><div style="color:#C9A84C;font-weight:700;font-size:9px;letter-spacing:.8px;text-transform:uppercase">Desenvolvido por</div><div style="color:#fff;font-weight:800;font-size:13px;letter-spacing:1.5px">EVEREST CONSULTORIA</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-style:italic">em Gestao Empresarial</div></div>
+<div style="text-align:right;font-size:9px;opacity:.5"><div>© 2026 Todos os direitos reservados</div><div>Versao 1.0</div></div>
+</div>
+</footer>
 </body>
 </html>

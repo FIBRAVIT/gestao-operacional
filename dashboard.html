@@ -10,7 +10,7 @@
 <body>
 <header class="header">
 <div class="header-logo">
-<span style="font-size:24px">🏗️</span>
+<span style="font-size:22px">🏗️</span>
 <div><h1>GESTAO OPERACIONAL</h1><span>PROJETO SEATRIUM</span></div>
 </div>
 <nav class="nav">
@@ -18,103 +18,156 @@
 <a href="planejamento.html">📋 Planejamento</a>
 <a href="registro.html">📝 Relatorio</a>
 <a href="comparativo.html">📈 Meta x Realizado</a>
+<a href="frota.html">🚗 Frota</a>
 </nav>
 </header>
 <div class="container">
-<div class="page-title">📊 Dashboard Operacional <span class="badge" id="statusBadge">Carregando...</span></div>
-<div class="cards" id="kpis">
-<div class="card"><div class="loading"><div class="spinner"></div></div></div>
-<div class="card"><div class="loading"><div class="spinner"></div></div></div>
-<div class="card"><div class="loading"><div class="spinner"></div></div></div>
-<div class="card"><div class="loading"><div class="spinner"></div></div></div>
-<div class="card"><div class="loading"><div class="spinner"></div></div></div>
+<div class="page-title">📊 Dashboard Operacional <span class="badge" style="background:#1E7145">Tempo Real</span></div>
+<!-- FILTRO -->
+<div class="filter-bar">
+<div class="form-group"><label>Data Inicial</label><input id="dIni" type="date"/></div>
+<div class="form-group"><label>Data Final</label><input id="dFim" type="date"/></div>
+<button class="btn btn-primary" onclick="carregarDados()">🔍 Filtrar</button>
+<div class="filter-shortcuts">
+<button onclick="setHoje('dIni','dFim');carregarDados()">Hoje</button>
+<button onclick="setEstaSemana('dIni','dFim');carregarDados()">Esta Semana</button>
+<button onclick="setEsteMes('dIni','dFim');carregarDados()">Este Mes</button>
+</div>
+</div>
+<!-- KPI CARDS -->
+<div class="cards" style="grid-template-columns:repeat(5,1fr)">
+<div class="card verde"><div class="card-icon">🧹</div><div class="card-value" id="kLimp">—</div><div class="card-label">Limpezas</div></div>
+<div class="card verde"><div class="card-icon">💧</div><div class="card-value" id="kLimpP">—</div><div class="card-label">Limp. Pesadas</div></div>
+<div class="card"><div class="card-icon">🔧</div><div class="card-value" id="kSucc">—</div><div class="card-label">Succoes</div></div>
+<div class="card amarelo"><div class="card-icon">⚠️</div><div class="card-value" id="kOcorr">—</div><div class="card-label">Ocorrencias</div></div>
+<div class="card"><div class="card-icon">👥</div><div class="card-value" id="kAbs">—</div><div class="card-label">Absenteismo</div></div>
 </div>
 <div class="grid2">
+<!-- KPIs DETALHADOS -->
 <div class="section">
-<div class="section-header">🎯 Meta x Realizado - Hoje</div>
-<div class="section-body" id="metaReal"><div class="loading"><div class="spinner"></div></div></div>
+<div class="section-header">📈 Indicadores de Desempenho</div>
+<div class="section-body" id="painelKpis"><div class="loading"><div class="spinner"></div></div></div>
 </div>
+<!-- TIPOS DE OCORRENCIA -->
 <div class="section">
-<div class="section-header">📈 Historico - Ultimos 7 Dias</div>
-<div class="section-body">
-<div class="chart-wrap" id="grafico"></div>
-<div class="chart-labels" id="graficoLabels"></div>
-<div style="display:flex;gap:14px;margin-top:8px;font-size:11px"><span>🔵 Limpezas</span><span>🟢 Succoes</span></div>
-</div>
+<div class="section-header amarelo">📊 Tipos de Ocorrencia e % Recorrencia</div>
+<div class="section-body" id="painelTiposOcorr"><div class="loading"><div class="spinner"></div></div></div>
 </div>
 </div>
 <div class="grid2">
+<!-- META x REALIZADO POR COLABORADOR -->
 <div class="section">
-<div class="section-header verde">👥 Por Colaborador - Hoje</div>
-<div class="section-body">
-<div style="overflow-x:auto">
-<table><thead><tr><th>Colaborador</th><th>Limpezas</th><th>Succoes</th><th>Meta</th><th>Eficiencia</th></tr></thead>
-<tbody id="tbColab"><tr><td class="loading" colspan="5"><div class="spinner"></div></td></tr></tbody></table>
+<div class="section-header">👥 Meta x Realizado por Colaborador</div>
+<div class="section-body" id="painelColabs"><div class="loading"><div class="spinner"></div></div></div>
 </div>
-</div>
-</div>
+<!-- OCORRENCIAS PENDENTES -->
 <div class="section">
-<div class="section-header vermelho">⚠️ Ocorrencias Pendentes</div>
-<div class="section-body">
-<div style="overflow-x:auto">
-<table><thead><tr><th>Data</th><th>Tipo</th><th>Local</th><th>Criticidade</th><th>Status</th></tr></thead>
-<tbody id="tbOcorr"><tr><td class="loading" colspan="5"><div class="spinner"></div></td></tr></tbody></table>
+<div class="section-header vermelho">🔴 Ocorrencias Pendentes por Criticidade</div>
+<div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descricao</th><th>Criticidade</th><th>Status</th></tr></thead><tbody id="tbOcorrPend"><tr><td class="loading" colspan="5"><div class="spinner"></div></td></tr></tbody></table></div></div>
 </div>
 </div>
-</div>
+<!-- HISTORICO 7 DIAS -->
+<div class="section">
+<div class="section-header">📅 Historico — Ultimos 7 Dias</div>
+<div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Limpezas</th><th>Limp. Pesadas</th><th>Succoes</th><th>Ocorrencias</th><th>Presentes</th></tr></thead><tbody id="tbHistorico"><tr><td class="loading" colspan="6"><div class="spinner"></div></td></tr></tbody></table></div></div>
 </div>
 </div>
 <footer class="footer-everest">
 <div class="footer-inner">
-<div style="display:flex;align-items:center;gap:10px">
-<span style="font-size:18px">🏗️</span>
-<div style="text-align:left"><div style="color:#fff;font-weight:700;font-size:12px">GESTAO OPERACIONAL — PROJETO SEATRIUM</div><div style="font-size:10px;opacity:.6">Sistema de Controle Operacional</div></div>
-</div>
-<div style="text-align:center">
-<div style="color:#C9A84C;font-weight:700;font-size:10px;letter-spacing:.8px;text-transform:uppercase">Desenvolvido por</div>
-<div style="color:#fff;font-weight:800;font-size:14px;letter-spacing:1.5px">EVEREST CONSULTORIA</div>
-<div style="color:rgba(255,255,255,.6);font-size:11px;font-style:italic">em Gestao Empresarial</div>
-</div>
-<div style="text-align:right;font-size:10px;opacity:.5"><div>© 2026 Todos os direitos reservados</div><div>Versao 1.0</div></div>
+<div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">🏗️</span><div><div style="color:#fff;font-weight:700;font-size:11px">GESTAO OPERACIONAL — PROJETO SEATRIUM</div><div style="font-size:9px;opacity:.6">Sistema de Controle Operacional</div></div></div>
+<div style="text-align:center"><div style="color:#C9A84C;font-weight:700;font-size:9px;letter-spacing:.8px;text-transform:uppercase">Desenvolvido por</div><div style="color:#fff;font-weight:800;font-size:13px;letter-spacing:1.5px">EVEREST CONSULTORIA</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-style:italic">em Gestao Empresarial</div></div>
+<div style="text-align:right;font-size:9px;opacity:.5"><div>© 2026 Todos os direitos reservados</div><div>Versao 1.0</div></div>
 </div>
 </footer>
 <script src="js/config.js"></script>
 <script>
-function setHoje(){
-  var h=dataHoje();
-  document.getElementById('periodoIni').value=h;
-  document.getElementById('periodoFim').value=h;
-  carregar();
+setEsteMes('dIni','dFim');
+
+async function carregarDados(){
+  var ini=document.getElementById('dIni').value,fim=document.getElementById('dFim').value;
+  if(!ini||!fim)return;
+  try{
+    var [regs,ocorrs,efetivo,plan]=await Promise.all([
+      apiGet('registros',{data_ini:ini,data_fim:fim}),
+      apiGet('ocorrencias',{data_ini:ini,data_fim:fim}),
+      apiGet('efetivo',{data_ini:ini,data_fim:fim}),
+      apiGet('planejamento',{data_ini:ini,data_fim:fim})
+    ]);
+    var lr=Array.isArray(regs)?regs:[],lo=Array.isArray(ocorrs)?ocorrs:[],le=Array.isArray(efetivo)?efetivo:[],lp=Array.isArray(plan)?plan:[];
+
+    // Totais
+    var totLimp=0,totLP=0,totSucc=0,totPrev=0,totPres=0,totFalt=0;
+    lr.forEach(function(r){if(r.servico==='Limpeza')totLimp+=(parseInt(r.quantidade)||0);if(r.servico==='Limpeza Pesada')totLP+=(parseInt(r.quantidade)||0);if(r.servico==='Succao')totSucc+=(parseInt(r.quantidade)||0);});
+    le.forEach(function(r){totPrev+=(parseInt(r.previstos)||0);totPres+=(parseInt(r.presentes)||0);totFalt+=(parseInt(r.faltas)||0);});
+    var abs=totPrev>0?(totFalt/totPrev*100).toFixed(1)+'%':'0%';
+
+    document.getElementById('kLimp').textContent=totLimp;
+    document.getElementById('kLimpP').textContent=totLP;
+    document.getElementById('kSucc').textContent=totSucc;
+    document.getElementById('kOcorr').textContent=lo.length;
+    document.getElementById('kAbs').textContent=abs;
+
+    // KPIs
+    var dias=Math.max(1,Math.round((new Date(fim)-new Date(ini))/(1000*60*60*24))+1);
+    var metaLimp=dias*2*2,metaSucc=dias*2*2;
+    function kpiRow(label,val,meta,menor){
+      var ef=meta>0?Math.round(val/meta*100):0;
+      var ok=menor?(val<=meta):(ef>=96);
+      var cls=ok?'badge-ok':(ef>=75?'badge-warn':'badge-err');
+      var txt=ok?'&#10004; NA META':'&#10006; ABAIXO DA META';
+      return '<div class="kpi-row"><span class="kpi-label">'+label+'</span><span class="kpi-val">'+val+'</span><span class="kpi-meta">Meta: '+meta+'</span><span class="kpi-status"><span class="'+cls+'">'+txt+'</span></span></div>';
+    }
+    document.getElementById('painelKpis').innerHTML=
+      kpiRow('Total Limpezas',totLimp,metaLimp,false)+
+      kpiRow('Total Limp. Pesadas',totLP,Math.round(metaLimp/2),false)+
+      kpiRow('Total Succoes',totSucc,metaSucc,false)+
+      kpiRow('Total Ocorrencias',lo.length,dias*1,true)+
+      '<div class="kpi-row"><span class="kpi-label">Absenteismo</span><span class="kpi-val">'+abs+'</span><span class="kpi-meta">Meta: &le;3%</span><span class="kpi-status"><span class="'+(parseFloat(abs)<=3?'badge-ok':'badge-err')+'">'+(parseFloat(abs)<=3?'&#10004; NA META':'&#10006; ABAIXO DA META')+'</span></span></div>';
+
+    // Tipos de ocorrencia
+    var tipoMap={};
+    lo.forEach(function(r){var t=r.tipo||'Outros';tipoMap[t]=(tipoMap[t]||0)+1;});
+    var tipoArr=Object.entries(tipoMap).sort(function(a,b){return b[1]-a[1];});
+    var totalOc=lo.length||1;
+    document.getElementById('painelTiposOcorr').innerHTML=tipoArr.length>0?tipoArr.map(function(t){
+      var pct=Math.round(t[1]/totalOc*100);
+      var cls=pct>=30?'vermelho':pct>=15?'amarelo':'verde';
+      return '<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:3px"><span>'+t[0]+'</span><span style="color:#666">'+t[1]+' ('+pct+'%)</span></div><div class="progress-wrap"><div class="progress-bar '+cls+'" style="width:'+pct+'%"></div></div></div>';
+    }).join(''):'<div class="empty">Nenhuma ocorrencia no periodo</div>';
+
+    // Por colaborador
+    var colabMap={};
+    lp.forEach(function(r){var c=r.colaborador||'?';if(!colabMap[c])colabMap[c]={meta:0,realizado:0};colabMap[c].meta+=(parseInt(r.meta)||0);});
+    lr.forEach(function(r){var c=r.colaborador||'?';if(!colabMap[c])colabMap[c]={meta:0,realizado:0};colabMap[c].realizado+=(parseInt(r.quantidade)||0);});
+    var colabArr=Object.entries(colabMap).sort(function(a,b){return b[1].realizado-a[1].realizado;});
+    document.getElementById('painelColabs').innerHTML=colabArr.length>0?colabArr.map(function(e){
+      var c=e[0],d=e[1];var ef=d.meta>0?Math.round(d.realizado/d.meta*100):100;
+      var cls=ef>=96?'verde':ef>=75?'amarelo':'vermelho';
+      return '<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:3px"><span>'+c+'</span><span style="color:#666">'+d.realizado+'/'+(d.meta||'—')+' ('+ef+'%)</span></div><div class="progress-wrap"><div class="progress-bar '+cls+'" style="width:'+Math.min(ef,100)+'%"></div></div></div>';
+    }).join(''):'<div class="empty">Sem dados no periodo</div>';
+
+    // Ocorrencias pendentes
+    var pend=lo.filter(function(r){return r.status!=='Resolvida';}).sort(function(a,b){var ord={Critica:0,Alta:1,Media:2,Baixa:3};return (ord[a.criticidade]||9)-(ord[b.criticidade]||9);});
+    document.getElementById('tbOcorrPend').innerHTML=pend.length>0?pend.map(function(r){var cc=r.criticidade==='Critica'||r.criticidade==='Alta'?'badge-err':r.criticidade==='Media'?'badge-warn':'badge-ok';var sc=r.status==='Em Andamento'?'badge-warn':'badge-err';return '<tr><td>'+fmtData(r.data)+'</td><td>'+(r.tipo||'—')+'</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.descricao||'—')+'</td><td><span class="'+cc+'">'+(r.criticidade||'—')+'</span></td><td><span class="'+sc+'">'+(r.status||'—')+'</span></td></tr>';}).join(''):'<tr><td colspan="5" style="text-align:center;padding:14px;color:#1E7145;font-weight:600">&#10003; Nenhuma ocorrencia pendente</td></tr>';
+
+    // Historico 7 dias
+    var hoje=new Date(),dias7=[];
+    for(var i=6;i>=0;i--){var d=new Date(hoje);d.setDate(hoje.getDate()-i);dias7.push(d.toISOString().split('T')[0]);}
+    document.getElementById('tbHistorico').innerHTML=dias7.map(function(dia){
+      var rDia=lr.filter(function(r){return r.data&&r.data.split('T')[0]===dia;});
+      var oDia=lo.filter(function(r){return r.data&&r.data.split('T')[0]===dia;});
+      var eDia=le.filter(function(r){return r.data&&r.data.split('T')[0]===dia;});
+      var l=0,lp2=0,s=0,pres=0;
+      rDia.forEach(function(r){if(r.servico==='Limpeza')l+=(parseInt(r.quantidade)||0);if(r.servico==='Limpeza Pesada')lp2+=(parseInt(r.quantidade)||0);if(r.servico==='Succao')s+=(parseInt(r.quantidade)||0);});
+      eDia.forEach(function(r){pres+=(parseInt(r.presentes)||0);});
+      var temDados=l>0||lp2>0||s>0||oDia.length>0||pres>0;
+      return '<tr style="'+(temDados?'':'opacity:.4')+'">'+'<td>'+fmtData(dia)+'</td><td style="text-align:center;font-weight:700;color:#1E7145">'+l+'</td><td style="text-align:center;font-weight:700;color:#2E75B6">'+lp2+'</td><td style="text-align:center">'+s+'</td><td style="text-align:center;color:'+(oDia.length>0?'#C00000':'#999')+'">'+oDia.length+'</td><td style="text-align:center">'+pres+'</td></tr>';
+    }).join('');
+
+  }catch(e){console.error(e);}
 }
 
-async function carregar(){
-  var ini=document.getElementById('periodoIni').value||dataHoje();
-  var fim=document.getElementById('periodoFim').value||dataHoje();
-  document.getElementById('periodoLabel').textContent='Periodo: '+new Date(ini+'T12:00:00').toLocaleDateString('pt-BR')+' a '+new Date(fim+'T12:00:00').toLocaleDateString('pt-BR');
-  try{
-    var d=await apiGet('dashboard',{data:ini,data_fim:fim});
-    document.getElementById('statusBadge').textContent='Ao Vivo';
-    document.getElementById('statusBadge').style.background='#1E7145';
-    var t=d.totais_hoje||{},m=d.metas_hoje||{};
-    document.getElementById('kpis').innerHTML=
-      '<div class="card verde"><div class="card-icon">&#129529;</div><div class="card-value">'+(t.limpezas||0)+'</div><div class="card-label">Limpezas Hoje</div><div class="card-sub">Meta: '+(m.limpezas||'-')+'</div></div>'
-      +'<div class="card"><div class="card-icon">&#128167;</div><div class="card-value">'+(t.succoes||0)+'</div><div class="card-label">Succoes Hoje</div><div class="card-sub">Meta: '+(m.succoes||'-')+'</div></div>'
-      +'<div class="card amarelo"><div class="card-icon">&#128295;</div><div class="card-value">'+(t.manutencoes||0)+'</div><div class="card-label">Manutencoes</div><div class="card-sub">Hoje</div></div>'
-      +'<div class="card '+(( t.ocorrencias||0)>0?'vermelho':'verde')+'"><div class="card-icon">&#9888;&#65039;</div><div class="card-value">'+(t.ocorrencias||0)+'</div><div class="card-label">Ocorrencias</div><div class="card-sub">'+(d.ocorrencias_pendentes||[]).length+' pendentes</div></div>'
-      +'<div class="card"><div class="card-icon">&#128101;</div><div class="card-value">'+(t.efetivo_presente||0)+'</div><div class="card-label">Colaboradores</div><div class="card-sub">Presentes hoje</div></div>';
-    var itens=[{l:'&#129529; Limpezas',r:t.limpezas||0,m:m.limpezas||0},{l:'&#128167; Succoes',r:t.succoes||0,m:m.succoes||0},{l:'&#129529; Limp. Pesadas',r:t.limpezas_pesadas||0,m:m.limpezas_pesadas||0}];
-    document.getElementById('metaReal').innerHTML=itens.map(function(i){var pct=i.m>0?Math.min(100,Math.round((i.r/i.m)*100)):0,cor=pct>=100?'verde':pct>=70?'amarelo':'vermelho';return '<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;font-weight:600">'+i.l+'</span><span style="font-size:13px;color:#666">'+i.r+' / '+(i.m||'-')+'</span></div><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill '+cor+'" style="width:'+pct+'%"></div></div><span class="progress-pct">'+(i.m>0?pct+'%':'-')+'</span></div></div>';}).join('')||'<div class="empty">Sem planejamento para hoje. <a href="planejamento.html">Criar planejamento</a></div>';
-    var hist=d.historico||[],maxV=Math.max.apply(null,hist.map(function(h){return h[1]?h[1].limpezas||0:0;}).concat([1]));
-    document.getElementById('grafico').innerHTML=hist.map(function(h){var v=h[1]||{},ht=Math.max(4,Math.round(((v.limpezas||0)/maxV)*150));return '<div class="bar" style="height:'+ht+'px"><div class="tip">'+h[0]+'<br>Limp:'+(v.limpezas||0)+' Succ:'+(v.succoes||0)+'</div></div>';}).join('');
-    document.getElementById('graficoLabels').innerHTML=hist.map(function(h){return '<div class="chart-label">'+h[0].slice(5)+'</div>';}).join('');
-    var colabs=Object.entries(d.por_colaborador||{});
-    document.getElementById('tbColab').innerHTML=colabs.length>0?colabs.map(function(entry){var nome=entry[0],v=entry[1],ef=v.meta>0?Math.round((v.limpezas/v.meta)*100):null,cor=ef===null?'badge-info':ef>=100?'badge-ok':ef>=70?'badge-warn':'badge-err';return '<tr><td><strong>'+nome+'</strong></td><td style="text-align:center">'+v.limpezas+'</td><td style="text-align:center">'+v.succoes+'</td><td style="text-align:center">'+v.meta+'</td><td><span class="'+cor+'">'+(ef!==null?ef+'%':'-')+'</span></td></tr>';}).join(''):'<tr><td colspan="5" class="empty">Sem registros hoje</td></tr>';
-    var ocorrs=d.ocorrencias_pendentes||[];
-    document.getElementById('tbOcorr').innerHTML=ocorrs.length>0?ocorrs.map(function(o){var cor=o['Criticidade']==='Alta'?'badge-err':o['Criticidade']==='Media'?'badge-warn':'badge-info';return '<tr><td>'+(o['Data']||'-')+'</td><td>'+(o['Tipo']||'-')+'</td><td>'+(o['Container/Local']||'-')+'</td><td><span class="'+cor+'">'+(o['Criticidade']||'-')+'</span></td><td><span class="badge-warn">'+(o['Status']||'-')+'</span></td></tr>';}).join(''):'<tr><td colspan="5" style="text-align:center;padding:14px;color:#1E7145;font-weight:600">Nenhuma ocorrencia pendente</td></tr>';
-  }catch(e){document.getElementById('statusBadge').textContent='Erro';document.getElementById('statusBadge').style.background='#C00000';console.error(e);}
-}
-setHoje();
-setInterval(carregar,30000);
+carregarDados();
 </script>
 </body>
 </html>

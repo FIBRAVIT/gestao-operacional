@@ -10,7 +10,7 @@
 <body>
 <header class="header">
 <div class="header-logo">
-<span style="font-size:24px">🏗️</span>
+<span style="font-size:22px">🏗️</span>
 <div><h1>GESTAO OPERACIONAL</h1><span>PROJETO SEATRIUM</span></div>
 </div>
 <nav class="nav">
@@ -18,213 +18,187 @@
 <a href="planejamento.html">📋 Planejamento</a>
 <a href="dashboard.html">📊 Dashboard</a>
 <a href="comparativo.html">📈 Meta x Realizado</a>
+<a href="frota.html">🚗 Frota</a>
 </nav>
 </header>
 <div class="container">
-<div class="page-title">📝 Relatorio do Dia <span class="badge" style="background:#1E7145">Realizado</span></div>
+<div class="page-title">📝 Relatorio do Dia <span class="badge" style="background:#1E7145">Registro Diario</span></div>
 <div id="alerta"></div>
-<div class="tabs">
-<button class="tab-btn active" onclick="showTab('tProd',this)">📝 Producao</button>
-<button class="tab-btn" onclick="showTab('tOcorr',this)">⚠️ Ocorrencia</button>
-<button class="tab-btn" onclick="showTab('tEfet',this)">👥 Efetivo</button>
-<button class="tab-btn" onclick="showTab('tHist',this)">📋 Historico</button>
+<div class="section" style="margin-bottom:16px">
+<div class="section-header">📅 Data do Registro</div>
+<div class="section-body">
+<div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
+<div class="form-group" style="margin:0"><label>Data</label><input id="rData" onchange="carregarPrevisto()" type="date"/></div>
+<div class="form-group" style="margin:0"><label>Turno</label><select id="rTurno"><option value="1">Turno 1</option><option value="2">Turno 2</option></select></div>
+<button class="btn btn-primary" onclick="carregarPrevisto()" style="padding:8px 18px">📈 Ver Planejado</button>
 </div>
+<div id="painelPrevisto" style="display:none;margin-top:14px;background:#EEF7FF;border-radius:8px;padding:14px">
+<div style="font-size:12px;font-weight:700;color:#1F4E79;margin-bottom:8px">📈 PLANEJADO PARA ESTE DIA</div>
+<div style="overflow-x:auto"><table><thead><tr><th>Colaborador</th><th>Servico</th><th>Meta</th><th>Locais</th></tr></thead><tbody id="tbPrevisto"></tbody></table></div>
+</div>
+</div>
+</div>
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab('tProd',this)">✅ Producao</button>
+<button class="tab-btn" onclick="showTab('tOcorr',this)">⚠️ Ocorrencia</button>
+<button class="tab-btn" onclick="showTab('tEfetivo',this)">👥 Efetivo</button>
+<button class="tab-btn" onclick="showTab('tHistorico',this)">📄 Historico</button>
+</div>
+<!-- PRODUCAO -->
 <div class="tab-content active" id="tProd">
 <div class="form-card">
-<div class="form-header"><h2>📝 Registro de Producao</h2><p>Registre o que foi realizado por colaborador e container</p></div>
+<div class="form-header" style="background:linear-gradient(135deg,#1E7145,#155a35)"><h2>✅ Registrar Producao</h2><p>Informe o que foi realizado no dia</p></div>
 <div class="form-body">
-<div class="form-section-title">📅 Identificacao</div>
 <div class="form-grid">
-<div class="form-group"><label>Data *</label><input id="pData" required="" type="date"/></div>
-<div class="form-group"><label>Turno *</label><select id="pTurno" required=""><option value="">Selecione...</option><option>07:00 AS 17:00</option><option>17:00 AS 23:00</option><option>23:00 AS 07:00</option></select></div>
-<div class="form-group"><label>Responsavel *</label><select id="pResp" required=""><option value="">Selecione...</option></select></div>
-<div class="form-group"><label>Container/Banheiro</label><select id="pAtivo"><option value="">Selecione...</option></select></div>
+<div class="form-group"><label>Colaborador *</label><select id="pColabReg"><option value="">Selecione...</option><option>CELSO</option><option>MARCIO</option><option>FAGNER</option><option>ELAINE</option><option>ERLANE</option><option>JULIANA</option><option>LILIANE</option><option>ELIDA</option><option>MARIA</option><option>SAMARA</option><option>OLAVO</option><option>DAVI</option></select></div>
+<div class="form-group"><label>Tipo de Servico *</label><select id="pServicoReg"><option value="">Selecione...</option><option>Limpeza</option><option>Limpeza Pesada</option><option>Succao</option><option>Inspecao</option><option>Manutencao de Container/Banheiro</option><option>Manutencao Geral</option></select></div>
+<div class="form-group"><label>Quantidade Realizada *</label><input id="pQtd" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Container / Banheiro</label><input id="pLocal" placeholder="Ex: C01, B03..." type="text"/></div>
+<div class="form-group"><label>Observacoes</label><input id="pObsReg" placeholder="Obs..." type="text"/></div>
 </div>
-<hr class="form-divider"/>
-<div class="form-section-title">📊 Producao Realizada</div>
-<div id="metaInfo" style="background:#EEF7FF;border:1px solid #9DC3E6;border-radius:7px;padding:10px;margin-bottom:12px;font-size:13px;display:none">🎯 <strong>Meta do planejamento:</strong> <span id="metaTxt">-</span></div>
-<div class="form-grid">
-<div class="form-group"><label>🎯 Meta</label><input id="pMeta" min="0" oninput="calcEf()" style="background:#FFF9E6" type="number" value="0"/></div>
-<div class="form-group"><label>🧹 Limpezas</label><input id="pLimp" min="0" oninput="calcEf()" type="number" value="0"/></div>
-<div class="form-group"><label>🧹 Limp. Pesadas</label><input id="pLimpPes" min="0" type="number" value="0"/></div>
-<div class="form-group"><label>💧 Succoes</label><input id="pSucc" min="0" type="number" value="0"/></div>
-<div class="form-group"><label>🔧 Manutencoes</label><input id="pManut" min="0" type="number" value="0"/></div>
-<div class="form-group"><label>⚠️ Ocorrencias</label><input id="pOcorr" min="0" type="number" value="0"/></div>
-</div>
-<div id="efBox" style="background:#F0F8F0;border:1px solid #A9D18E;border-radius:7px;padding:10px;margin-bottom:12px;display:none">
-<span id="efEmoji" style="font-size:20px">📊</span>
-<strong style="color:#1E7145"> Eficiencia: </strong>
-<span id="efVal" style="font-size:20px;font-weight:800;color:#1E7145">-</span>
-</div>
-<div class="form-group"><label>📝 Observacoes</label><textarea id="pObs" placeholder="Descreva o que foi realizado..."></textarea></div>
-<div class="btn-group">
-<button class="btn btn-success" onclick="salvarProd()">✓ Salvar Registro</button>
-<button class="btn btn-outline" onclick="limparProd()">🗑 Limpar</button>
+<div class="btn-group"><button class="btn btn-success" onclick="salvarRegistro()">✅ Registrar Producao</button></div>
 </div>
 </div>
+<div class="section">
+<div class="section-header verde">✅ Producao do Dia</div>
+<div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Colaborador</th><th>Servico</th><th>Qtd</th><th>Local</th><th>Turno</th><th>Obs</th></tr></thead><tbody id="tbProd"><tr><td class="loading" colspan="6"><div class="spinner"></div></td></tr></tbody></table></div></div>
 </div>
 </div>
+<!-- OCORRENCIA -->
 <div class="tab-content" id="tOcorr">
 <div class="form-card">
-<div class="form-header" style="background:linear-gradient(135deg,#C00000,#900000)"><h2>⚠️ Registro de Ocorrencia</h2><p>Registre ocorrencias, incidentes e nao conformidades</p></div>
+<div class="form-header" style="background:linear-gradient(135deg,#C55A11,#a04a0e)"><h2>⚠️ Registrar Ocorrencia</h2><p>Registre ocorrencias e desvios do dia</p></div>
 <div class="form-body">
 <div class="form-grid">
-<div class="form-group"><label>Data *</label><input id="oData" required="" type="date"/></div>
-<div class="form-group"><label>Tipo *</label><select id="oTipo" required=""><option value="">Selecione...</option><option>OPERACAO</option><option>ADMINISTRATIVA</option><option>FROTA</option><option>MAO DE OBRA</option><option>SEGURANCA</option><option>EQUIPAMENTO</option><option>OUTROS</option></select></div>
-<div class="form-group"><label>Container/Local</label><select id="oLocal"><option value="">Selecione...</option></select></div>
-<div class="form-group"><label>Criticidade *</label><select id="oCrit" required=""><option value="">Selecione...</option><option value="Alta">🔴 Alta</option><option value="Media">🟡 Media</option><option value="Baixa">🟢 Baixa</option></select></div>
-<div class="form-group"><label>Responsavel</label><select id="oResp"><option value="">Selecione...</option></select></div>
-<div class="form-group"><label>Status</label><select id="oStatus"><option value="Em andamento">Em andamento</option><option value="Pendente">Pendente</option><option value="Resolvido">Resolvido</option></select></div>
+<div class="form-group"><label>Tipo de Ocorrencia *</label><select id="oTipo"><option value="">Selecione...</option><option>Acidente de Trabalho</option><option>Quase Acidente</option><option>Falha de Equipamento</option><option>Falta de Insumo</option><option>Atraso na Execucao</option><option>Nao Conformidade</option><option>Reclamacao do Cliente</option><option>Dano ao Patrimonio</option><option>Outros</option></select></div>
+<div class="form-group"><label>Local / Container</label><input id="oLocal" placeholder="Ex: C05, Banheiro B02..." type="text"/></div>
+<div class="form-group"><label>Descricao *</label><input id="oDesc" placeholder="Descreva a ocorrencia..." type="text"/></div>
+<div class="form-group"><label>Acao Tomada</label><input id="oAcao" placeholder="O que foi feito..." type="text"/></div>
+<div class="form-group"><label>Responsavel</label><input id="oResp" placeholder="Responsavel pela ocorrencia" type="text"/></div>
+<div class="form-group"><label>Criticidade</label><select id="oCrit"><option value="Baixa">Baixa</option><option value="Media">Media</option><option value="Alta">Alta</option><option value="Critica">Critica</option></select></div>
+<div class="form-group"><label>Status</label><select id="oStatus"><option value="Aberta">Aberta</option><option value="Em Andamento">Em Andamento</option><option value="Resolvida">Resolvida</option></select></div>
 </div>
-<div class="form-group"><label>Descricao *</label><textarea id="oDesc" placeholder="Descreva detalhadamente o que aconteceu..." required=""></textarea></div>
-<div class="form-group"><label>Acao Tomada</label><textarea id="oAcao" placeholder="Descreva as acoes tomadas..."></textarea></div>
-<div class="btn-group">
-<button class="btn btn-danger" onclick="salvarOcorr()">⚠️ Registrar Ocorrencia</button>
-<button class="btn btn-outline" onclick="limparOcorr()">🗑 Limpar</button>
+<div class="btn-group"><button class="btn btn-warning" onclick="salvarOcorrencia()">⚠️ Registrar Ocorrencia</button></div>
 </div>
 </div>
-</div>
-</div>
-<div class="tab-content" id="tEfet">
-<div class="form-card">
-<div class="form-header" style="background:linear-gradient(135deg,#1E7145,#155a35)"><h2>👥 Efetivo do Dia</h2><p>Registre a presenca da equipe</p></div>
-<div class="form-body">
-<div class="form-grid">
-<div class="form-group"><label>Data *</label><input id="eData" required="" type="date"/></div>
-<div class="form-group"><label>Efetivo Previsto</label><input id="ePrev" min="0" type="number" value="0"/></div>
-<div class="form-group"><label>Efetivo Presente</label><input id="ePres" min="0" type="number" value="0"/></div>
-</div>
-<div class="form-section-title" style="margin-top:14px">📋 Presenca Individual</div>
-<div id="presenca"></div>
-<div class="btn-group"><button class="btn btn-success" onclick="salvarEfet()">✓ Salvar Efetivo</button></div>
-</div>
-</div>
-</div>
-<div class="tab-content" id="tHist">
 <div class="section">
-<div class="section-header verde">📋 Registros
-        <div style="display:flex;gap:6px;align-items:center">
-<input id="filtro" style="padding:4px 7px;border-radius:5px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.15);color:#fff;font-size:11px" type="date"/>
-<button onclick="carregarHist()" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:4px 9px;border-radius:5px;cursor:pointer;font-size:11px">🔍</button>
+<div class="section-header amarelo">⚠️ Ocorrencias do Dia</div>
+<div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Tipo</th><th>Local</th><th>Descricao</th><th>Acao</th><th>Responsavel</th><th>Criticidade</th><th>Status</th></tr></thead><tbody id="tbOcorr"><tr><td class="loading" colspan="7"><div class="spinner"></div></td></tr></tbody></table></div></div>
 </div>
 </div>
+<!-- EFETIVO -->
+<div class="tab-content" id="tEfetivo">
+<div class="form-card">
+<div class="form-header" style="background:linear-gradient(135deg,#2E75B6,#1F4E79)"><h2>👥 Registrar Efetivo</h2><p>Informe a presenca da equipe por turno</p></div>
+<div class="form-body">
+<div class="form-grid">
+<div class="form-group"><label>Turno *</label><select id="eTurno"><option value="1">Turno 1</option><option value="2">Turno 2</option></select></div>
+<div class="form-group"><label>Previstos</label><input id="ePrev" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Presentes</label><input id="ePres" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Faltas</label><input id="eFalt" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Atestados</label><input id="eAtest" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Observacoes</label><input id="eObs" placeholder="Obs..." type="text"/></div>
+</div>
+<div class="btn-group"><button class="btn btn-primary" onclick="salvarEfetivo()">👥 Registrar Efetivo</button></div>
+</div>
+</div>
+<div class="section">
+<div class="section-header">👥 Efetivo do Dia</div>
+<div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Turno</th><th>Previstos</th><th>Presentes</th><th>Faltas</th><th>Atestados</th><th>Absenteismo</th></tr></thead><tbody id="tbEfetivo"><tr><td class="loading" colspan="6"><div class="spinner"></div></td></tr></tbody></table></div></div>
+</div>
+</div>
+<!-- HISTORICO -->
+<div class="tab-content" id="tHistorico">
+<div class="section">
+<div class="section-header">📄 Historico de Registros</div>
 <div class="section-body">
-<div id="resumo" style="margin-bottom:10px"></div>
-<div style="overflow-x:auto">
-<table><thead><tr><th>Data</th><th>Turno</th><th>Responsavel</th><th>Container</th><th>Meta</th><th>Limpezas</th><th>Limp.Pes.</th><th>Succoes</th><th>Manut.</th><th>Ocorr.</th><th>Efic.</th><th>Obs.</th></tr></thead>
-<tbody id="tbHist"><tr><td class="loading" colspan="12"><div class="spinner"></div></td></tr></tbody></table>
+<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+<input id="hDataIni" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px" type="date"/>
+<input id="hDataFim" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px" type="date"/>
+<button class="btn btn-primary" onclick="carregarHistorico()" style="padding:6px 14px;font-size:12px">🔍 Buscar</button>
 </div>
+<div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Turno</th><th>Colaborador</th><th>Servico</th><th>Qtd</th><th>Local</th></tr></thead><tbody id="tbHistorico"><tr><td class="empty" colspan="6">Selecione um periodo para buscar</td></tr></tbody></table></div>
 </div>
 </div>
 </div>
 </div>
 <footer class="footer-everest">
 <div class="footer-inner">
-<div style="display:flex;align-items:center;gap:10px">
-<span style="font-size:18px">🏗️</span>
-<div style="text-align:left"><div style="color:#fff;font-weight:700;font-size:12px">GESTAO OPERACIONAL — PROJETO SEATRIUM</div><div style="font-size:10px;opacity:.6">Sistema de Controle Operacional</div></div>
-</div>
-<div style="text-align:center">
-<div style="color:#C9A84C;font-weight:700;font-size:10px;letter-spacing:.8px;text-transform:uppercase">Desenvolvido por</div>
-<div style="color:#fff;font-weight:800;font-size:14px;letter-spacing:1.5px">EVEREST CONSULTORIA</div>
-<div style="color:rgba(255,255,255,.6);font-size:11px;font-style:italic">em Gestao Empresarial</div>
-</div>
-<div style="text-align:right;font-size:10px;opacity:.5"><div>© 2026 Todos os direitos reservados</div><div>Versao 1.0</div></div>
+<div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">🏗️</span><div><div style="color:#fff;font-weight:700;font-size:11px">GESTAO OPERACIONAL — PROJETO SEATRIUM</div><div style="font-size:9px;opacity:.6">Sistema de Controle Operacional</div></div></div>
+<div style="text-align:center"><div style="color:#C9A84C;font-weight:700;font-size:9px;letter-spacing:.8px;text-transform:uppercase">Desenvolvido por</div><div style="color:#fff;font-weight:800;font-size:13px;letter-spacing:1.5px">EVEREST CONSULTORIA</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-style:italic">em Gestao Empresarial</div></div>
+<div style="text-align:right;font-size:9px;opacity:.5"><div>© 2026 Todos os direitos reservados</div><div>Versao 1.0</div></div>
 </div>
 </footer>
 <script src="js/config.js"></script>
 <script>
-var colaboradores=[],ativos=[];
-var hoje=dataHoje();
-['pData','oData','eData','filtro'].forEach(function(id){var el=document.getElementById(id);if(el)el.value=hoje;});
+document.getElementById('rData').value=dataHoje();
+document.getElementById('hDataIni').value=dataHoje();
+document.getElementById('hDataFim').value=dataHoje();
 
 function showTab(id,btn){
   document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
   document.getElementById(id).classList.add('active');btn.classList.add('active');
-  if(id==='tHist')carregarHist();
+  if(id==='tProd')carregarProd();if(id==='tOcorr')carregarOcorr();if(id==='tEfetivo')carregarEfetivo();
 }
-
-async function carregarPainelDia(data){
-  if(!data) return;
-  var painel=document.getElementById('painelPlanReal');
-  var label=document.getElementById('dataPainelLabel');
-  var conteudo=document.getElementById('painelConteudo');
-  painel.style.display='block';
-  label.textContent=new Date(data+'T12:00:00').toLocaleDateString('pt-BR');
-  conteudo.innerHTML='<div class="loading"><div class="spinner"></div> Carregando...</div>';
-  try{
-    var plans=await apiGet('planejamento');
-    var regs=await apiGet('registros',{data:data});
-    var planDia=Array.isArray(plans)?plans.filter(function(p){return (p['Data']||p.data||'')=== data;}):[];
-    var regDia=Array.isArray(regs)?regs:[];
-    var totPlan={limp:planDia.reduce(function(s,p){return s+Number(p['Meta Limpezas']||p.meta_limpezas||0);},0),succ:planDia.reduce(function(s,p){return s+Number(p['Meta Succoes']||p.meta_succoes||0);},0),efet:planDia.reduce(function(s,p){return s+Number(p['Efetivo Previsto']||p.efetivo_previsto||0);},0)};
-    var totReal={limp:regDia.reduce(function(s,r){return s+Number(r['Limpezas']||r.limpezas||0);},0),succ:regDia.reduce(function(s,r){return s+Number(r['Succoes']||r.succoes||0);},0),efet:[...new Set(regDia.map(function(r){return r['Responsavel']||r.responsavel||'';}).filter(Boolean))].length};
-    var efL=totPlan.limp>0?Math.round((totReal.limp/totPlan.limp)*100):null;
-    // Por colaborador
-    var porColab={};
-    regDia.forEach(function(r){var n=r['Responsavel']||r.responsavel||'';if(!n)return;if(!porColab[n])porColab[n]={limp:0,succ:0,turno:r['Turno']||r.turno||''};porColab[n].limp+=Number(r['Limpezas']||r.limpezas||0);porColab[n].succ+=Number(r['Succoes']||r.succoes||0);});
-    var colabHtml=Object.entries(porColab).map(function(e){var n=e[0],v=e[1];return '<span style="background:#fff;border-radius:6px;padding:5px 10px;font-size:12px;border:1px solid #D6E4F0"><strong>'+n+'</strong>: '+v.limp+' limp / '+v.succ+' succ <span style="color:#888;font-size:10px">'+v.turno+'</span></span>';}).join('');
-    conteudo.innerHTML='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">'
-      +'<div style="background:#fff;border-radius:7px;padding:8px 12px;flex:1;min-width:100px;border-left:3px solid #2E75B6"><div style="font-size:10px;color:#666;font-weight:700">LIMPEZAS</div><div style="font-size:16px;font-weight:800;color:#2E75B6">'+totReal.limp+'<span style="font-size:11px;color:#888"> / '+totPlan.limp+'</span></div>'+(efL!==null?'<div style="font-size:11px;font-weight:700;color:'+(efL>=100?'#1E7145':'#C00000')+'">'+efL+'%</div>':'')+'</div>'
-      +'<div style="background:#fff;border-radius:7px;padding:8px 12px;flex:1;min-width:100px;border-left:3px solid #1E7145"><div style="font-size:10px;color:#666;font-weight:700">SUCCOES</div><div style="font-size:16px;font-weight:800;color:#1E7145">'+totReal.succ+'<span style="font-size:11px;color:#888"> / '+totPlan.succ+'</span></div></div>'
-      +'<div style="background:#fff;border-radius:7px;padding:8px 12px;flex:1;min-width:100px;border-left:3px solid #C9A84C"><div style="font-size:10px;color:#666;font-weight:700">EFETIVO</div><div style="font-size:16px;font-weight:800;color:#C9A84C">'+totReal.efet+'<span style="font-size:11px;color:#888"> / '+totPlan.efet+'</span></div></div>'
-      +'</div>'
-      +(colabHtml?'<div style="font-size:10px;font-weight:700;color:#1F4E79;margin-bottom:5px">POR COLABORADOR:</div><div style="display:flex;gap:6px;flex-wrap:wrap">'+colabHtml+'</div>':'<div style="font-size:12px;color:#888">Sem registros para este dia ainda.</div>');
-  }catch(e){conteudo.innerHTML='<div style="font-size:12px;color:#888">Erro ao carregar dados.</div>';}
-}
-
-function calcEf(){
-  var meta=parseInt(document.getElementById('pMeta').value)||0;
-  var limp=parseInt(document.getElementById('pLimp').value)||0;
-  if(meta>0){var ef=Math.round((limp/meta)*100);var box=document.getElementById('efBox');box.style.display='block';document.getElementById('efVal').textContent=ef+'%';document.getElementById('efEmoji').textContent=ef>=100?'&#127942;':ef>=70?'&#128202;':'&#9888;&#65039;';box.style.background=ef>=100?'#F0F8F0':ef>=70?'#FFFBF0':'#FFF0F0';}
-}
-
-async function init(){
-  try{
-    var d=await apiGet('dados');
-    colaboradores=d.colaboradores||[];ativos=d.ativos||[];
-    ['pResp','oResp'].forEach(function(id){var sel=document.getElementById(id);if(sel)colaboradores.forEach(function(c){var o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});});
-    ['pAtivo','oLocal'].forEach(function(id){var sel=document.getElementById(id);if(sel)ativos.forEach(function(a){var o=document.createElement('option');o.value=a;o.textContent=a;sel.appendChild(o);});});
-    var pc=document.getElementById('presenca');
-    pc.innerHTML=colaboradores.map(function(c){return '<div style="display:flex;align-items:center;gap:10px;padding:7px;border-bottom:1px solid #F0F0F0"><span style="min-width:140px;font-weight:600;font-size:13px">'+c+'</span><select style="padding:5px;border:1.5px solid #DDD;border-radius:5px;font-size:12px" data-colab="'+c+'"><option value="Presenca">&#10003; Presenca</option><option value="Falta">&#10007; Falta</option><option value="Atestado">&#127973; Atestado</option><option value="Folga">&#127796; Folga</option><option value="Ferias">&#127958; Ferias</option></select><input type="text" placeholder="Observacao" style="flex:1;padding:5px;border:1.5px solid #DDD;border-radius:5px;font-size:12px" data-obs="'+c+'"></div>';}).join('');
-    carregarHist();
-  }catch(e){alerta('error','Erro ao carregar dados.');}
-}
-
-async function salvarProd(){
-  var data=document.getElementById('pData').value,turno=document.getElementById('pTurno').value,resp=document.getElementById('pResp').value;
-  if(!data||!turno||!resp){alerta('warn','Preencha data, turno e responsavel.');return;}
-  var payload={data:data,turno:turno,responsavel:resp,ativo:document.getElementById('pAtivo').value,meta:parseInt(document.getElementById('pMeta').value)||0,limpezas:parseInt(document.getElementById('pLimp').value)||0,limpezas_pesadas:parseInt(document.getElementById('pLimpPes').value)||0,succoes:parseInt(document.getElementById('pSucc').value)||0,manutencoes:parseInt(document.getElementById('pManut').value)||0,ocorrencias:parseInt(document.getElementById('pOcorr').value)||0,observacoes:document.getElementById('pObs').value};
-  try{await apiPost('registro',payload);alerta('success','Registro salvo! '+resp+' - '+payload.limpezas+' limpezas');limparProd();}catch(e){alerta('error','Erro ao salvar.');}
-}
-
-async function salvarOcorr(){
-  var data=document.getElementById('oData').value,tipo=document.getElementById('oTipo').value,desc=document.getElementById('oDesc').value;
-  if(!data||!tipo||!desc){alerta('warn','Preencha data, tipo e descricao.');return;}
-  try{await apiPost('ocorrencia',{data:data,tipo_ocorrencia:tipo,local:document.getElementById('oLocal').value,criticidade:document.getElementById('oCrit').value,responsavel:document.getElementById('oResp').value,status:document.getElementById('oStatus').value,descricao:desc,acao:document.getElementById('oAcao').value});alerta('success','Ocorrencia registrada!');limparOcorr();}catch(e){alerta('error','Erro ao salvar.');}
-}
-
-async function salvarEfet(){
-  var data=document.getElementById('eData').value,presencas=[];
-  document.querySelectorAll('[data-colab]').forEach(function(sel){var colab=sel.dataset.colab,obs=document.querySelector('[data-obs="'+colab+'"]');presencas.push({colaborador:colab,ocorrencia:sel.value,observacao:obs?obs.value:''});});
-  try{await apiPost('efetivo',{data:data,turno:document.getElementById('eTurno').value,efetivo_previsto:parseInt(document.getElementById('ePrev').value)||0,efetivo_presente:parseInt(document.getElementById('ePres').value)||0,presencas:presencas});alerta('success','Efetivo salvo!');}catch(e){alerta('error','Erro ao salvar.');}
-}
-
-async function carregarHist(){
-  var filtro=document.getElementById('filtro').value;
-  try{
-    var registros=await apiGet('registros',filtro?{data:filtro}:{});
-    var lista=Array.isArray(registros)?registros.slice(-50).reverse():[];
-    if(filtro&&lista.length>0){var tot={limp:0,succ:0,meta:0,ocorr:0};lista.forEach(function(r){tot.limp+=Number(r['Limpezas']||r.limpezas||0);tot.succ+=Number(r['Succoes']||r.succoes||0);tot.meta+=Number(r['Meta']||r.meta||0);tot.ocorr+=Number(r['Ocorrencias']||r.ocorrencias||0);});var ef=tot.meta>0?Math.round((tot.limp/tot.meta)*100):null;document.getElementById('resumo').innerHTML='<div class="cards" style="grid-template-columns:repeat(4,1fr);margin-bottom:10px"><div class="card" style="padding:10px"><div class="card-value" style="font-size:22px">'+tot.limp+'</div><div class="card-label">Limpezas</div></div><div class="card" style="padding:10px"><div class="card-value" style="font-size:22px">'+tot.succ+'</div><div class="card-label">Succoes</div></div><div class="card '+(ef!==null&&ef>=100?'verde':'amarelo')+'" style="padding:10px"><div class="card-value" style="font-size:22px">'+(ef!==null?ef+'%':'-')+'</div><div class="card-label">Eficiencia</div></div><div class="card '+(tot.ocorr>0?'vermelho':'verde')+'" style="padding:10px"><div class="card-value" style="font-size:22px">'+tot.ocorr+'</div><div class="card-label">Ocorrencias</div></div></div>';}else{document.getElementById('resumo').innerHTML='';}
-    document.getElementById('tbHist').innerHTML=lista.length>0?lista.map(function(r){var limp=Number(r['Limpezas']||r.limpezas||0),meta=Number(r['Meta']||r.meta||0),ef=meta>0?Math.round((limp/meta)*100):null,cor=ef===null?'badge-info':ef>=100?'badge-ok':ef>=70?'badge-warn':'badge-err';return '<tr><td>'+(r['Data']||r.data||'-')+'</td><td style="font-size:11px">'+(r['Turno']||r.turno||'-')+'</td><td><strong>'+(r['Responsavel']||r.responsavel||'-')+'</strong></td><td>'+(r['Container/Banheiro']||r.ativo||'-')+'</td><td style="text-align:center">'+meta+'</td><td style="text-align:center;font-weight:700;color:#2E75B6">'+limp+'</td><td style="text-align:center">'+(r['Limpezas Pesadas']||r.limpezas_pesadas||0)+'</td><td style="text-align:center">'+(r['Succoes']||r.succoes||0)+'</td><td style="text-align:center">'+(r['Manutencoes']||r.manutencoes||0)+'</td><td style="text-align:center;color:'+((r['Ocorrencias']||r.ocorrencias||0)>0?'#C00000':'#1E7145')+';font-weight:700">'+(r['Ocorrencias']||r.ocorrencias||0)+'</td><td><span class="'+cor+'">'+(ef!==null?ef+'%':'-')+'</span></td><td style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px">'+(r['Observacoes']||r.observacoes||'-')+'</td></tr>';}).join(''):'<tr><td colspan="12" class="empty">Nenhum registro encontrado</td></tr>';
-  }catch(e){console.error(e);}
-}
-
-function limparProd(){['pLimp','pLimpPes','pSucc','pManut','pOcorr'].forEach(function(id){document.getElementById(id).value=0;});document.getElementById('pObs').value='';document.getElementById('efBox').style.display='none';}
-function limparOcorr(){['oTipo','oLocal','oCrit','oResp'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('oDesc').value='';document.getElementById('oAcao').value='';}
 function alerta(tipo,msg){document.getElementById('alerta').innerHTML='<div class="alert alert-'+tipo+'">'+msg+'</div>';setTimeout(function(){document.getElementById('alerta').innerHTML='';},5000);}
-init();
+function getData(){return document.getElementById('rData').value;}
+function getTurno(){return document.getElementById('rTurno').value;}
+
+async function carregarPrevisto(){
+  var data=getData();if(!data)return;
+  try{var d=await apiGet('planejamento',{data:data});var l=Array.isArray(d)?d:[];
+  if(l.length>0){document.getElementById('painelPrevisto').style.display='block';document.getElementById('tbPrevisto').innerHTML=l.map(function(r){return '<tr><td><strong>'+(r.colaborador||'—')+'</strong></td><td>'+(r.servico||'—')+'</td><td style="text-align:center;font-weight:700;color:#2E75B6">'+(r.meta||0)+'</td><td style="font-size:11px">'+(r.locais||'—')+'</td></tr>';}).join('');}
+  else{document.getElementById('painelPrevisto').style.display='none';}
+  carregarProd();carregarOcorr();carregarEfetivo();}catch(e){document.getElementById('painelPrevisto').style.display='none';}
+}
+
+async function salvarRegistro(){
+  var colab=document.getElementById('pColabReg').value,serv=document.getElementById('pServicoReg').value;
+  if(!colab||!serv){alerta('warn','Selecione colaborador e servico.');return;}
+  var dados={data:getData(),turno:getTurno(),colaborador:colab,servico:serv,quantidade:parseInt(document.getElementById('pQtd').value)||0,local:document.getElementById('pLocal').value,observacoes:document.getElementById('pObsReg').value};
+  try{await apiPost('registro',dados);alerta('success','Producao registrada!');document.getElementById('pQtd').value=0;document.getElementById('pLocal').value='';document.getElementById('pObsReg').value='';carregarProd();}
+  catch(e){alerta('error','Erro ao salvar.');}
+}
+async function carregarProd(){
+  try{var d=await apiGet('registros',{data:getData()});var l=Array.isArray(d)?d:[];
+  document.getElementById('tbProd').innerHTML=l.length>0?l.map(function(r){return '<tr><td><strong>'+(r.colaborador||'—')+'</strong></td><td>'+(r.servico||'—')+'</td><td style="text-align:center;font-weight:700;color:#1E7145">'+(r.quantidade||0)+'</td><td>'+(r.local||'—')+'</td><td style="text-align:center">T'+(r.turno||'—')+'</td><td style="font-size:11px;color:#555">'+(r.observacoes||'—')+'</td></tr>';}).join(''):'<tr><td colspan="6" class="empty">Nenhum registro para esta data</td></tr>';}
+  catch(e){document.getElementById('tbProd').innerHTML='<tr><td colspan="6" class="empty">Conecte ao Apps Script</td></tr>';}
+}
+
+async function salvarOcorrencia(){
+  var tipo=document.getElementById('oTipo').value,desc=document.getElementById('oDesc').value;
+  if(!tipo||!desc){alerta('warn','Informe o tipo e a descricao.');return;}
+  var dados={data:getData(),turno:getTurno(),tipo:tipo,local:document.getElementById('oLocal').value,descricao:desc,acao:document.getElementById('oAcao').value,responsavel:document.getElementById('oResp').value,criticidade:document.getElementById('oCrit').value,status:document.getElementById('oStatus').value};
+  try{await apiPost('ocorrencia',dados);alerta('success','Ocorrencia registrada!');['oTipo','oLocal','oDesc','oAcao','oResp'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('oCrit').value='Baixa';document.getElementById('oStatus').value='Aberta';carregarOcorr();}
+  catch(e){alerta('error','Erro ao salvar.');}
+}
+async function carregarOcorr(){
+  try{var d=await apiGet('ocorrencias',{data:getData()});var l=Array.isArray(d)?d:[];
+  document.getElementById('tbOcorr').innerHTML=l.length>0?l.map(function(r){var cc=r.criticidade==='Critica'||r.criticidade==='Alta'?'badge-err':r.criticidade==='Media'?'badge-warn':'badge-ok';var sc=r.status==='Resolvida'?'badge-ok':r.status==='Em Andamento'?'badge-warn':'badge-err';return '<tr><td>'+(r.tipo||'—')+'</td><td>'+(r.local||'—')+'</td><td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.descricao||'—')+'</td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.acao||'—')+'</td><td>'+(r.responsavel||'—')+'</td><td><span class="'+cc+'">'+(r.criticidade||'—')+'</span></td><td><span class="'+sc+'">'+(r.status||'—')+'</span></td></tr>';}).join(''):'<tr><td colspan="7" class="empty">Nenhuma ocorrencia para esta data</td></tr>';}
+  catch(e){document.getElementById('tbOcorr').innerHTML='<tr><td colspan="7" class="empty">Conecte ao Apps Script</td></tr>';}
+}
+
+async function salvarEfetivo(){
+  var dados={data:getData(),turno:document.getElementById('eTurno').value,previstos:parseInt(document.getElementById('ePrev').value)||0,presentes:parseInt(document.getElementById('ePres').value)||0,faltas:parseInt(document.getElementById('eFalt').value)||0,atestados:parseInt(document.getElementById('eAtest').value)||0,observacoes:document.getElementById('eObs').value};
+  try{await apiPost('efetivo',dados);alerta('success','Efetivo registrado!');['ePrev','ePres','eFalt','eAtest'].forEach(function(id){document.getElementById(id).value=0;});document.getElementById('eObs').value='';carregarEfetivo();}
+  catch(e){alerta('error','Erro ao salvar.');}
+}
+async function carregarEfetivo(){
+  try{var d=await apiGet('efetivo',{data:getData()});var l=Array.isArray(d)?d:[];
+  document.getElementById('tbEfetivo').innerHTML=l.length>0?l.map(function(r){var abs=r.previstos>0?((r.faltas||0)/r.previstos*100).toFixed(1)+'%':'0%';var cor=parseFloat(abs)>3?'color:#C00000':'color:#1E7145';return '<tr><td style="text-align:center;font-weight:700">T'+(r.turno||'—')+'</td><td style="text-align:center">'+(r.previstos||0)+'</td><td style="text-align:center;color:#1E7145;font-weight:700">'+(r.presentes||0)+'</td><td style="text-align:center;color:#C00000">'+(r.faltas||0)+'</td><td style="text-align:center;color:#C9A84C">'+(r.atestados||0)+'</td><td style="text-align:center;font-weight:700;'+cor+'">'+abs+'</td></tr>';}).join(''):'<tr><td colspan="6" class="empty">Nenhum efetivo para esta data</td></tr>';}
+  catch(e){document.getElementById('tbEfetivo').innerHTML='<tr><td colspan="6" class="empty">Conecte ao Apps Script</td></tr>';}
+}
+
+async function carregarHistorico(){
+  var ini=document.getElementById('hDataIni').value,fim=document.getElementById('hDataFim').value;
+  if(!ini||!fim){alerta('warn','Selecione o periodo.');return;}
+  try{var d=await apiGet('registros',{data_ini:ini,data_fim:fim});var l=Array.isArray(d)?d:[];
+  document.getElementById('tbHistorico').innerHTML=l.length>0?l.map(function(r){return '<tr><td>'+fmtData(r.data)+'</td><td style="text-align:center">T'+(r.turno||'—')+'</td><td><strong>'+(r.colaborador||'—')+'</strong></td><td>'+(r.servico||'—')+'</td><td style="text-align:center;font-weight:700;color:#1E7145">'+(r.quantidade||0)+'</td><td>'+(r.local||'—')+'</td></tr>';}).join(''):'<tr><td colspan="6" class="empty">Nenhum registro no periodo</td></tr>';}
+  catch(e){document.getElementById('tbHistorico').innerHTML='<tr><td colspan="6" class="empty">Conecte ao Apps Script</td></tr>';}
+}
+
+carregarPrevisto();
 </script>
 </body>
 </html>
