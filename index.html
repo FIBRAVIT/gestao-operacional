@@ -120,6 +120,8 @@ tbody tr:nth-child(even){background:#FAFBFC}
     <a onclick="sp('dash')" id="nd">&#128202; Dashboard</a>
     <a onclick="sp('comp')" id="nc">&#128200; Meta x Real.</a>
     <a onclick="sp('est')" id="ne">&#128230; Estoque</a>
+    <a onclick="sp('frota')" id="nfrota">&#128663; Frota</a>
+    <a onclick="sp('blit')" id="nblit" style="background:rgba(30,113,69,.25);border-color:#1E7145">&#9989; BLIT</a>
     <a onclick="sp('rel')" id="nrl" style="background:rgba(201,168,76,.25);border-color:#C9A84C">&#128196; Rel. Operacional</a>
   </nav>
 </header>
@@ -134,6 +136,8 @@ tbody tr:nth-child(even){background:#FAFBFC}
     <div class="qlk" onclick="sp('dash')"><div class="qi">&#128202;</div>Dashboard</div>
     <div class="qlk" onclick="sp('comp')"><div class="qi">&#128200;</div>Meta x Realizado</div>
     <div class="qlk" onclick="sp('est')"><div class="qi">&#128230;</div>Estoque</div>
+    <div class="qlk" onclick="sp('frota')"><div class="qi">&#128663;</div>Frota</div>
+    <div class="qlk" onclick="sp('blit')" style="background:#1E7145;color:#fff"><div class="qi">&#9989;</div>BLIT</div>
     <div class="qlk" onclick="sp('rel')" style="background:#1F4E79;color:#fff"><div class="qi">&#128196;</div>Rel. Operacional</div>
   </div>
   <div style="background:#fff;border-radius:10px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)">
@@ -397,6 +401,241 @@ tbody tr:nth-child(even){background:#FAFBFC}
   </div>
 </div></div>
 
+
+<!-- FROTA -->
+<div id="page-frota" class="page"><div class="container">
+  <div class="page-title">&#128663; Controle de Frota <span class="badge" style="background:#2E75B6">Gestao de Veiculos</span></div>
+  <div id="al-frota"></div>
+  <div class="cards" style="grid-template-columns:repeat(5,1fr)">
+    <div class="card verde"><div class="card-icon">&#128663;</div><div class="card-value" id="fVeicAtivos">-</div><div class="card-label">Veiculos Ativos</div></div>
+    <div class="card vermelho"><div class="card-icon">&#128308;</div><div class="card-value" id="fManutVenc">-</div><div class="card-label">Manut. Vencidas</div></div>
+    <div class="card amarelo"><div class="card-icon">&#128993;</div><div class="card-value" id="fManutProx">-</div><div class="card-label">Manut. Proximas</div></div>
+    <div class="card"><div class="card-icon">&#9981;</div><div class="card-value" id="fTotalAbast">-</div><div class="card-label">Abastecimentos</div></div>
+    <div class="card"><div class="card-icon">&#128167;</div><div class="card-value" id="fLavagens">-</div><div class="card-label">Lavagens</div></div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="sfTab('fAbast',this)">&#9981; Abastecimento</button>
+    <button class="tab-btn" onclick="sfTab('fLavagem',this)">&#128167; Lavagem</button>
+    <button class="tab-btn" onclick="sfTab('fManut',this)">&#128295; Manutencoes</button>
+    <button class="tab-btn" onclick="sfTab('fCadastro',this)">&#128663; Cadastro</button>
+  </div>
+  <!-- ABASTECIMENTO -->
+  <div id="fAbast" class="tab-content active">
+    <div class="form-card"><div class="form-header" style="background:linear-gradient(135deg,#1E7145,#155a35)"><h2>&#9981; Registrar Abastecimento</h2></div><div class="form-body">
+      <div class="form-grid">
+        <div class="form-group"><label>Data *</label><input type="date" id="aData"></div>
+        <div class="form-group"><label>Veiculo/Placa *</label><input type="text" id="aVeiculo" placeholder="Ex: ABC-1234"></div>
+        <div class="form-group"><label>Combustivel</label><select id="aCombust"><option>Diesel</option><option>Gasolina</option><option>Etanol</option><option>GNV</option></select></div>
+        <div class="form-group"><label>Litros</label><input type="number" id="aLitros" min="0" step="0.1" value="0"></div>
+        <div class="form-group"><label>KM Atual</label><input type="number" id="aKm" min="0" value="0"></div>
+        <div class="form-group"><label>Posto</label><input type="text" id="aPosto" placeholder="Nome do posto"></div>
+        <div class="form-group"><label>Responsavel</label><input type="text" id="aResp" placeholder="Motorista"></div>
+      </div>
+      <div class="btn-group"><button class="btn btn-success" onclick="svAbast()">&#9981; Registrar</button></div>
+    </div></div>
+    <div class="section"><div class="section-header verde">&#9981; Historico de Abastecimentos</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Veiculo</th><th>Combustivel</th><th>Litros</th><th>KM</th><th>Posto</th><th>Responsavel</th></tr></thead><tbody id="tbAbast"><tr><td colspan="7" class="empty">Nenhum registro</td></tr></tbody></table></div></div></div>
+  </div>
+  <!-- LAVAGEM -->
+  <div id="fLavagem" class="tab-content">
+    <div class="tabs" style="margin-bottom:12px">
+      <button class="tab-btn active" onclick="sfSubTab('fLavPlan',this,'lavSub')">&#128203; Planejamento</button>
+      <button class="tab-btn" onclick="sfSubTab('fLavReal',this,'lavSub')">&#10003; Realizado</button>
+      <button class="tab-btn" onclick="sfSubTab('fLavComp',this,'lavSub')">&#128200; Previsto x Realizado</button>
+    </div>
+    <div id="fLavPlan" class="tab-content lavSub active">
+      <div class="form-card"><div class="form-header" style="background:linear-gradient(135deg,#2E75B6,#1F4E79)"><h2>&#128203; Planejar Lavagem</h2></div><div class="form-body">
+        <div class="form-grid">
+          <div class="form-group"><label>Veiculo *</label><input type="text" id="lpVeiculo" placeholder="Ex: ABC-1234"></div>
+          <div class="form-group"><label>Tipo</label><select id="lpTipo"><option>Lavagem Simples</option><option>Lavagem Completa</option><option>Lubrificacao</option><option>Lavagem + Lubrificacao</option></select></div>
+          <div class="form-group"><label>Data Prevista *</label><input type="date" id="lpDataPrev"></div>
+          <div class="form-group"><label>Responsavel</label><input type="text" id="lpResp"></div>
+        </div>
+        <div class="btn-group"><button class="btn btn-primary" onclick="svLavPlan()">&#128203; Salvar Planejamento</button></div>
+      </div></div>
+      <div class="section"><div class="section-header">&#128203; Lavagens Planejadas</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Veiculo</th><th>Tipo</th><th>Data Prevista</th><th>Responsavel</th><th>Status</th></tr></thead><tbody id="tbLavPlan"><tr><td colspan="5" class="empty">Nenhum registro</td></tr></tbody></table></div></div></div>
+    </div>
+    <div id="fLavReal" class="tab-content lavSub">
+      <div class="form-card"><div class="form-header" style="background:linear-gradient(135deg,#1E7145,#155a35)"><h2>&#10003; Registrar Lavagem Realizada</h2></div><div class="form-body">
+        <div class="form-grid">
+          <div class="form-group"><label>Veiculo *</label><input type="text" id="lrVeiculo" placeholder="Ex: ABC-1234"></div>
+          <div class="form-group"><label>Tipo</label><select id="lrTipo"><option>Lavagem Simples</option><option>Lavagem Completa</option><option>Lubrificacao</option><option>Lavagem + Lubrificacao</option></select></div>
+          <div class="form-group"><label>Data Realizada *</label><input type="date" id="lrDataReal"></div>
+          <div class="form-group"><label>Proxima Previsao</label><input type="date" id="lrProxima"></div>
+          <div class="form-group"><label>Responsavel</label><input type="text" id="lrResp"></div>
+        </div>
+        <div class="btn-group"><button class="btn btn-success" onclick="svLavReal()">&#10003; Registrar Realizado</button></div>
+      </div></div>
+      <div class="section"><div class="section-header verde">&#10003; Lavagens Realizadas</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Veiculo</th><th>Tipo</th><th>Data Realizada</th><th>Proxima</th><th>Responsavel</th></tr></thead><tbody id="tbLavReal"><tr><td colspan="5" class="empty">Nenhum registro</td></tr></tbody></table></div></div></div>
+    </div>
+    <div id="fLavComp" class="tab-content lavSub">
+      <div class="section"><div class="section-header">&#128200; Previsto x Realizado - Lavagem</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Veiculo</th><th>Tipo</th><th>Data Prevista</th><th>Data Realizada</th><th>Proxima</th><th>Status</th></tr></thead><tbody id="tbLavComp"><tr><td colspan="6" class="empty">Nenhum registro</td></tr></tbody></table></div></div></div>
+    </div>
+  </div>
+  <!-- MANUTENCAO -->
+  <div id="fManut" class="tab-content">
+    <div class="tabs" style="margin-bottom:12px">
+      <button class="tab-btn active" onclick="sfSubTab('fMPlan',this,'manutSub')">&#128203; Planejamento</button>
+      <button class="tab-btn" onclick="sfSubTab('fMReal',this,'manutSub')">&#10003; Realizado</button>
+      <button class="tab-btn" onclick="sfSubTab('fMComp',this,'manutSub')">&#128200; Previsto x Realizado</button>
+    </div>
+    <div id="fMPlan" class="tab-content manutSub active">
+      <div class="form-card"><div class="form-header" style="background:linear-gradient(135deg,#C55A11,#a04a0e)"><h2>&#128203; Planejar Manutencao</h2></div><div class="form-body">
+        <div class="form-grid">
+          <div class="form-group"><label>Veiculo *</label><input type="text" id="mpVeiculo" placeholder="Ex: ABC-1234"></div>
+          <div class="form-group"><label>Tipo *</label><select id="mpTipo"><option>Preventiva</option><option>Corretiva</option><option>Revisao Geral</option><option>Troca de Oleo</option><option>Troca de Filtro</option><option>Troca de Pneu</option><option>Freios</option><option>Eletrica</option><option>Outros</option></select></div>
+          <div class="form-group"><label>Descricao *</label><input type="text" id="mpDesc" placeholder="Descreva..."></div>
+          <div class="form-group"><label>KM Previsto</label><input type="number" id="mpKmPrev" min="0" value="0"></div>
+          <div class="form-group"><label>Data Prevista *</label><input type="date" id="mpDataPrev"></div>
+          <div class="form-group"><label>Responsavel</label><input type="text" id="mpResp"></div>
+        </div>
+        <div class="btn-group"><button class="btn btn-warning" onclick="svMPlan()">&#128203; Salvar Planejamento</button></div>
+      </div></div>
+      <div class="section"><div class="section-header amarelo">&#128203; Manutencoes Planejadas</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Veiculo</th><th>Tipo</th><th>Descricao</th><th>KM Prev.</th><th>Data Prev.</th><th>Status</th></tr></thead><tbody id="tbMPlan"><tr><td colspan="6" class="empty">Nenhum registro</td></tr></tbody></table></div></div></div>
+    </div>
+    <div id="fMReal" class="tab-content manutSub">
+      <div class="form-card"><div class="form-header" style="background:linear-gradient(135deg,#1E7145,#155a35)"><h2>&#10003; Registrar Manutencao Realizada</h2></div><div class="form-body">
+        <div class="form-grid">
+          <div class="form-group"><label>Veiculo *</label><input type="text" id="mrVeiculo" placeholder="Ex: ABC-1234"></div>
+          <div class="form-group"><label>Tipo *</label><select id="mrTipo"><option>Preventiva</option><option>Corretiva</option><option>Revisao Geral</option><option>Troca de Oleo</option><option>Troca de Filtro</option><option>Troca de Pneu</option><option>Freios</option><option>Eletrica</option><option>Outros</option></select></div>
+          <div class="form-group"><label>Descricao *</label><input type="text" id="mrDesc" placeholder="Descreva..."></div>
+          <div class="form-group"><label>KM Realizado</label><input type="number" id="mrKmReal" min="0" value="0"></div>
+          <div class="form-group"><label>Data Realizada *</label><input type="date" id="mrDataReal"></div>
+          <div class="form-group"><label>Proxima Manut. (Data)</label><input type="date" id="mrProxData"></div>
+          <div class="form-group"><label>Responsavel</label><input type="text" id="mrResp"></div>
+        </div>
+        <div class="btn-group"><button class="btn btn-success" onclick="svMReal()">&#10003; Registrar Realizado</button></div>
+      </div></div>
+      <div class="section"><div class="section-header verde">&#10003; Manutencoes Realizadas</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Veiculo</th><th>Tipo</th><th>Descricao</th><th>KM Real.</th><th>Data Real.</th><th>Prox. Data</th><th>Responsavel</th></tr></thead><tbody id="tbMReal"><tr><td colspan="7" class="empty">Nenhum registro</td></tr></tbody></table></div></div></div>
+    </div>
+    <div id="fMComp" class="tab-content manutSub">
+      <div class="section"><div class="section-header">&#128200; Previsto x Realizado - Manutencao</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Veiculo</th><th>Tipo</th><th>Descricao</th><th>Data Prev.</th><th>Data Real.</th><th>Status</th></tr></thead><tbody id="tbMComp"><tr><td colspan="6" class="empty">Nenhum registro</td></tr></tbody></table></div></div></div>
+    </div>
+  </div>
+  <!-- CADASTRO -->
+  <div id="fCadastro" class="tab-content">
+    <div class="form-card"><div class="form-header"><h2>&#128663; Cadastro de Veiculos</h2></div><div class="form-body">
+      <div class="form-grid">
+        <div class="form-group"><label>Placa/ID *</label><input type="text" id="cPlaca" placeholder="Ex: ABC-1234"></div>
+        <div class="form-group"><label>Descricao *</label><input type="text" id="cDesc" placeholder="Ex: Caminhao Pipa"></div>
+        <div class="form-group"><label>Tipo</label><select id="cTipo"><option>Caminhao</option><option>Van</option><option>Carro</option><option>Caminhonete</option><option>Moto</option><option>Equipamento</option><option>Outros</option></select></div>
+        <div class="form-group"><label>Marca/Modelo</label><input type="text" id="cModelo" placeholder="Ex: Ford Cargo"></div>
+        <div class="form-group"><label>Ano</label><input type="number" id="cAno" min="1990" max="2030" placeholder="2024"></div>
+        <div class="form-group"><label>Status</label><select id="cStatus"><option value="Ativo">Ativo</option><option value="Em Manutencao">Em Manutencao</option><option value="Inativo">Inativo</option></select></div>
+        <div class="form-group"><label>Responsavel</label><input type="text" id="cResp" placeholder="Motorista/Operador"></div>
+      </div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="svCadastro()">&#128663; Cadastrar Veiculo</button></div>
+    </div></div>
+    <div class="section"><div class="section-header">&#128663; Frota Cadastrada</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Placa/ID</th><th>Descricao</th><th>Tipo</th><th>Marca/Modelo</th><th>Ano</th><th>Status</th><th>Responsavel</th></tr></thead><tbody id="tbCadastro"><tr><td colspan="7" class="empty">Nenhum veiculo cadastrado</td></tr></tbody></table></div></div></div>
+  </div>
+</div></div>
+
+<!-- BLIT OPERACIONAL -->
+<div id="page-blit" class="page"><div class="container">
+  <div class="page-title">&#9989; BLIT Operacional <span class="badge" style="background:#1E7145">Boletim de Inspecao</span></div>
+  <div id="al-blit"></div>
+  <div class="section" style="margin-bottom:14px"><div class="section-header">&#128197; Identificacao</div><div class="section-body">
+    <div class="form-grid">
+      <div class="form-group"><label>Data *</label><input type="date" id="blData"></div>
+      <div class="form-group"><label>Turno *</label><select id="blTurno"><option value="1">Turno 1</option><option value="2">Turno 2</option></select></div>
+      <div class="form-group"><label>Responsavel *</label><select id="blResp"><option value="">Selecione...</option><option>CELSO</option><option>MARCIO</option><option>FAGNER</option><option>ELAINE</option><option>ERLANE</option><option>JULIANA</option><option>LILIANE</option><option>ELIDA</option><option>MARIA</option><option>SAMARA</option><option>OLAVO</option><option>DAVI</option></select></div>
+      <div class="form-group"><label>Veiculo/Placa</label><input type="text" id="blVeiculo" placeholder="Ex: ABC-1234"></div>
+    </div>
+  </div></div>
+
+  <style>
+  .blit-section{background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:14px;overflow:hidden}
+  .blit-section-header{padding:10px 16px;font-size:12px;font-weight:700;color:#fff}
+  .blit-table{width:100%;border-collapse:collapse}
+  .blit-table th{background:#f5f5f5;padding:8px 10px;font-size:10px;font-weight:700;color:#444;text-transform:uppercase;text-align:left;border-bottom:2px solid #ddd}
+  .blit-table td{padding:8px 10px;border-bottom:1px solid #f0f0f0;font-size:12px;vertical-align:middle}
+  .blit-table tr:hover{background:#F0F6FF}
+  .blit-opts{display:flex;gap:6px;flex-wrap:wrap}
+  .blit-opt{display:flex;align-items:center;gap:4px;cursor:pointer;padding:4px 8px;border-radius:6px;border:1px solid #ddd;font-size:11px;font-weight:600;transition:all .2s;background:#fff}
+  .blit-opt:hover{border-color:#2E75B6}
+  .blit-opt input{display:none}
+  .blit-opt.ok{background:#C6EFCE;border-color:#1E7145;color:#276221}
+  .blit-opt.nok{background:#FFC7CE;border-color:#C00000;color:#9C0006}
+  .blit-opt.na{background:#F5F5F5;border-color:#999;color:#666}
+  .blit-obs{width:100%;padding:5px 8px;border:1px solid #ddd;border-radius:6px;font-size:11px;font-family:inherit;resize:none}
+  </style>
+
+  <!-- 1. EPI - SEGURANCA OPERACIONAL -->
+  <div class="blit-section">
+    <div class="blit-section-header" style="background:#1F4E79">&#9875; 1. Seguranca Operacional — EPI</div>
+    <div style="padding:12px;overflow-x:auto">
+      <table class="blit-table">
+        <thead><tr><th style="width:35%">Item</th><th style="width:35%">Status</th><th>Observacao</th></tr></thead>
+        <tbody id="blEpiBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 2. SEGURANCA NO VEICULO -->
+  <div class="blit-section">
+    <div class="blit-section-header" style="background:#C55A11">&#128663; 2. Seguranca no Veiculo/Caminhao</div>
+    <div style="padding:12px;overflow-x:auto">
+      <table class="blit-table">
+        <thead><tr><th style="width:35%">Item</th><th style="width:35%">Status</th><th>Observacao</th></tr></thead>
+        <tbody id="blVeicBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 3. CONDICOES DO VEICULO -->
+  <div class="blit-section">
+    <div class="blit-section-header" style="background:#2E75B6">&#128295; 3. Condicoes do Veiculo</div>
+    <div style="padding:12px;overflow-x:auto">
+      <table class="blit-table">
+        <thead><tr><th style="width:35%">Item</th><th style="width:35%">Status</th><th>Observacao</th></tr></thead>
+        <tbody id="blCondBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 4. CONDICOES DA EQUIPE -->
+  <div class="blit-section">
+    <div class="blit-section-header" style="background:#5B2C8D">&#128101; 4. Condicoes da Equipe</div>
+    <div style="padding:12px;overflow-x:auto">
+      <table class="blit-table">
+        <thead><tr><th style="width:35%">Item</th><th style="width:35%">Status</th><th>Observacao</th></tr></thead>
+        <tbody id="blEquipeBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 5. EQUIPAMENTOS DE TRABALHO -->
+  <div class="blit-section">
+    <div class="blit-section-header" style="background:#1E7145">&#128295; 5. Equipamentos de Trabalho</div>
+    <div style="padding:12px;overflow-x:auto">
+      <table class="blit-table">
+        <thead><tr><th style="width:35%">Item</th><th style="width:35%">Status</th><th>Observacao</th></tr></thead>
+        <tbody id="blEquipBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- OBSERVACOES GERAIS -->
+  <div class="section"><div class="section-header">&#128221; Observacoes Gerais</div><div class="section-body">
+    <textarea id="blObsGeral" rows="4" placeholder="Observacoes gerais da inspecao..." style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;font-size:12px;font-family:inherit;resize:vertical"></textarea>
+  </div></div>
+
+  <div class="btn-group" style="margin-bottom:20px">
+    <button class="btn btn-success" onclick="svBlit()">&#9989; Salvar BLIT</button>
+    <button class="btn" onclick="window.print()" style="background:#1F4E79;color:#fff">&#128438; Imprimir BLIT</button>
+    <button class="btn" onclick="initBlit()" style="background:#6c757d;color:#fff">&#10006; Limpar</button>
+  </div>
+
+  <!-- HISTORICO BLIT -->
+  <div class="section"><div class="section-header">&#128196; Historico de BLITs</div><div class="section-body">
+    <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+      <input type="date" id="blHistIni" style="padding:5px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px">
+      <input type="date" id="blHistFim" style="padding:5px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px">
+      <button class="btn btn-primary" onclick="ldBlit()" style="padding:5px 12px;font-size:11px">&#128269; Buscar</button>
+    </div>
+    <div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Turno</th><th>Responsavel</th><th>Veiculo</th><th>Resultado</th><th>Obs</th></tr></thead><tbody id="tbBlit"><tr><td colspan="6" class="empty">Selecione um periodo</td></tr></tbody></table></div>
+  </div></div>
+</div></div>
+
 <footer class="fe"><div class="fi">
   <div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px">&#127959;&#65039;</span><div><div style="color:#fff;font-weight:700;font-size:10px">GESTAO OPERACIONAL - SEATRIUM</div><div style="font-size:9px;opacity:.6">GRUPO FIBRAVIT</div></div></div>
   <div style="text-align:center"><div style="color:#C9A84C;font-weight:700;font-size:9px;letter-spacing:.8px;text-transform:uppercase">Desenvolvido por</div><div style="color:#fff;font-weight:800;font-size:12px;letter-spacing:1.5px">EVEREST CONSULTORIA</div><div style="color:rgba(255,255,255,.6);font-size:9px;font-style:italic">em Gestao Empresarial</div></div>
@@ -404,7 +643,7 @@ tbody tr:nth-child(even){background:#FAFBFC}
 </div></footer>
 
 <script>
-const AU='https://script.google.com/macros/s/AKfycbyebvV2nAb2eReBetaptXI08-F6MtVyjw1nksipjHhQjoKAMR4eE84QKhTaVWvZzP2e/exec';
+const AU='https://script.google.com/macros/s/AKfycbyvN1kvA6pMQJZGou2Mw14z196XdBrRaY_qfWHcuu5cqCBvKdcYTt6QsYCkOlget3J6/exec';
 async function ag(a,p){var u=AU+'?action='+encodeURIComponent(a);if(p)Object.keys(p).forEach(function(k){if(p[k]!==undefined&&p[k]!=='')u+='&'+k+'='+encodeURIComponent(p[k]);});var r=await fetch(u);if(!r.ok)throw new Error('HTTP '+r.status);var d=await r.json();if(d&&d.error)throw new Error(d.error);return d;}
 async function ap(a,b){
   // Apps Script nao suporta CORS para POST direto
@@ -423,7 +662,7 @@ function sh(a,b){var h=dh();document.getElementById(a).value=h;document.getEleme
 function sw(a,b){var h=new Date(),d=h.getDay(),s=new Date(h);s.setDate(h.getDate()-(d===0?6:d-1));var e=new Date(s);e.setDate(s.getDate()+6);document.getElementById(a).value=s.toISOString().split('T')[0];document.getElementById(b).value=e.toISOString().split('T')[0];}
 function sm(a,b){var h=new Date(),i=new Date(h.getFullYear(),h.getMonth(),1),f=new Date(h.getFullYear(),h.getMonth()+1,0);document.getElementById(a).value=i.toISOString().split('T')[0];document.getElementById(b).value=f.toISOString().split('T')[0];}
 function al(id,t,m){var e=document.getElementById(id);if(!e)return;e.innerHTML='<div class="alert alert-'+t+'">'+m+'</div>';setTimeout(function(){e.innerHTML='';},5000);}
-function sp(n){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});document.querySelectorAll('.nav a').forEach(function(a){a.classList.remove('ap');});document.getElementById('page-'+n).classList.add('active');var ids={home:'nh',plan:'np',reg:'nr',dash:'nd',comp:'nc',est:'ne',rel:'nrl'};var x=document.getElementById(ids[n]);if(x)x.classList.add('ap');window.scrollTo(0,0);if(n==='dash'){sm('dIni','dFim');ldDash();}if(n==='comp'){sm('cIni','cFim');ldComp();}if(n==='est')ldEst();if(n==='rel')sm('rlIni','rlFim');}
+function sp(n){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});document.querySelectorAll('.nav a').forEach(function(a){a.classList.remove('ap');});document.getElementById('page-'+n).classList.add('active');var ids={home:'nh',plan:'np',reg:'nr',dash:'nd',comp:'nc',est:'ne',rel:'nrl',frota:'nfrota',blit:'nblit'};var x=document.getElementById(ids[n]);if(x)x.classList.add('ap');window.scrollTo(0,0);if(n==='dash'){sm('dIni','dFim');ldDash();}if(n==='comp'){sm('cIni','cFim');ldComp();}if(n==='est')ldEst();if(n==='rel')sm('rlIni','rlFim');if(n==='frota'){ldAbast();ldLavPlan();ldMPlan();ldCadastro();}if(n==='blit')initBlit();}
 function srt(id,btn){document.querySelectorAll('#page-reg .tab-content').forEach(function(t){t.classList.remove('active');});document.querySelectorAll('#page-reg .tabs .tab-btn').forEach(function(b){b.classList.remove('active');});document.getElementById(id).classList.add('active');btn.classList.add('active');if(id==='tAss')ldAss();}
 function set2(id,btn){document.querySelectorAll('#eCad,#eMov,#eTod').forEach(function(t){t.classList.remove('active');});document.querySelectorAll('#page-est .tabs .tab-btn').forEach(function(b){b.classList.remove('active');});document.getElementById(id).classList.add('active');btn.classList.add('active');if(id==='eMov'){ldMov();ppSel();}if(id==='eTod')ldTod();}
 var hoje=dh();
@@ -463,6 +702,161 @@ async function svMov(){var p=document.getElementById('mProd').value,q=parseInt(d
 async function ldMov(){try{var d=await ag('estoque_movimentacao');var l=Array.isArray(d)?d.slice(-30).reverse():[];document.getElementById('tbMov').innerHTML=l.length>0?l.map(function(r){var cor=r.tipo==='Entrada'?'color:#1E7145':'color:#C00000';var st=r.tipo==='Entrada'?'&#8593;':'&#8595;';return'<tr><td>'+fd(r.data)+'</td><td><strong>'+(r.produto||'-')+'</strong></td><td>'+(r.codigo||'-')+'</td><td style="font-weight:700;'+cor+'">'+st+' '+(r.tipo||'-')+'</td><td style="text-align:center;font-weight:700;'+cor+'">'+(r.quantidade||0)+'</td><td>'+(r.responsavel||'-')+'</td><td style="font-size:10px">'+(r.observacoes||'-')+'</td></tr>';}).join(''):'<tr><td colspan="7" class="empty">Nenhuma movimentacao</td></tr>';}catch(e){document.getElementById('tbMov').innerHTML='<tr><td colspan="7" class="empty">Erro: '+e.message+'</td></tr>';}}
 async function ldTod(){document.getElementById('tbTod').innerHTML=pCache.length>0?pCache.map(function(p){var mn=parseInt(p.estoque_minimo)||0,rp=parseInt(p.ponto_reposicao)||0,s=p.sa||0;var fl,tx;if(s<=0){fl='fzr';tx='<span class="berr">SEM ESTOQUE</span>';}else if(s<mn){fl='fab';tx='<span class="berr">ABAIXO MINIMO</span>';}else if(s===mn){fl='fmn';tx='<span class="bwarn">ESTOQUE MINIMO</span>';}else if(s<=rp&&rp>0){fl='fbx2';tx='<span class="bwarn">ESTOQUE BAIXO</span>';}else{fl='fok';tx='<span class="bok">OK</span>';}return'<tr><td><strong>'+(p.codigo||'-')+'</strong></td><td>'+(p.nome||'-')+'</td><td>'+(p.categoria||'-')+'</td><td style="text-align:center">'+(p.unidade||'-')+'</td><td style="text-align:center;font-weight:700">'+s+'</td><td style="text-align:center">'+mn+'</td><td style="text-align:center">'+rp+'</td><td><span class="ef2 '+fl+'"></span>'+tx+'</td></tr>';}).join(''):'<tr><td colspan="8" class="empty">Nenhum produto cadastrado</td></tr>';}
 async function grRel(){var i=document.getElementById('rlIni').value,f=document.getElementById('rlFim').value;if(!i||!f){alert('Selecione o periodo.');return;}document.getElementById('rlVazio').style.display='none';document.getElementById('rlConteudo').style.display='block';document.getElementById('rlPer').textContent=fd(i)+' a '+fd(f);document.getElementById('rlGer').textContent=new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});try{var [rg,oc,ef,pl,as]=await Promise.all([ag('registros',{data_ini:i,data_fim:f}),ag('ocorrencias',{data_ini:i,data_fim:f}),ag('efetivo',{data_ini:i,data_fim:f}),ag('planejamento',{data_ini:i,data_fim:f}),ag('assuntos_gerais',{data_ini:i,data_fim:f})]);var lr=Array.isArray(rg)?rg:[],lo=Array.isArray(oc)?oc:[],le=Array.isArray(ef)?ef:[],lp=Array.isArray(pl)?pl:[],la=Array.isArray(as)?as:[];var tL=0,tLP=0,tS=0,tPv=0,tPs=0,tFt=0;lr.forEach(function(r){if(r.servico==='Limpeza')tL+=(parseInt(r.quantidade)||0);if(r.servico==='Limpeza Pesada')tLP+=(parseInt(r.quantidade)||0);if(r.servico==='Succao')tS+=(parseInt(r.quantidade)||0);});le.forEach(function(r){tPv+=(parseInt(r.previstos)||0);tPs+=(parseInt(r.presentes)||0);tFt+=(parseInt(r.faltas)||0);});var ab=tPv>0?(tFt/tPv*100).toFixed(1)+'%':'0%';document.getElementById('rlL').textContent=tL;document.getElementById('rlLP').textContent=tLP;document.getElementById('rlS').textContent=tS;document.getElementById('rlO').textContent=lo.length;document.getElementById('rlPv').textContent=tPv;document.getElementById('rlPs').textContent=tPs;document.getElementById('rlFt').textContent=tFt;var ae=document.getElementById('rlAb');ae.textContent=ab;ae.style.color=parseFloat(ab)<=3?'#1E7145':'#C00000';var ds=Math.max(1,Math.round((new Date(f)-new Date(i))/(1000*60*60*24))+1);function kr2(lb,vl,mt,mn,un){var ef=mt>0?Math.round(vl/mt*100):0;var ok=mn?(vl<=mt):(ef>=96);var cor=ok?'#1E7145':ef>=75?'#C9A84C':'#C00000';var tx=ok?'NA META':'ABAIXO DA META';return'<div style="display:flex;align-items:center;padding:7px 0;border-bottom:1px solid #f0f0f0"><span style="flex:1;font-size:11px;font-weight:600;color:#444">'+lb+'</span><span style="font-size:13px;font-weight:800;color:#1F4E79;min-width:55px;text-align:right">'+(un?vl+un:vl)+'</span><span style="font-size:10px;color:#999;min-width:65px;text-align:right">Meta: '+(un?mt+un:mt)+'</span><span style="min-width:110px;text-align:right"><span style="background:'+(ok?'#C6EFCE':ef>=75?'#FFEB9C':'#FFC7CE')+';color:'+(ok?'#276221':ef>=75?'#9C5700':'#9C0006')+';padding:2px 7px;border-radius:12px;font-size:10px;font-weight:700">'+tx+'</span></span></div>';}document.getElementById('rlKpi').innerHTML=kr2('Total Limpezas',tL,ds*4,false,'')+kr2('Total Limpezas Pesadas',tLP,ds*2,false,'')+kr2('Total Succoes',tS,ds*4,false,'')+kr2('Total Ocorrencias',lo.length,ds,true,'')+kr2('Absenteismo',parseFloat(ab).toFixed(1),3,true,'%');var mp={};lp.forEach(function(r){var k=(r.colaborador||'?')+'|'+(r.servico||'?');if(!mp[k])mp[k]={colaborador:r.colaborador,servico:r.servico,meta:0,realizado:0};mp[k].meta+=(parseInt(r.meta)||0);});lr.forEach(function(r){var k=(r.colaborador||'?')+'|'+(r.servico||'?');if(!mp[k])mp[k]={colaborador:r.colaborador,servico:r.servico,meta:0,realizado:0};mp[k].realizado+=(parseInt(r.quantidade)||0);});var rw=Object.values(mp);document.getElementById('rlCol').innerHTML=rw.length>0?rw.map(function(r){var ef=r.meta>0?Math.round(r.realizado/r.meta*100):100;var cl=ef>=96?'bok':ef>=75?'bwarn':'berr';return'<tr><td><strong>'+(r.colaborador||'-')+'</strong></td><td>'+(r.servico||'-')+'</td><td style="text-align:center">'+r.meta+'</td><td style="text-align:center;font-weight:700;color:#1E7145">'+r.realizado+'</td><td style="text-align:center;font-weight:700;color:'+(ef>=96?'#1E7145':ef>=75?'#C9A84C':'#C00000')+'">'+ef+'%</td><td><span class="'+cl+'">'+(ef>=96?'NA META':ef>=75?'ATENCAO':'ABAIXO')+'</span></td></tr>';}).join(''):'<tr><td colspan="6" class="empty">Sem dados de planejamento</td></tr>';var mn=lr.filter(function(r){return r.servico==='Manutencao de Container/Banheiro'||r.servico==='Manutencao Geral';});document.getElementById('rlMan').innerHTML=mn.length>0?mn.map(function(r){return'<tr><td>'+fd(r.data)+'</td><td><strong>'+(r.colaborador||'-')+'</strong></td><td>'+(r.local||'-')+'</td><td>'+(r.observacoes||r.insp_detectado||'-')+'</td><td style="text-align:center">T'+(r.turno||'-')+'</td></tr>';}).join(''):'<tr><td colspan="5" class="empty">Nenhuma manutencao realizada no periodo</td></tr>';document.getElementById('rlOcr').innerHTML=lo.length>0?lo.map(function(r){var cc=r.criticidade==='Critica'||r.criticidade==='Alta'?'berr':r.criticidade==='Media'?'bwarn':'bok';var sc=r.status==='Resolvida'?'bok':r.status==='Em Andamento'?'bwarn':'berr';return'<tr><td>'+fd(r.data)+'</td><td>'+(r.tipo||'-')+'</td><td>'+(r.local||'-')+'</td><td style="max-width:160px">'+(r.descricao||'-')+'</td><td style="max-width:130px">'+(r.acao||'-')+'</td><td><span class="'+cc+'">'+(r.criticidade||'-')+'</span></td><td><span class="'+sc+'">'+(r.status||'-')+'</span></td></tr>';}).join(''):'<tr><td colspan="7" class="empty">Nenhuma ocorrencia no periodo</td></tr>';var ins=lr.filter(function(r){return r.servico==='Inspecao';});document.getElementById('rlInsp').innerHTML=ins.length>0?ins.map(function(r){return'<tr><td>'+fd(r.data)+'</td><td><strong>'+(r.colaborador||'-')+'</strong></td><td>'+(r.local||'-')+'</td><td>'+(r.insp_detectado||r.observacoes||'-')+'</td><td>'+(r.insp_data_manut?'Agendada para '+fd(r.insp_data_manut):'Nao necessaria')+'</td></tr>';}).join(''):'<tr><td colspan="5" class="empty">Nenhuma inspecao no periodo</td></tr>';document.getElementById('rlAss').innerHTML=la.length>0?la.map(function(r){return'<tr><td>'+fd(r.data)+'</td><td><strong>'+(r.assunto||'-')+'</strong></td><td>'+(r.categoria||'-')+'</td><td>'+(r.descricao||'-')+'</td></tr>';}).join(''):'<tr><td colspan="4" class="empty">Nenhum assunto geral no periodo</td></tr>';}catch(e){alert('Erro ao gerar relatorio: '+e.message);}}
+
+// ── FROTA ──────────────────────────────────────────────────────────────────
+var hoje2=dh();
+function sfTab(id,btn){
+  document.querySelectorAll('#fAbast,#fLavagem,#fManut,#fCadastro').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('#page-frota > .container > .tabs .tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById(id).classList.add('active');btn.classList.add('active');
+}
+function sfSubTab(id,btn,cls){
+  document.querySelectorAll('.'+cls).forEach(function(t){t.classList.remove('active');});
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById(id).classList.add('active');btn.classList.add('active');
+  if(id==='fLavComp')ldLavComp();if(id==='fMComp')ldMComp();
+}
+function alF(t,m){al('al-frota',t,m);}
+
+async function svAbast(){var v=document.getElementById('aVeiculo').value;if(!v){alF('warn','Informe o veiculo.');return;}var d={data:document.getElementById('aData').value,veiculo:v,combustivel:document.getElementById('aCombust').value,litros:parseFloat(document.getElementById('aLitros').value)||0,km:parseInt(document.getElementById('aKm').value)||0,posto:document.getElementById('aPosto').value,responsavel:document.getElementById('aResp').value};try{await ap('frota_abastecimento_save',d);alF('success','Abastecimento registrado!');document.getElementById('aLitros').value=0;document.getElementById('aKm').value=0;document.getElementById('aPosto').value='';document.getElementById('aResp').value='';ldAbast();}catch(e){alF('error','Erro: '+e.message);}}
+async function ldAbast(){try{var d=await ag('frota_abastecimento');var l=Array.isArray(d)?d.slice(-20).reverse():[];document.getElementById('fTotalAbast').textContent=l.length;document.getElementById('tbAbast').innerHTML=l.length>0?l.map(function(r){return'<tr><td>'+fd(r.data)+'</td><td><strong>'+(r.veiculo||'-')+'</strong></td><td>'+(r.combustivel||'-')+'</td><td style="text-align:center">'+(r.litros||0)+'L</td><td style="text-align:center">'+(r.km||0)+'km</td><td>'+(r.posto||'-')+'</td><td>'+(r.responsavel||'-')+'</td></tr>';}).join(''):'<tr><td colspan="7" class="empty">Nenhum registro</td></tr>';}catch(e){document.getElementById('tbAbast').innerHTML='<tr><td colspan="7" class="empty">Conecte ao Apps Script</td></tr>';}}
+
+async function svLavPlan(){var v=document.getElementById('lpVeiculo').value;if(!v){alF('warn','Informe o veiculo.');return;}var d={veiculo:v,tipo:document.getElementById('lpTipo').value,data_prevista:document.getElementById('lpDataPrev').value,responsavel:document.getElementById('lpResp').value,status:'Planejado',registro:'planejamento'};try{await ap('frota_lavagem_save',d);alF('success','Planejamento salvo!');ldLavPlan();}catch(e){alF('error','Erro: '+e.message);}}
+async function ldLavPlan(){try{var d=await ag('frota_lavagem');var l=Array.isArray(d)?d.filter(function(r){return r.registro==='planejamento'||!r.data_realizada;}).slice(-20).reverse():[];document.getElementById('tbLavPlan').innerHTML=l.length>0?l.map(function(r){var cor=r.status==='Realizado'?'bok':'bwarn';return'<tr><td><strong>'+(r.veiculo||'-')+'</strong></td><td>'+(r.tipo||'-')+'</td><td>'+fd(r.data_prevista)+'</td><td>'+(r.responsavel||'-')+'</td><td><span class="'+cor+'">'+(r.status||'Planejado')+'</span></td></tr>';}).join(''):'<tr><td colspan="5" class="empty">Nenhum registro</td></tr>';}catch(e){document.getElementById('tbLavPlan').innerHTML='<tr><td colspan="5" class="empty">Conecte ao Apps Script</td></tr>';}}
+
+async function svLavReal(){var v=document.getElementById('lrVeiculo').value;if(!v){alF('warn','Informe o veiculo.');return;}var d={veiculo:v,tipo:document.getElementById('lrTipo').value,data_realizada:document.getElementById('lrDataReal').value,proxima:document.getElementById('lrProxima').value,responsavel:document.getElementById('lrResp').value,status:'Realizado',registro:'realizado'};try{await ap('frota_lavagem_save',d);alF('success','Lavagem registrada!');ldLavReal();}catch(e){alF('error','Erro: '+e.message);}}
+async function ldLavReal(){try{var d=await ag('frota_lavagem');var l=Array.isArray(d)?d.filter(function(r){return r.registro==='realizado'||r.data_realizada;}).slice(-20).reverse():[];document.getElementById('fLavagens').textContent=l.length;document.getElementById('tbLavReal').innerHTML=l.length>0?l.map(function(r){return'<tr><td><strong>'+(r.veiculo||'-')+'</strong></td><td>'+(r.tipo||'-')+'</td><td>'+fd(r.data_realizada)+'</td><td>'+fd(r.proxima)+'</td><td>'+(r.responsavel||'-')+'</td></tr>';}).join(''):'<tr><td colspan="5" class="empty">Nenhum registro</td></tr>';}catch(e){document.getElementById('tbLavReal').innerHTML='<tr><td colspan="5" class="empty">Conecte ao Apps Script</td></tr>';}}
+async function ldLavComp(){try{var d=await ag('frota_lavagem');var l=Array.isArray(d)?d.slice(-30).reverse():[];document.getElementById('tbLavComp').innerHTML=l.length>0?l.map(function(r){var cor=r.data_realizada?'bok':r.data_prevista&&r.data_prevista<hoje2?'berr':'bwarn';return'<tr><td><strong>'+(r.veiculo||'-')+'</strong></td><td>'+(r.tipo||'-')+'</td><td>'+fd(r.data_prevista)+'</td><td>'+fd(r.data_realizada)+'</td><td>'+fd(r.proxima)+'</td><td><span class="'+cor+'">'+(r.data_realizada?'Realizado':r.data_prevista&&r.data_prevista<hoje2?'Vencido':'Pendente')+'</span></td></tr>';}).join(''):'<tr><td colspan="6" class="empty">Nenhum registro</td></tr>';}catch(e){}}
+
+async function svMPlan(){var v=document.getElementById('mpVeiculo').value,t=document.getElementById('mpTipo').value,desc=document.getElementById('mpDesc').value;if(!v||!desc){alF('warn','Preencha veiculo e descricao.');return;}var d={veiculo:v,tipo:t,descricao:desc,km_previsto:parseInt(document.getElementById('mpKmPrev').value)||0,data_prevista:document.getElementById('mpDataPrev').value,responsavel:document.getElementById('mpResp').value,status:'Planejado',registro:'planejamento'};try{await ap('frota_manutencao_save',d);alF('success','Planejamento salvo!');ldMPlan();}catch(e){alF('error','Erro: '+e.message);}}
+async function ldMPlan(){try{var d=await ag('frota_manutencao');var l=Array.isArray(d)?d.filter(function(r){return !r.data_realizada;}).slice(-20).reverse():[];var venc=l.filter(function(r){return r.data_prevista&&r.data_prevista<hoje2;}).length;var prox=l.filter(function(r){if(!r.data_prevista)return false;var dd=new Date(r.data_prevista),h=new Date();return dd>=h&&(dd-h)/(1000*60*60*24)<=15;}).length;document.getElementById('fManutVenc').textContent=venc;document.getElementById('fManutProx').textContent=prox;document.getElementById('tbMPlan').innerHTML=l.length>0?l.map(function(r){var cor=r.data_prevista&&r.data_prevista<hoje2?'berr':'bwarn';return'<tr><td><strong>'+(r.veiculo||'-')+'</strong></td><td>'+(r.tipo||'-')+'</td><td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.descricao||'-')+'</td><td style="text-align:center">'+(r.km_previsto||'-')+'</td><td>'+fd(r.data_prevista)+'</td><td><span class="'+cor+'">'+(r.data_prevista&&r.data_prevista<hoje2?'Vencido':'Planejado')+'</span></td></tr>';}).join(''):'<tr><td colspan="6" class="empty">Nenhum registro</td></tr>';}catch(e){document.getElementById('tbMPlan').innerHTML='<tr><td colspan="6" class="empty">Conecte ao Apps Script</td></tr>';}}
+
+async function svMReal(){var v=document.getElementById('mrVeiculo').value,t=document.getElementById('mrTipo').value,desc=document.getElementById('mrDesc').value;if(!v||!desc){alF('warn','Preencha veiculo e descricao.');return;}var d={veiculo:v,tipo:t,descricao:desc,km_realizado:parseInt(document.getElementById('mrKmReal').value)||0,data_realizada:document.getElementById('mrDataReal').value,proxima_data:document.getElementById('mrProxData').value,responsavel:document.getElementById('mrResp').value,status:'Concluido',registro:'realizado'};try{await ap('frota_manutencao_save',d);alF('success','Manutencao registrada!');ldMReal();}catch(e){alF('error','Erro: '+e.message);}}
+async function ldMReal(){try{var d=await ag('frota_manutencao');var l=Array.isArray(d)?d.filter(function(r){return r.data_realizada;}).slice(-20).reverse():[];document.getElementById('tbMReal').innerHTML=l.length>0?l.map(function(r){return'<tr><td><strong>'+(r.veiculo||'-')+'</strong></td><td>'+(r.tipo||'-')+'</td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.descricao||'-')+'</td><td style="text-align:center">'+(r.km_realizado||'-')+'</td><td>'+fd(r.data_realizada)+'</td><td>'+fd(r.proxima_data)+'</td><td>'+(r.responsavel||'-')+'</td></tr>';}).join(''):'<tr><td colspan="7" class="empty">Nenhum registro</td></tr>';}catch(e){document.getElementById('tbMReal').innerHTML='<tr><td colspan="7" class="empty">Conecte ao Apps Script</td></tr>';}}
+async function ldMComp(){try{var d=await ag('frota_manutencao');var l=Array.isArray(d)?d.slice(-30).reverse():[];document.getElementById('tbMComp').innerHTML=l.length>0?l.map(function(r){var cor=r.data_realizada?'bok':r.data_prevista&&r.data_prevista<hoje2?'berr':'bwarn';return'<tr><td><strong>'+(r.veiculo||'-')+'</strong></td><td>'+(r.tipo||'-')+'</td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.descricao||'-')+'</td><td>'+fd(r.data_prevista)+'</td><td>'+fd(r.data_realizada)+'</td><td><span class="'+cor+'">'+(r.data_realizada?'Concluido':r.data_prevista&&r.data_prevista<hoje2?'Vencido':'Pendente')+'</span></td></tr>';}).join(''):'<tr><td colspan="6" class="empty">Nenhum registro</td></tr>';}catch(e){}}
+
+async function svCadastro(){var p=document.getElementById('cPlaca').value,desc=document.getElementById('cDesc').value;if(!p||!desc){alF('warn','Preencha placa e descricao.');return;}var d={placa:p,descricao:desc,tipo:document.getElementById('cTipo').value,modelo:document.getElementById('cModelo').value,ano:document.getElementById('cAno').value,status:document.getElementById('cStatus').value,responsavel:document.getElementById('cResp').value};try{await ap('frota_cadastro_save',d);alF('success','Veiculo cadastrado!');ldCadastro();}catch(e){alF('error','Erro: '+e.message);}}
+async function ldCadastro(){try{var d=await ag('frota_cadastro');var l=Array.isArray(d)?d:[];var ativos=l.filter(function(r){return r.status==='Ativo';}).length;document.getElementById('fVeicAtivos').textContent=ativos||l.length;document.getElementById('tbCadastro').innerHTML=l.length>0?l.map(function(r){var cor=r.status==='Ativo'?'bok':r.status==='Em Manutencao'?'bwarn':'berr';return'<tr><td><strong>'+(r.placa||'-')+'</strong></td><td>'+(r.descricao||'-')+'</td><td>'+(r.tipo||'-')+'</td><td>'+(r.modelo||'-')+'</td><td style="text-align:center">'+(r.ano||'-')+'</td><td><span class="'+cor+'">'+(r.status||'-')+'</span></td><td>'+(r.responsavel||'-')+'</td></tr>';}).join(''):'<tr><td colspan="7" class="empty">Nenhum veiculo cadastrado</td></tr>';}catch(e){document.getElementById('tbCadastro').innerHTML='<tr><td colspan="7" class="empty">Conecte ao Apps Script</td></tr>';}}
+
+// ── BLIT OPERACIONAL ────────────────────────────────────────────────────────
+var BLIT_EPI = [
+  'Capacete de Seguranca','Colete Refletivo','Luvas de Protecao','Bota de Seguranca',
+  'Oculos de Protecao','Protetor Auricular','Mascara de Protecao','Uniforme Completo',
+  'Cinto de Seguranca (se aplicavel)','Protetor Solar (se aplicavel)'
+];
+var BLIT_VEIC = [
+  'Cone de Sinalizacao','Calco de Roda','Chave de Roda','Triangulo de Seguranca',
+  'Extintor de Incendio','Macaco Hidraulico','Lanterna/Sinalizador','Cinto de Seguranca (motorista)',
+  'Documentos do Veiculo (CRLV)','Kit de Primeiros Socorros'
+];
+var BLIT_COND = [
+  'Pneus (calibragem e estado)','Freios (funcionamento)','Luzes (farol, freio, seta)',
+  'Retrovisores','Limpador de Para-brisa','Nivel de Oleo','Nivel de Agua/Radiador',
+  'Combustivel suficiente','Lataria/Estrutura (sem avarias)','Limpeza interna e externa'
+];
+var BLIT_EQUIPE = [
+  'Presenca de todos os colaboradores','Uniforme correto e completo',
+  'Colaboradores descansados e aptos','Briefing de seguranca realizado',
+  'Distribuicao de tarefas realizada','Comunicacao com supervisao'
+];
+var BLIT_EQUIP = [
+  'Equipamentos de limpeza (vassouras, rodos, etc.)','Produtos quimicos (rotulados e seguros)',
+  'Mangueiras e conexoes','Bomba de succao (se aplicavel)','Ferramentas de manutencao',
+  'Materiais de EPI reserva','Sacos de lixo e descarte','Equipamentos de comunicacao (radio/celular)'
+];
+
+function criarLinhasBlit(items, tbodyId) {
+  var tbody = document.getElementById(tbodyId);
+  tbody.innerHTML = '';
+  items.forEach(function(item, idx) {
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td style="font-weight:600;font-size:11px">'+item+'</td>'
+      +'<td><div class="blit-opts">'
+      +'<label class="blit-opt" id="'+tbodyId+'_ok_'+idx+'" onclick="setBlit(this,'ok',''+tbodyId+'_'+idx+'')"><input type="radio" name="'+tbodyId+'_'+idx+'" value="ok"> &#10004; OK</label>'
+      +'<label class="blit-opt" id="'+tbodyId+'_nok_'+idx+'" onclick="setBlit(this,'nok',''+tbodyId+'_'+idx+'')"><input type="radio" name="'+tbodyId+'_'+idx+'" value="nok"> &#10006; NOK</label>'
+      +'<label class="blit-opt" id="'+tbodyId+'_na_'+idx+'" onclick="setBlit(this,'na',''+tbodyId+'_'+idx+'')"><input type="radio" name="'+tbodyId+'_'+idx+'" value="na"> N/A</label>'
+      +'</div></td>'
+      +'<td><textarea class="blit-obs" id="'+tbodyId+'_obs_'+idx+'" rows="1" placeholder="Obs..."></textarea></td>';
+    tbody.appendChild(tr);
+  });
+}
+
+function setBlit(label, val, name) {
+  var opts = label.parentElement.querySelectorAll('.blit-opt');
+  opts.forEach(function(o){o.classList.remove('ok','nok','na');});
+  label.classList.add(val);
+}
+
+function initBlit() {
+  document.getElementById('blData').value = dh();
+  document.getElementById('blObsGeral').value = '';
+  criarLinhasBlit(BLIT_EPI, 'blEpiBody');
+  criarLinhasBlit(BLIT_VEIC, 'blVeicBody');
+  criarLinhasBlit(BLIT_COND, 'blCondBody');
+  criarLinhasBlit(BLIT_EQUIPE, 'blEquipeBody');
+  criarLinhasBlit(BLIT_EQUIP, 'blEquipBody');
+  document.getElementById('blHistIni').value = dh();
+  document.getElementById('blHistFim').value = dh();
+}
+
+function coletarBlit(items, tbodyId) {
+  var resultado = [];
+  items.forEach(function(item, idx) {
+    var sel = document.querySelector('input[name="'+tbodyId+'_'+idx+'"]:checked');
+    var obs = document.getElementById(tbodyId+'_obs_'+idx).value;
+    resultado.push({item:item, status:sel?sel.value:'nao_inspecionado', obs:obs});
+  });
+  return resultado;
+}
+
+function calcResultado(grupos) {
+  var total=0, ok=0, nok=0, na=0;
+  grupos.forEach(function(g){g.forEach(function(i){total++;if(i.status==='ok')ok++;else if(i.status==='nok')nok++;else if(i.status==='na')na++;});});
+  if(nok>0)return'NOK - '+nok+' item(s) com problema';
+  if(ok+na===total&&total>0)return'OK - Aprovado';
+  return'Incompleto';
+}
+
+async function svBlit() {
+  var resp = document.getElementById('blResp').value;
+  if(!resp){al('al-blit','warn','Selecione o responsavel.');return;}
+  var epi = coletarBlit(BLIT_EPI,'blEpiBody');
+  var veic = coletarBlit(BLIT_VEIC,'blVeicBody');
+  var cond = coletarBlit(BLIT_COND,'blCondBody');
+  var equipe = coletarBlit(BLIT_EQUIPE,'blEquipeBody');
+  var equip = coletarBlit(BLIT_EQUIP,'blEquipBody');
+  var resultado = calcResultado([epi,veic,cond,equipe,equip]);
+  var d = {
+    data: document.getElementById('blData').value,
+    turno: document.getElementById('blTurno').value,
+    responsavel: resp,
+    veiculo: document.getElementById('blVeiculo').value,
+    epi: JSON.stringify(epi),
+    seguranca_veiculo: JSON.stringify(veic),
+    condicoes_veiculo: JSON.stringify(cond),
+    equipe: JSON.stringify(equipe),
+    equipamentos: JSON.stringify(equip),
+    resultado: resultado,
+    observacoes: document.getElementById('blObsGeral').value
+  };
+  try{await ap('blit_save',d);al('al-blit','success','BLIT salvo! Resultado: '+resultado);initBlit();}
+  catch(e){al('al-blit','error','Erro: '+e.message);}
+}
+
+async function ldBlit() {
+  var ini=document.getElementById('blHistIni').value,fim=document.getElementById('blHistFim').value;
+  try{var d=await ag('blit',{data_ini:ini,data_fim:fim});var l=Array.isArray(d)?d:[];
+  document.getElementById('tbBlit').innerHTML=l.length>0?l.map(function(r){var cor=r.resultado&&r.resultado.indexOf('OK - Aprovado')>=0?'bok':r.resultado&&r.resultado.indexOf('NOK')>=0?'berr':'bwarn';return'<tr><td>'+fd(r.data)+'</td><td style="text-align:center">T'+(r.turno||'-')+'</td><td><strong>'+(r.responsavel||'-')+'</strong></td><td>'+(r.veiculo||'-')+'</td><td><span class="'+cor+'">'+(r.resultado||'-')+'</span></td><td style="font-size:10px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.observacoes||'-')+'</td></tr>';}).join(''):'<tr><td colspan="6" class="empty">Nenhum BLIT no periodo</td></tr>';}
+  catch(e){document.getElementById('tbBlit').innerHTML='<tr><td colspan="6" class="empty">Conecte ao Apps Script</td></tr>';}
+}
+
+// Inicializar datas da frota
+document.getElementById('aData').value=dh();
+document.getElementById('lpDataPrev').value=dh();
+document.getElementById('lrDataReal').value=dh();
+document.getElementById('mpDataPrev').value=dh();
+document.getElementById('mrDataReal').value=dh();
+
 </script>
 </body>
 </html>
