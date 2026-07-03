@@ -644,17 +644,39 @@ tbody tr:nth-child(even){background:#FAFBFC}
 
 <script>
 const AU='https://script.google.com/macros/s/AKfycbyvN1kvA6pMQJZGou2Mw14z196XdBrRaY_qfWHcuu5cqCBvKdcYTt6QsYCkOlget3J6/exec';
-async function ag(a,p){var u=AU+'?action='+encodeURIComponent(a);if(p)Object.keys(p).forEach(function(k){if(p[k]!==undefined&&p[k]!=='')u+='&'+k+'='+encodeURIComponent(p[k]);});var r=await fetch(u);if(!r.ok)throw new Error('HTTP '+r.status);var d=await r.json();if(d&&d.error)throw new Error(d.error);return d;}
+async function ag(a,p){
+  var u=AU+'?action='+encodeURIComponent(a);
+  if(p)Object.keys(p).forEach(function(k){if(p[k]!==undefined&&p[k]!==null&&p[k]!=='')u+='&'+encodeURIComponent(k)+'='+encodeURIComponent(p[k]);});
+  try{
+    var r=await fetch(u,{redirect:'follow'});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    var d=JSON.parse(await r.text());
+    if(d&&d.error)throw new Error(d.error);
+    return d;
+  }catch(e){
+    if(e.message&&e.message.indexOf('fetch')>=0)throw new Error('Sem conexao com o Apps Script.');
+    throw e;
+  }
+}
 async function ap(a,b){
-  // Apps Script nao suporta CORS para POST direto
-  // Usamos GET com parametros codificados
   var p=Object.assign({action:a},b);
-  var u=AU+'?'+Object.keys(p).map(function(k){return encodeURIComponent(k)+'='+encodeURIComponent(typeof p[k]==='object'?JSON.stringify(p[k]):p[k]);}).join('&');
-  var r=await fetch(u);
-  if(!r.ok)throw new Error('HTTP '+r.status);
-  var d=await r.json();
-  if(d&&d.error)throw new Error(d.error);
-  return d;
+  var parts=[];
+  Object.keys(p).forEach(function(k){
+    var v=p[k];
+    if(v!==null&&v!==undefined&&v!=='')
+      parts.push(encodeURIComponent(k)+'='+encodeURIComponent(typeof v==='object'?JSON.stringify(v):String(v)));
+  });
+  var u=AU+'?'+parts.join('&');
+  try{
+    var r=await fetch(u,{redirect:'follow'});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    var d=JSON.parse(await r.text());
+    if(d&&d.error)throw new Error(d.error);
+    return d;
+  }catch(e){
+    if(e.message&&e.message.indexOf('fetch')>=0)throw new Error('Sem conexao com o Apps Script.');
+    throw e;
+  }
 }
 function dh(){return new Date().toISOString().split('T')[0];}
 function fd(d){if(!d)return'-';try{var p=String(d).split('T')[0].split('-');if(p.length===3)return p[2]+'/'+p[1]+'/'+p[0];}catch(e){}return d;}
@@ -662,7 +684,22 @@ function sh(a,b){var h=dh();document.getElementById(a).value=h;document.getEleme
 function sw(a,b){var h=new Date(),d=h.getDay(),s=new Date(h);s.setDate(h.getDate()-(d===0?6:d-1));var e=new Date(s);e.setDate(s.getDate()+6);document.getElementById(a).value=s.toISOString().split('T')[0];document.getElementById(b).value=e.toISOString().split('T')[0];}
 function sm(a,b){var h=new Date(),i=new Date(h.getFullYear(),h.getMonth(),1),f=new Date(h.getFullYear(),h.getMonth()+1,0);document.getElementById(a).value=i.toISOString().split('T')[0];document.getElementById(b).value=f.toISOString().split('T')[0];}
 function al(id,t,m){var e=document.getElementById(id);if(!e)return;e.innerHTML='<div class="alert alert-'+t+'">'+m+'</div>';setTimeout(function(){e.innerHTML='';},5000);}
-function sp(n){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});document.querySelectorAll('.nav a').forEach(function(a){a.classList.remove('ap');});document.getElementById('page-'+n).classList.add('active');var ids={home:'nh',plan:'np',reg:'nr',dash:'nd',comp:'nc',est:'ne',rel:'nrl',frota:'nfrota',blit:'nblit'};var x=document.getElementById(ids[n]);if(x)x.classList.add('ap');window.scrollTo(0,0);if(n==='dash'){sm('dIni','dFim');ldDash();}if(n==='comp'){sm('cIni','cFim');ldComp();}if(n==='est')ldEst();if(n==='rel')sm('rlIni','rlFim');if(n==='frota'){ldAbast();ldLavPlan();ldMPlan();ldCadastro();}if(n==='blit')initBlit();}
+function sp(n){
+  var pg=document.getElementById('page-'+n);
+  if(!pg){console.warn('Pagina nao encontrada: page-'+n);return;}
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.nav a').forEach(function(a){a.classList.remove('ap');});
+  pg.classList.add('active');
+  var ids={home:'nh',plan:'np',reg:'nr',dash:'nd',comp:'nc',est:'ne',rel:'nrl',frota:'nfrota',blit:'nblit'};
+  var x=document.getElementById(ids[n]);if(x)x.classList.add('ap');
+  window.scrollTo(0,0);
+  if(n==='dash'){sm('dIni','dFim');ldDash();}
+  if(n==='comp'){sm('cIni','cFim');ldComp();}
+  if(n==='est')ldEst();
+  if(n==='rel')sm('rlIni','rlFim');
+  if(n==='frota'){ldAbast();ldLavPlan();ldMPlan();ldCadastro();}
+  if(n==='blit')initBlit();
+}
 function srt(id,btn){document.querySelectorAll('#page-reg .tab-content').forEach(function(t){t.classList.remove('active');});document.querySelectorAll('#page-reg .tabs .tab-btn').forEach(function(b){b.classList.remove('active');});document.getElementById(id).classList.add('active');btn.classList.add('active');if(id==='tAss')ldAss();}
 function set2(id,btn){document.querySelectorAll('#eCad,#eMov,#eTod').forEach(function(t){t.classList.remove('active');});document.querySelectorAll('#page-est .tabs .tab-btn').forEach(function(b){b.classList.remove('active');});document.getElementById(id).classList.add('active');btn.classList.add('active');if(id==='eMov'){ldMov();ppSel();}if(id==='eTod')ldTod();}
 var hoje=dh();
