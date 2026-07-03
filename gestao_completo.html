@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>Gestao Operacional - Seatrium | Grupo Fibravit</title>
+<link href="css/style.css" rel="stylesheet"/>
+<style>
+.page{display:none}.page.active{display:block}
+.nav a.active-page{background:rgba(255,255,255,.3)!important;border-color:rgba(255,255,255,.8)!important}
+@media print{
+  .header,.nav,.filter-bar,.btn-group,.tabs,.tab-btn,.footer-everest,.no-print{display:none!important}
+  .page{display:block!important}
+  #page-relatorio{display:block!important}
+  body{background:#fff}
+  .section{box-shadow:none;border:1px solid #ddd}
+  .relatorio-header{background:#1F4E79!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+.insp-extra{display:none;margin-top:10px;padding:10px;background:#FFF8E1;border-radius:8px;border-left:4px solid #C9A84C}
+.estoque-farol{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px}
+.farol-ok{background:#1E7145}.farol-baixo{background:#C9A84C}.farol-minimo{background:#E67E22}.farol-abaixo{background:#C00000}.farol-zero{background:#333}
+</style>
+</head>
+<body>
+<header class="header">
+<div class="header-logo" onclick="showPage('home')" style="cursor:pointer">
+<span style="font-size:22px">🏗️</span>
+<div><h1>GESTAO OPERACIONAL</h1><span>SEATRIUM | GRUPO FIBRAVIT</span></div>
+</div>
+<nav class="nav">
+<a id="nav-home" onclick="showPage('home')">🏠 Inicio</a>
+<a id="nav-planejamento" onclick="showPage('planejamento')">📋 Planejamento</a>
+<a id="nav-registro" onclick="showPage('registro')">📝 Relatorio</a>
+<a id="nav-dashboard" onclick="showPage('dashboard')">📊 Dashboard</a>
+<a id="nav-comparativo" onclick="showPage('comparativo')">📈 Meta x Realizado</a>
+<a id="nav-estoque" onclick="showPage('estoque')">📦 Estoque</a>
+<a id="nav-relatorio" onclick="showPage('relatorio')">📄 Rel. Operacional</a>
+</nav>
+</header>
+<!-- ═══ HOME ═══ -->
+<div class="page active" id="page-home">
+<div class="container">
+<div class="hero">
+<div style="font-size:48px;margin-bottom:12px">🏗️</div>
+<h2>GESTAO OPERACIONAL</h2>
+<p style="font-size:16px;font-weight:700;margin-bottom:8px;opacity:1">SEATRIUM | GRUPO FIBRAVIT</p>
+<p>Sistema completo de controle operacional — planejamento, registro diario, KPIs, estoque e relatorios.</p>
+</div>
+<div class="main-actions">
+<div class="action-card" onclick="showPage('planejamento')"><div class="icon">📋</div><h3>Planejamento do Dia</h3><p>Defina metas, atribua colaboradores e selecione containers/banheiros</p></div>
+<div class="action-card" onclick="showPage('registro')"><div class="icon">📝</div><h3>Relatorio do Dia</h3><p>Registre producao, ocorrencias, inspecoes e efetivo do turno</p></div>
+</div>
+<div class="quick-links">
+<div class="quick-link" onclick="showPage('dashboard')"><div class="ql-icon">📊</div>Dashboard</div>
+<div class="quick-link" onclick="showPage('comparativo')"><div class="ql-icon">📈</div>Meta x Realizado</div>
+<div class="quick-link" onclick="showPage('estoque')"><div class="ql-icon">📦</div>Estoque</div>
+<div class="quick-link" onclick="showPage('relatorio')"><div class="ql-icon">📄</div>Rel. Operacional</div>
+</div>
+<div style="margin-top:20px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.08)">
+<div style="font-size:12px;font-weight:700;color:#1F4E79;margin-bottom:10px;text-transform:uppercase">👥 Equipe Operacional</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">CELSO</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">MARCIO</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">FAGNER</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">ELAINE</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">ERLANE</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">JULIANA</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">LILIANE</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">ELIDA</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">MARIA</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">SAMARA</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">OLAVO</span>
+<span style="background:#EEF7FF;color:#1F4E79;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">DAVI</span>
+</div>
+</div>
+</div>
+</div>
+<!-- ═══ PLANEJAMENTO ═══ -->
+<div class="page" id="page-planejamento">
+<div class="container">
+<div class="page-title">📋 Planejamento do Proximo Dia <span class="badge" style="background:#2E75B6">Definicao de Metas</span></div>
+<div id="alerta-plan"></div>
+<div class="section" style="margin-bottom:16px">
+<div class="section-header">📅 Periodo de Planejamento</div>
+<div class="section-body">
+<div class="form-grid" style="grid-template-columns:repeat(3,1fr)">
+<div class="form-group"><label>Data Inicio</label><input id="pDataIni" type="date"/></div>
+<div class="form-group"><label>Data Fim</label><input id="pDataFim" type="date"/></div>
+<div class="form-group" style="display:flex;align-items:flex-end"><button class="btn btn-primary" onclick="carregarComparativoPlan()" style="width:100%">📈 Ver Previsto x Realizado</button></div>
+</div>
+<div id="painelComparativoPlan" style="display:none;margin-top:12px">
+<div style="font-size:12px;font-weight:700;color:#1F4E79;margin-bottom:8px">📈 PREVISTO x REALIZADO NO PERIODO</div>
+<div style="overflow-x:auto"><table><thead><tr><th>Colaborador</th><th>Servico</th><th>Meta</th><th>Realizado</th><th>Eficiencia</th></tr></thead><tbody id="tbComparativoPlan"></tbody></table></div>
+</div>
+</div>
+</div>
+<div class="grid2">
+<div class="form-card">
+<div class="form-header"><h2>📋 Novo Planejamento</h2><p>Defina metas e atribuicoes para o proximo dia</p></div>
+<div class="form-body">
+<div class="form-group"><label>Colaborador *</label><select id="pColab"><option value="">Selecione...</option><option>CELSO</option><option>MARCIO</option><option>FAGNER</option><option>ELAINE</option><option>ERLANE</option><option>JULIANA</option><option>LILIANE</option><option>ELIDA</option><option>MARIA</option><option>SAMARA</option><option>OLAVO</option><option>DAVI</option></select></div>
+<div class="form-group"><label>Tipo de Servico *</label><select id="pServico" onchange="toggleManutDesc()"><option value="">Selecione...</option><option>Limpeza</option><option>Limpeza Pesada</option><option>Succao</option><option>Inspecao</option><option>Manutencao de Container/Banheiro</option><option>Manutencao Geral</option></select></div>
+<div class="form-group" id="manutDescBox" style="display:none"><label>Descricao da Manutencao</label><input id="pManutDesc" placeholder="Descreva a manutencao..." type="text"/></div>
+<div class="form-group"><label>Meta (quantidade)</label><input id="pMeta" min="0" type="number" value="2"/></div>
+<div class="form-group">
+<label>Containers / Banheiros</label>
+<div class="multi-select-box">
+<div style="font-size:11px;color:#666;margin-bottom:6px;font-weight:600">CONTAINERS</div>
+<div class="multi-select-grid" id="gridContainers"></div>
+<div style="font-size:11px;color:#666;margin:8px 0 6px;font-weight:600">BANHEIROS</div>
+<div class="multi-select-grid" id="gridBanheiros"></div>
+</div>
+</div>
+<div class="form-group"><label>Observacoes</label><input id="pObs" placeholder="Obs..." type="text"/></div>
+<div class="btn-group">
+<button class="btn btn-success" onclick="salvarPlanejamento()">📋 Salvar Planejamento</button>
+<button class="btn" onclick="limparFormPlan()" style="background:#6c757d;color:#fff">✖ Limpar</button>
+</div>
+</div>
+</div>
+<div class="section">
+<div class="section-header">📋 Planejamentos Salvos</div>
+<div class="section-body">
+<div style="margin-bottom:10px;display:flex;gap:8px">
+<input id="filtroDataPlan" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px" type="date"/>
+<button class="btn btn-primary" onclick="carregarPlanejamentos()" style="padding:6px 14px;font-size:12px">🔍 Filtrar</button>
+</div>
+<div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Colaborador</th><th>Servico</th><th>Meta</th><th>Locais</th></tr></thead><tbody id="tbPlanejamentos"><tr><td class="empty" colspan="5">Selecione uma data</td></tr></tbody></table></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ═══ REGISTRO ═══ -->
+<div class="page" id="page-registro">
+<div class="container">
+<div class="page-title">📝 Relatorio do Dia <span class="badge" style="background:#1E7145">Registro Diario</span></div>
+<div id="alerta-reg"></div>
+<div class="section" style="margin-bottom:16px">
+<div class="section-header">📅 Data do Registro</div>
+<div class="section-body">
+<div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
+<div class="form-group" style="margin:0"><label>Data</label><input id="rData" onchange="carregarPrevisto()" type="date"/></div>
+<div class="form-group" style="margin:0"><label>Turno</label><select id="rTurno"><option value="1">Turno 1</option><option value="2">Turno 2</option></select></div>
+<button class="btn btn-primary" onclick="carregarPrevisto()">📈 Ver Planejado</button>
+</div>
+<div id="painelPrevisto" style="display:none;margin-top:14px;background:#EEF7FF;border-radius:8px;padding:14px">
+<div style="font-size:12px;font-weight:700;color:#1F4E79;margin-bottom:8px">📈 PLANEJADO PARA ESTE DIA</div>
+<div style="overflow-x:auto"><table><thead><tr><th>Colaborador</th><th>Servico</th><th>Meta</th><th>Locais</th></tr></thead><tbody id="tbPrevisto"></tbody></table></div>
+</div>
+</div>
+</div>
+<div class="tabs">
+<button class="tab-btn active" onclick="showRegTab('tProd',this)">✅ Producao</button>
+<button class="tab-btn" onclick="showRegTab('tOcorr',this)">⚠️ Ocorrencia</button>
+<button class="tab-btn" onclick="showRegTab('tEfetivo',this)">👥 Efetivo</button>
+<button class="tab-btn" onclick="showRegTab('tAssuntos',this)">📝 Assuntos Gerais</button>
+<button class="tab-btn" onclick="showRegTab('tHistorico',this)">📄 Historico</button>
+</div>
+<!-- PRODUCAO -->
+<div class="tab-content active" id="tProd">
+<div class="form-card">
+<div class="form-header" style="background:linear-gradient(135deg,#1E7145,#155a35)"><h2>✅ Registrar Producao</h2><p>Informe o que foi realizado no dia</p></div>
+<div class="form-body">
+<div class="form-grid">
+<div class="form-group"><label>Colaborador *</label><select id="pColabReg"><option value="">Selecione...</option><option>CELSO</option><option>MARCIO</option><option>FAGNER</option><option>ELAINE</option><option>ERLANE</option><option>JULIANA</option><option>LILIANE</option><option>ELIDA</option><option>MARIA</option><option>SAMARA</option><option>OLAVO</option><option>DAVI</option></select></div>
+<div class="form-group"><label>Tipo de Servico *</label><select id="pServicoReg" onchange="toggleInspExtra()"><option value="">Selecione...</option><option>Limpeza</option><option>Limpeza Pesada</option><option>Succao</option><option>Inspecao</option><option>Manutencao de Container/Banheiro</option><option>Manutencao Geral</option></select></div>
+<div class="form-group"><label>Quantidade *</label><input id="pQtd" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Container/Banheiro</label><input id="pLocal" placeholder="Ex: C01, B03..." type="text"/></div>
+<div class="form-group"><label>Observacoes</label><input id="pObsReg" placeholder="Obs..." type="text"/></div>
+</div>
+<!-- CAMPO EXTRA INSPECAO -->
+<div class="insp-extra" id="inspExtra">
+<div style="font-size:12px;font-weight:700;color:#C9A84C;margin-bottom:8px">🔍 DETALHES DA INSPECAO</div>
+<div class="form-grid">
+<div class="form-group"><label>O que foi detectado *</label><textarea id="inspDetectado" placeholder="Descreva o que foi encontrado na inspecao..." rows="3" style="padding:8px;border:1px solid #ddd;border-radius:6px;font-size:13px;font-family:inherit;resize:vertical"></textarea></div>
+<div class="form-group"><label>Precisa de Manutencao?</label><select id="inspPrecisaManut"><option value="nao">Nao</option><option value="sim">Sim — Agendar Manutencao</option></select></div>
+<div class="form-group" id="inspDataManutBox" style="display:none"><label>📅 Data Prevista da Manutencao</label><input id="inspDataManut" type="date"/><div style="font-size:10px;color:#C9A84C;margin-top:4px">⚠ Sera criado automaticamente um planejamento de manutencao para esta data</div></div>
+</div>
+</div>
+<div class="btn-group" style="margin-top:12px"><button class="btn btn-success" onclick="salvarRegistro()">✅ Registrar Producao</button></div>
+</div>
+</div>
+<div class="section"><div class="section-header verde">✅ Producao do Dia</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Colaborador</th><th>Servico</th><th>Qtd</th><th>Local</th><th>Turno</th><th>Obs/Deteccao</th></tr></thead><tbody id="tbProd"><tr><td class="empty" colspan="6">Selecione uma data</td></tr></tbody></table></div></div></div>
+</div>
+<!-- OCORRENCIA -->
+<div class="tab-content" id="tOcorr">
+<div class="form-card">
+<div class="form-header" style="background:linear-gradient(135deg,#C55A11,#a04a0e)"><h2>⚠️ Registrar Ocorrencia</h2></div>
+<div class="form-body">
+<div class="form-grid">
+<div class="form-group"><label>Tipo *</label><select id="oTipo"><option value="">Selecione...</option><option>Acidente de Trabalho</option><option>Quase Acidente</option><option>Falha de Equipamento</option><option>Falta de Insumo</option><option>Atraso na Execucao</option><option>Nao Conformidade</option><option>Reclamacao do Cliente</option><option>Dano ao Patrimonio</option><option>Outros</option></select></div>
+<div class="form-group"><label>Local</label><input id="oLocal" placeholder="Ex: C05, B02..." type="text"/></div>
+<div class="form-group"><label>Descricao *</label><input id="oDesc" placeholder="Descreva a ocorrencia..." type="text"/></div>
+<div class="form-group"><label>Acao Tomada</label><input id="oAcao" placeholder="O que foi feito..." type="text"/></div>
+<div class="form-group"><label>Responsavel</label><input id="oResp" placeholder="Responsavel" type="text"/></div>
+<div class="form-group"><label>Criticidade</label><select id="oCrit"><option value="Baixa">Baixa</option><option value="Media">Media</option><option value="Alta">Alta</option><option value="Critica">Critica</option></select></div>
+<div class="form-group"><label>Status</label><select id="oStatus"><option value="Aberta">Aberta</option><option value="Em Andamento">Em Andamento</option><option value="Resolvida">Resolvida</option></select></div>
+</div>
+<div class="btn-group"><button class="btn btn-warning" onclick="salvarOcorrencia()">⚠️ Registrar Ocorrencia</button></div>
+</div>
+</div>
+<div class="section"><div class="section-header amarelo">⚠️ Ocorrencias do Dia</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Tipo</th><th>Local</th><th>Descricao</th><th>Criticidade</th><th>Status</th></tr></thead><tbody id="tbOcorr"><tr><td class="empty" colspan="5">Selecione uma data</td></tr></tbody></table></div></div></div>
+</div>
+<!-- EFETIVO -->
+<div class="tab-content" id="tEfetivo">
+<div class="form-card">
+<div class="form-header" style="background:linear-gradient(135deg,#2E75B6,#1F4E79)"><h2>👥 Registrar Efetivo</h2></div>
+<div class="form-body">
+<div class="form-grid">
+<div class="form-group"><label>Turno *</label><select id="eTurno"><option value="1">Turno 1</option><option value="2">Turno 2</option></select></div>
+<div class="form-group"><label>Previstos</label><input id="ePrev" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Presentes</label><input id="ePres" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Faltas</label><input id="eFalt" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Atestados</label><input id="eAtest" min="0" type="number" value="0"/></div>
+</div>
+<div class="btn-group"><button class="btn btn-primary" onclick="salvarEfetivo()">👥 Registrar Efetivo</button></div>
+</div>
+</div>
+<div class="section"><div class="section-header">👥 Efetivo do Dia</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Turno</th><th>Previstos</th><th>Presentes</th><th>Faltas</th><th>Atestados</th><th>Absenteismo</th></tr></thead><tbody id="tbEfetivo"><tr><td class="empty" colspan="6">Selecione uma data</td></tr></tbody></table></div></div></div>
+</div>
+<!-- ASSUNTOS GERAIS -->
+<div class="tab-content" id="tAssuntos">
+<div class="form-card">
+<div class="form-header" style="background:linear-gradient(135deg,#5B2C8D,#7D3C98)"><h2>📝 Registrar Assunto Geral</h2><p>Registre informacoes e assuntos relevantes do dia (max. 5 por dia)</p></div>
+<div class="form-body">
+<div class="form-grid">
+<div class="form-group"><label>Assunto *</label><input id="agAssunto" placeholder="Titulo do assunto..." type="text"/></div>
+<div class="form-group"><label>Categoria</label><select id="agCategoria"><option value="">Selecione...</option><option>Comunicado</option><option>Pendencia</option><option>Informacao Operacional</option><option>Feedback do Cliente</option><option>Seguranca</option><option>Outros</option></select></div>
+<div class="form-group" style="grid-column:1/-1"><label>Descricao *</label><textarea id="agDesc" placeholder="Descreva o assunto em detalhes..." rows="3" style="padding:8px;border:1px solid #ddd;border-radius:6px;font-size:13px;font-family:inherit;resize:vertical;width:100%"></textarea></div>
+</div>
+<div class="btn-group"><button class="btn" onclick="salvarAssunto()" style="background:#5B2C8D;color:#fff">📝 Registrar Assunto</button></div>
+</div>
+</div>
+<div class="section">
+<div class="section-header" style="background:#5B2C8D">📝 Assuntos Gerais do Dia</div>
+<div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>#</th><th>Assunto</th><th>Categoria</th><th>Descricao</th></tr></thead><tbody id="tbAssuntos"><tr><td class="empty" colspan="4">Selecione uma data</td></tr></tbody></table></div></div>
+</div>
+</div>
+<!-- HISTORICO -->
+<div class="tab-content" id="tHistorico">
+<div class="section"><div class="section-header">📄 Historico</div><div class="section-body">
+<div style="display:flex;gap:8px;margin-bottom:12px">
+<input id="hDataIni" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px" type="date"/>
+<input id="hDataFim" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px" type="date"/>
+<button class="btn btn-primary" onclick="carregarHistorico()" style="padding:6px 14px;font-size:12px">🔍 Buscar</button>
+</div>
+<div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Turno</th><th>Colaborador</th><th>Servico</th><th>Qtd</th><th>Local</th></tr></thead><tbody id="tbHistorico"><tr><td class="empty" colspan="6">Selecione um periodo</td></tr></tbody></table></div>
+</div></div>
+</div>
+</div>
+</div>
+<!-- ═══ DASHBOARD ═══ -->
+<div class="page" id="page-dashboard">
+<div class="container">
+<div class="page-title">📊 Dashboard Operacional <span class="badge" style="background:#1E7145">Tempo Real</span></div>
+<div class="filter-bar">
+<div class="form-group"><label>Data Inicial</label><input id="dIni" type="date"/></div>
+<div class="form-group"><label>Data Final</label><input id="dFim" type="date"/></div>
+<button class="btn btn-primary" onclick="carregarDashboard()">🔍 Filtrar</button>
+<div class="filter-shortcuts">
+<button onclick="setHoje('dIni','dFim');carregarDashboard()">Hoje</button>
+<button onclick="setEstaSemana('dIni','dFim');carregarDashboard()">Esta Semana</button>
+<button onclick="setEsteMes('dIni','dFim');carregarDashboard()">Este Mes</button>
+</div>
+</div>
+<div class="cards" style="grid-template-columns:repeat(5,1fr)">
+<div class="card verde"><div class="card-icon">🧹</div><div class="card-value" id="kLimp">—</div><div class="card-label">Limpezas</div></div>
+<div class="card verde"><div class="card-icon">💧</div><div class="card-value" id="kLimpP">—</div><div class="card-label">Limp. Pesadas</div></div>
+<div class="card"><div class="card-icon">🔧</div><div class="card-value" id="kSucc">—</div><div class="card-label">Succoes</div></div>
+<div class="card amarelo"><div class="card-icon">⚠️</div><div class="card-value" id="kOcorr">—</div><div class="card-label">Ocorrencias</div></div>
+<div class="card"><div class="card-icon">👥</div><div class="card-value" id="kAbs">—</div><div class="card-label">Absenteismo</div></div>
+</div>
+<div class="grid2">
+<div class="section"><div class="section-header">📈 Indicadores de Desempenho</div><div class="section-body" id="painelKpis"><div class="loading"><div class="spinner"></div></div></div></div>
+<div class="section"><div class="section-header amarelo">📊 Tipos de Ocorrencia e % Recorrencia</div><div class="section-body" id="painelTiposOcorr"><div class="loading"><div class="spinner"></div></div></div></div>
+</div>
+<div class="grid2">
+<div class="section"><div class="section-header">👥 Meta x Realizado por Colaborador</div><div class="section-body" id="painelColabsDash"><div class="loading"><div class="spinner"></div></div></div></div>
+<div class="section"><div class="section-header vermelho">🔴 Ocorrencias Pendentes por Criticidade</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descricao</th><th>Criticidade</th><th>Status</th></tr></thead><tbody id="tbOcorrPend"><tr><td class="loading" colspan="5"><div class="spinner"></div></td></tr></tbody></table></div></div></div>
+</div>
+</div>
+</div>
+<!-- ═══ COMPARATIVO ═══ -->
+<div class="page" id="page-comparativo">
+<div class="container">
+<div class="page-title">📈 Meta x Realizado <span class="badge" style="background:#C9A84C">Comparativo</span></div>
+<div class="filter-bar">
+<div class="form-group"><label>Data Inicial</label><input id="cIni" type="date"/></div>
+<div class="form-group"><label>Data Final</label><input id="cFim" type="date"/></div>
+<button class="btn btn-primary" onclick="carregarComparativo()">🔍 Filtrar</button>
+<div class="filter-shortcuts">
+<button onclick="setHoje('cIni','cFim');carregarComparativo()">Hoje</button>
+<button onclick="setEstaSemana('cIni','cFim');carregarComparativo()">Esta Semana</button>
+<button onclick="setEsteMes('cIni','cFim');carregarComparativo()">Este Mes</button>
+</div>
+<button class="btn" onclick="exportarCSV()" style="background:#1E7145;color:#fff;margin-left:auto">📥 Exportar CSV</button>
+</div>
+<div class="cards" style="grid-template-columns:repeat(4,1fr)">
+<div class="card"><div class="card-icon">📋</div><div class="card-value" id="cMetaTotal">—</div><div class="card-label">Meta Total</div></div>
+<div class="card verde"><div class="card-icon">✅</div><div class="card-value" id="cRealTotal">—</div><div class="card-label">Realizado Total</div></div>
+<div class="card" id="cEfCard"><div class="card-icon">📈</div><div class="card-value" id="cEfTotal">—</div><div class="card-label">Eficiencia Geral</div></div>
+<div class="card amarelo"><div class="card-icon">⚠️</div><div class="card-value" id="cOcorrTotal">—</div><div class="card-label">Ocorrencias</div></div>
+</div>
+<div class="grid2">
+<div class="section"><div class="section-header">👥 Eficiencia por Colaborador</div><div class="section-body" id="painelColabsComp"><div class="loading"><div class="spinner"></div></div></div></div>
+<div class="section"><div class="section-header">🔧 Meta x Realizado por Servico</div><div class="section-body" id="painelServicos"><div class="loading"><div class="spinner"></div></div></div></div>
+</div>
+<div class="section"><div class="section-header">📄 Tabela Detalhada</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Colaborador</th><th>Servico</th><th>Meta</th><th>Realizado</th><th>Diferenca</th><th>Eficiencia</th><th>Status</th></tr></thead><tbody id="tbDetalhado"><tr><td class="loading" colspan="7"><div class="spinner"></div></td></tr></tbody></table></div></div></div>
+</div>
+</div>
+<!-- ═══ ESTOQUE ═══ -->
+<div class="page" id="page-estoque">
+<div class="container">
+<div class="page-title">📦 Controle de Estoque <span class="badge" style="background:#5B2C8D">Gestao de Produtos</span></div>
+<div id="alerta-estoque"></div>
+<!-- DASHBOARD ESTOQUE -->
+<div class="cards" style="grid-template-columns:repeat(5,1fr)">
+<div class="card verde"><div class="card-icon">📦</div><div class="card-value" id="esTotalProd">—</div><div class="card-label">Total Produtos</div></div>
+<div class="card vermelho"><div class="card-icon">⬛</div><div class="card-value" id="esSemEstoque">—</div><div class="card-label">Sem Estoque</div></div>
+<div class="card vermelho"><div class="card-icon">🔴</div><div class="card-value" id="esAbaixoMin">—</div><div class="card-label">Abaixo Minimo</div></div>
+<div class="card amarelo"><div class="card-icon">🟡</div><div class="card-value" id="esEstoqueMin">—</div><div class="card-label">Estoque Minimo</div></div>
+<div class="card amarelo"><div class="card-icon">🟥</div><div class="card-value" id="esBaixo">—</div><div class="card-label">Estoque Baixo</div></div>
+</div>
+<!-- FAROL DE ALERTAS -->
+<div class="section" style="margin-bottom:16px">
+<div class="section-header vermelho">🔴 Farol de Alertas — Produtos que Precisam de Atencao</div>
+<div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Codigo</th><th>Produto</th><th>Unidade</th><th>Estoque Atual</th><th>Estoque Minimo</th><th>Ponto de Reposicao</th><th>Status</th></tr></thead><tbody id="tbFarol"><tr><td class="loading" colspan="7"><div class="spinner"></div></td></tr></tbody></table></div></div>
+</div>
+<div class="tabs">
+<button class="tab-btn active" onclick="showEstTab('esCadastro',this)">📦 Cadastro de Produtos</button>
+<button class="tab-btn" onclick="showEstTab('esMovimentacao',this)">⇄ Movimentacao</button>
+<button class="tab-btn" onclick="showEstTab('esTodosProd',this)">📋 Todos os Produtos</button>
+</div>
+<!-- CADASTRO -->
+<div class="tab-content active" id="esCadastro">
+<div class="form-card">
+<div class="form-header" style="background:linear-gradient(135deg,#5B2C8D,#7D3C98)"><h2>📦 Cadastrar Produto</h2><p>Cadastre os produtos do estoque</p></div>
+<div class="form-body">
+<div class="form-grid">
+<div class="form-group"><label>Codigo *</label><input id="esCod" placeholder="Ex: PROD-001" type="text"/></div>
+<div class="form-group"><label>Nome do Produto *</label><input id="esNome" placeholder="Ex: Detergente 5L" type="text"/></div>
+<div class="form-group"><label>Categoria</label><select id="esCat"><option value="">Selecione...</option><option>Limpeza</option><option>EPI</option><option>Ferramentas</option><option>Quimicos</option><option>Descartaveis</option><option>Manutencao</option><option>Outros</option></select></div>
+<div class="form-group"><label>Unidade</label><select id="esUnid"><option>UN</option><option>KG</option><option>L</option><option>CX</option><option>PCT</option><option>M</option><option>PAR</option></select></div>
+<div class="form-group"><label>Estoque Inicial</label><input id="esEstIni" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Estoque Minimo</label><input id="esEstMin" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Ponto de Reposicao</label><input id="esPontoRep" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Observacoes</label><input id="esObsProd" placeholder="Obs..." type="text"/></div>
+</div>
+<div class="btn-group"><button class="btn" onclick="salvarProduto()" style="background:#5B2C8D;color:#fff">📦 Cadastrar Produto</button></div>
+</div>
+</div>
+</div>
+<!-- MOVIMENTACAO -->
+<div class="tab-content" id="esMovimentacao">
+<div class="form-card">
+<div class="form-header" style="background:linear-gradient(135deg,#1E7145,#155a35)"><h2>⇄ Registrar Movimentacao</h2><p>Registre entradas e saidas de produtos</p></div>
+<div class="form-body">
+<div class="form-grid">
+<div class="form-group"><label>Data *</label><input id="esMvData" type="date"/></div>
+<div class="form-group"><label>Produto *</label><select id="esMvProd" onchange="preencherCodigo()"><option value="">Selecione...</option></select></div>
+<div class="form-group"><label>Codigo</label><input id="esMvCod" readonly="" style="background:#f5f5f5" type="text"/></div>
+<div class="form-group"><label>Tipo *</label><select id="esMvTipo"><option value="Entrada">↑ Entrada</option><option value="Saida">↓ Saida</option></select></div>
+<div class="form-group"><label>Quantidade *</label><input id="esMvQtd" min="0" type="number" value="0"/></div>
+<div class="form-group"><label>Responsavel</label><input id="esMvResp" placeholder="Responsavel" type="text"/></div>
+<div class="form-group"><label>Motivo/Obs</label><input id="esMvObs" placeholder="Ex: Compra, Uso em servico..." type="text"/></div>
+</div>
+<div class="btn-group"><button class="btn btn-success" onclick="salvarMovimentacao()">⇄ Registrar Movimentacao</button></div>
+</div>
+</div>
+<div class="section"><div class="section-header">⇄ Ultimas Movimentacoes</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Produto</th><th>Codigo</th><th>Tipo</th><th>Qtd</th><th>Responsavel</th><th>Obs</th></tr></thead><tbody id="tbMovimentacao"><tr><td class="loading" colspan="7"><div class="spinner"></div></td></tr></tbody></table></div></div></div>
+</div>
+<!-- TODOS OS PRODUTOS -->
+<div class="tab-content" id="esTodosProd">
+<div class="section"><div class="section-header" style="background:#5B2C8D">📋 Todos os Produtos — Posicao de Estoque</div><div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Codigo</th><th>Produto</th><th>Categoria</th><th>Unidade</th><th>Estoque Atual</th><th>Minimo</th><th>Ponto Rep.</th><th>Status</th></tr></thead><tbody id="tbTodosProd"><tr><td class="loading" colspan="8"><div class="spinner"></div></td></tr></tbody></table></div></div></div>
+</div>
+</div>
+</div>
+<!-- ═══ RELATORIO OPERACIONAL ═══ -->
+<div class="page" id="page-relatorio">
+<div class="container">
+<div class="page-title no-print">📄 Relatorio Operacional <span class="badge" style="background:#1F4E79">Para Impressao e Envio</span></div>
+<!-- FILTRO -->
+<div class="filter-bar no-print">
+<div class="form-group"><label>Data Inicial</label><input id="relIni" type="date"/></div>
+<div class="form-group"><label>Data Final</label><input id="relFim" type="date"/></div>
+<button class="btn btn-primary" onclick="gerarRelatorio()">🔍 Gerar Relatorio</button>
+<div class="filter-shortcuts">
+<button onclick="setHoje('relIni','relFim');gerarRelatorio()">Hoje</button>
+<button onclick="setEstaSemana('relIni','relFim');gerarRelatorio()">Esta Semana</button>
+<button onclick="setEsteMes('relIni','relFim');gerarRelatorio()">Este Mes</button>
+</div>
+<button class="btn" onclick="window.print()" style="background:#1F4E79;color:#fff;margin-left:auto">🖶 Imprimir / PDF</button>
+</div>
+<!-- CONTEUDO DO RELATORIO -->
+<div id="relatorioConteudo" style="display:none">
+<!-- CABECALHO -->
+<div class="relatorio-header" style="background:#1F4E79;color:#fff;border-radius:10px;padding:24px 28px;margin-bottom:20px">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+<div>
+<div style="font-size:11px;opacity:.7;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Relatorio Operacional</div>
+<div style="font-size:22px;font-weight:800;letter-spacing:.5px">GRUPO FIBRAVIT</div>
+<div style="font-size:14px;opacity:.85;margin-top:2px">Cliente: SEATRIUM</div>
+</div>
+<div style="text-align:right">
+<div style="font-size:11px;opacity:.7;text-transform:uppercase;letter-spacing:.5px">Periodo</div>
+<div id="relPeriodoTxt" style="font-size:16px;font-weight:700">—</div>
+<div style="font-size:10px;opacity:.6;margin-top:4px">Gerado em: <span id="relGeradoEm">—</span></div>
+</div>
+</div>
+</div>
+<!-- 1. RESUMO OPERACIONAL -->
+<div class="section">
+<div class="section-header">📊 1. Resumo Operacional do Periodo</div>
+<div class="section-body">
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">
+<div style="background:#F0F8F0;border-radius:8px;padding:14px;text-align:center;border-top:3px solid #1E7145"><div style="font-size:10px;color:#666;font-weight:700;text-transform:uppercase">Total Limpezas</div><div id="relLimp" style="font-size:28px;font-weight:800;color:#1E7145">—</div></div>
+<div style="background:#EEF7FF;border-radius:8px;padding:14px;text-align:center;border-top:3px solid #2E75B6"><div style="font-size:10px;color:#666;font-weight:700;text-transform:uppercase">Limp. Pesadas</div><div id="relLimpP" style="font-size:28px;font-weight:800;color:#2E75B6">—</div></div>
+<div style="background:#F5F5F5;border-radius:8px;padding:14px;text-align:center;border-top:3px solid #555"><div style="font-size:10px;color:#666;font-weight:700;text-transform:uppercase">Succoes</div><div id="relSucc" style="font-size:28px;font-weight:800;color:#555">—</div></div>
+<div style="background:#FFF8E1;border-radius:8px;padding:14px;text-align:center;border-top:3px solid #C9A84C"><div style="font-size:10px;color:#666;font-weight:700;text-transform:uppercase">Ocorrencias</div><div id="relOcorr" style="font-size:28px;font-weight:800;color:#C9A84C">—</div></div>
+</div>
+</div>
+</div>
+<!-- 2. KPIs -->
+<div class="section">
+<div class="section-header">📈 2. Indicadores de Desempenho (KPIs)</div>
+<div class="section-body" id="relKpis"></div>
+</div>
+<!-- 3. EFETIVO E ABSENTEISMO -->
+<div class="section">
+<div class="section-header">👥 3. Efetivo e Absenteismo</div>
+<div class="section-body">
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px">
+<div style="background:#F5F5F5;border-radius:8px;padding:12px;text-align:center"><div style="font-size:10px;color:#666;font-weight:700">PREVISTOS</div><div id="relPrev" style="font-size:22px;font-weight:800;color:#333">—</div></div>
+<div style="background:#F0F8F0;border-radius:8px;padding:12px;text-align:center"><div style="font-size:10px;color:#666;font-weight:700">PRESENTES</div><div id="relPres" style="font-size:22px;font-weight:800;color:#1E7145">—</div></div>
+<div style="background:#FFF0F0;border-radius:8px;padding:12px;text-align:center"><div style="font-size:10px;color:#666;font-weight:700">FALTAS</div><div id="relFalt" style="font-size:22px;font-weight:800;color:#C00000">—</div></div>
+<div style="background:#FFF8E1;border-radius:8px;padding:12px;text-align:center"><div style="font-size:10px;color:#666;font-weight:700">ABSENTEISMO</div><div id="relAbs" style="font-size:22px;font-weight:800">—</div></div>
+</div>
+</div>
+</div>
+<!-- 4. META x REALIZADO POR COLABORADOR -->
+<div class="section">
+<div class="section-header">👥 4. Meta x Realizado por Colaborador</div>
+<div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Colaborador</th><th>Servico</th><th>Meta</th><th>Realizado</th><th>Eficiencia</th><th>Status</th></tr></thead><tbody id="relColabs"></tbody></table></div></div>
+</div>
+<!-- 5. MANUTENCOES REALIZADAS -->
+<div class="section">
+<div class="section-header" style="background:#C55A11">🔧 5. Manutencoes de Container/Banheiro Realizadas</div>
+<div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Colaborador</th><th>Local</th><th>Descricao</th><th>Turno</th></tr></thead><tbody id="relManutencoes"></tbody></table></div></div>
+</div>
+<!-- 6. OCORRENCIAS -->
+<div class="section">
+<div class="section-header amarelo">⚠️ 6. Ocorrencias do Periodo</div>
+<div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Tipo</th><th>Local</th><th>Descricao</th><th>Acao Tomada</th><th>Criticidade</th><th>Status</th></tr></thead><tbody id="relOcorrencias"></tbody></table></div></div>
+</div>
+<!-- 7. INSPECOES -->
+<div class="section">
+<div class="section-header" style="background:#1F6B5B">🔍 7. Inspecoes Realizadas</div>
+<div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Colaborador</th><th>Local</th><th>O que foi Detectado</th><th>Manutencao Agendada</th></tr></thead><tbody id="relInspecoes"></tbody></table></div></div>
+</div>
+<!-- 8. ASSUNTOS GERAIS -->
+<div class="section">
+<div class="section-header" style="background:#5B2C8D">📝 8. Assuntos Gerais do Periodo</div>
+<div class="section-body"><div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Assunto</th><th>Categoria</th><th>Descricao</th></tr></thead><tbody id="relAssuntos"></tbody></table></div></div>
+</div>
+<!-- RODAPE -->
+<div style="margin-top:24px;padding:16px;border-top:2px solid #1F4E79;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+<div><div style="font-size:11px;color:#666">Desenvolvido por</div><div style="font-size:13px;font-weight:700;color:#1F4E79">EVEREST CONSULTORIA em Gestao Empresarial</div></div>
+<div style="text-align:right;font-size:10px;color:#999"><div>GRUPO FIBRAVIT | Cliente: SEATRIUM</div><div>Relatorio gerado automaticamente pelo sistema</div></div>
+</div>
+</div>
+<div id="relatorioVazio" style="text-align:center;padding:40px;color:#999">
+<div style="font-size:48px;margin-bottom:12px">📄</div>
+<div style="font-size:16px;font-weight:600">Selecione o periodo e clique em "Gerar Relatorio"</div>
+</div>
+</div>
+</div>
+<!-- FOOTER -->
+<footer class="footer-everest">
+<div class="footer-inner">
+<div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">🏗️</span><div><div style="color:#fff;font-weight:700;font-size:11px">GESTAO OPERACIONAL — SEATRIUM</div><div style="font-size:9px;opacity:.6">GRUPO FIBRAVIT</div></div></div>
+<div style="text-align:center"><div style="color:#C9A84C;font-weight:700;font-size:9px;letter-spacing:.8px;text-transform:uppercase">Desenvolvido por</div><div style="color:#fff;font-weight:800;font-size:13px;letter-spacing:1.5px">EVEREST CONSULTORIA</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-style:italic">em Gestao Empresarial</div></div>
+<div style="text-align:right;font-size:9px;opacity:.5"><div>© 2026 Todos os direitos reservados</div></div>
+</div>
+</footer>
+<script src="js/config.js"></script>
+<script>
+// ── NAVEGACAO ──
+function showPage(name){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.nav a').forEach(function(a){a.classList.remove('active-page');});
+  document.getElementById('page-'+name).classList.add('active');
+  var navEl=document.getElementById('nav-'+name);if(navEl)navEl.classList.add('active-page');
+  window.scrollTo(0,0);
+  if(name==='dashboard'){setEsteMes('dIni','dFim');carregarDashboard();}
+  if(name==='comparativo'){setEsteMes('cIni','cFim');carregarComparativo();}
+  if(name==='estoque'){carregarEstoque();}
+  if(name==='relatorio'){setEsteMes('relIni','relFim');}
+}
+function showRegTab(id,btn){document.querySelectorAll('#page-registro .tab-content').forEach(function(t){t.classList.remove('active');});document.querySelectorAll('#page-registro .tabs .tab-btn').forEach(function(b){b.classList.remove('active');});document.getElementById(id).classList.add('active');btn.classList.add('active');if(id==='tAssuntos')carregarAssuntos();}
+function showEstTab(id,btn){document.querySelectorAll('#esCadastro,#esMovimentacao,#esTodosProd').forEach(function(t){t.classList.remove('active');});document.querySelectorAll('#page-estoque .tabs .tab-btn').forEach(function(b){b.classList.remove('active');});document.getElementById(id).classList.add('active');btn.classList.add('active');if(id==='esMovimentacao'){carregarMovimentacao();popularSelectProdutos();}if(id==='esTodosProd')carregarTodosProdutos();}
+function alerta(elId,tipo,msg){var el=document.getElementById(elId);if(!el)return;el.innerHTML='<div class="alert alert-'+tipo+'">'+msg+'</div>';setTimeout(function(){el.innerHTML='';},5000);}
+
+// ── INIT ──
+var hoje=dataHoje();
+['rData','hDataIni','hDataFim','esMvData'].forEach(function(id){var el=document.getElementById(id);if(el)el.value=hoje;});
+var amanha=new Date();amanha.setDate(amanha.getDate()+1);
+document.getElementById('filtroDataPlan').value=amanha.toISOString().split('T')[0];
+
+// Containers e Banheiros
+(function(){
+  var gc=document.getElementById('gridContainers'),gb=document.getElementById('gridBanheiros');
+  for(var i=1;i<=15;i++){var b=document.createElement('button');b.className='loc-btn';b.type='button';b.textContent='C'+String(i).padStart(2,'0');b.dataset.val='C'+String(i).padStart(2,'0');b.onclick=function(){this.classList.toggle('selected');};gc.appendChild(b);}
+  for(var j=1;j<=8;j++){var b2=document.createElement('button');b2.className='loc-btn';b2.type='button';b2.textContent='B'+String(j).padStart(2,'0');b2.dataset.val='B'+String(j).padStart(2,'0');b2.onclick=function(){this.classList.toggle('selected');};gb.appendChild(b2);}
+})();
+
+// ── INSPECAO EXTRA ──
+function toggleInspExtra(){
+  var s=document.getElementById('pServicoReg').value;
+  document.getElementById('inspExtra').style.display=(s==='Inspecao')?'block':'none';
+}
+document.getElementById('inspPrecisaManut').addEventListener('change',function(){
+  document.getElementById('inspDataManutBox').style.display=(this.value==='sim')?'block':'none';
+});
+
+// ── PLANEJAMENTO ──
+function toggleManutDesc(){var s=document.getElementById('pServico').value;document.getElementById('manutDescBox').style.display=(s.indexOf('Manutencao')>=0)?'block':'none';}
+function getLocais(){return Array.from(document.querySelectorAll('.loc-btn.selected')).map(function(b){return b.dataset.val;}).join(', ');}
+function limparFormPlan(){document.getElementById('pColab').value='';document.getElementById('pServico').value='';document.getElementById('pManutDesc').value='';document.getElementById('pMeta').value=2;document.getElementById('pObs').value='';document.getElementById('manutDescBox').style.display='none';document.querySelectorAll('.loc-btn.selected').forEach(function(b){b.classList.remove('selected');});}
+async function salvarPlanejamento(){
+  var colab=document.getElementById('pColab').value,servico=document.getElementById('pServico').value;
+  if(!colab||!servico){alerta('alerta-plan','warn','Selecione colaborador e tipo de servico.');return;}
+  var dados={data:document.getElementById('filtroDataPlan').value,colaborador:colab,servico:servico,descricao_manut:document.getElementById('pManutDesc').value,meta:parseInt(document.getElementById('pMeta').value)||0,locais:getLocais(),observacoes:document.getElementById('pObs').value};
+  try{await apiPost('planejamento',dados);alerta('alerta-plan','success','Planejamento salvo!');limparFormPlan();carregarPlanejamentos();}
+  catch(e){alerta('alerta-plan','error','Erro ao salvar.');}
+}
+async function carregarPlanejamentos(){
+  var data=document.getElementById('filtroDataPlan').value;
+  try{var d=await apiGet('planejamento',{data:data});var l=Array.isArray(d)?d:[];
+  document.getElementById('tbPlanejamentos').innerHTML=l.length>0?l.map(function(r){return '<tr><td>'+fmtData(r.data)+'</td><td><strong>'+(r.colaborador||'—')+'</strong></td><td>'+(r.servico||'—')+'</td><td style="text-align:center;font-weight:700;color:#2E75B6">'+(r.meta||0)+'</td><td style="font-size:11px">'+(r.locais||'—')+'</td></tr>';}).join(''):'<tr><td colspan="5" class="empty">Nenhum planejamento para esta data</td></tr>';}
+  catch(e){document.getElementById('tbPlanejamentos').innerHTML='<tr><td colspan="5" class="empty">Conecte ao Apps Script</td></tr>';}
+}
+async function carregarComparativoPlan(){
+  var ini=document.getElementById('pDataIni').value,fim=document.getElementById('pDataFim').value;
+  if(!ini||!fim){alerta('alerta-plan','warn','Selecione o periodo.');return;}
+  document.getElementById('painelComparativoPlan').style.display='block';
+  try{
+    var [plan,regs]=await Promise.all([apiGet('planejamento',{data_ini:ini,data_fim:fim}),apiGet('registros',{data_ini:ini,data_fim:fim})]);
+    var lp=Array.isArray(plan)?plan:[],lr=Array.isArray(regs)?regs:[],mapa={};
+    lp.forEach(function(r){var k=(r.colaborador||'')+'|'+(r.servico||'');if(!mapa[k])mapa[k]={colaborador:r.colaborador,servico:r.servico,meta:0,realizado:0};mapa[k].meta+=(parseInt(r.meta)||0);});
+    lr.forEach(function(r){var k=(r.colaborador||'')+'|'+(r.servico||'');if(!mapa[k])mapa[k]={colaborador:r.colaborador,servico:r.servico,meta:0,realizado:0};mapa[k].realizado+=(parseInt(r.quantidade)||0);});
+    var rows=Object.values(mapa);
+    document.getElementById('tbComparativoPlan').innerHTML=rows.length>0?rows.map(function(r){var ef=r.meta>0?Math.round(r.realizado/r.meta*100):100;var cor=ef>=96?'#1E7145':ef>=75?'#C9A84C':'#C00000';return '<tr><td><strong>'+(r.colaborador||'—')+'</strong></td><td>'+(r.servico||'—')+'</td><td style="text-align:center">'+r.meta+'</td><td style="text-align:center">'+r.realizado+'</td><td style="text-align:center;font-weight:700;color:'+cor+'">'+ef+'%</td></tr>';}).join(''):'<tr><td colspan="5" class="empty">Sem dados no periodo</td></tr>';
+  }catch(e){document.getElementById('tbComparativoPlan').innerHTML='<tr><td colspan="5" class="empty">Conecte ao Apps Script</td></tr>';}
+}
+
+// ── REGISTRO ──
+async function carregarPrevisto(){
+  var data=document.getElementById('rData').value;if(!data)return;
+  try{var d=await apiGet('planejamento',{data:data});var l=Array.isArray(d)?d:[];
+  if(l.length>0){document.getElementById('painelPrevisto').style.display='block';document.getElementById('tbPrevisto').innerHTML=l.map(function(r){return '<tr><td><strong>'+(r.colaborador||'—')+'</strong></td><td>'+(r.servico||'—')+'</td><td style="text-align:center;font-weight:700;color:#2E75B6">'+(r.meta||0)+'</td><td style="font-size:11px">'+(r.locais||'—')+'</td></tr>';}).join('');}
+  else{document.getElementById('painelPrevisto').style.display='none';}
+  carregarProd();}catch(e){document.getElementById('painelPrevisto').style.display='none';}
+}
+function getData(){return document.getElementById('rData').value;}
+function getTurno(){return document.getElementById('rTurno').value;}
+
+async function salvarRegistro(){
+  var colab=document.getElementById('pColabReg').value,serv=document.getElementById('pServicoReg').value;
+  if(!colab||!serv){alerta('alerta-reg','warn','Selecione colaborador e servico.');return;}
+  var detectado='',dataManut='';
+  if(serv==='Inspecao'){
+    detectado=document.getElementById('inspDetectado').value;
+    if(!detectado){alerta('alerta-reg','warn','Descreva o que foi detectado na inspecao.');return;}
+    if(document.getElementById('inspPrecisaManut').value==='sim'){
+      dataManut=document.getElementById('inspDataManut').value;
+      if(!dataManut){alerta('alerta-reg','warn','Informe a data prevista da manutencao.');return;}
+    }
+  }
+  var dados={data:getData(),turno:getTurno(),colaborador:colab,servico:serv,quantidade:parseInt(document.getElementById('pQtd').value)||0,local:document.getElementById('pLocal').value,observacoes:document.getElementById('pObsReg').value,insp_detectado:detectado,insp_data_manut:dataManut};
+  try{
+    await apiPost('registro',dados);
+    // Se inspecao com manutencao, cria planejamento automatico
+    if(serv==='Inspecao'&&dataManut){
+      await apiPost('planejamento',{data:dataManut,colaborador:colab,servico:'Manutencao de Container/Banheiro',descricao_manut:'[AUTO] Originado de inspecao em '+getData()+': '+detectado,meta:1,locais:document.getElementById('pLocal').value,observacoes:'Gerado automaticamente pela inspecao de '+getData()});
+      alerta('alerta-reg','success','Producao registrada! Manutencao agendada automaticamente para '+fmtData(dataManut));
+    }else{alerta('alerta-reg','success','Producao registrada!');}
+    document.getElementById('pQtd').value=0;document.getElementById('pLocal').value='';document.getElementById('pObsReg').value='';document.getElementById('inspDetectado').value='';document.getElementById('inspPrecisaManut').value='nao';document.getElementById('inspDataManutBox').style.display='none';document.getElementById('inspExtra').style.display='none';document.getElementById('pServicoReg').value='';
+    carregarProd();
+  }catch(e){alerta('alerta-reg','error','Erro ao salvar.');}
+}
+async function carregarProd(){
+  try{var d=await apiGet('registros',{data:getData()});var l=Array.isArray(d)?d:[];
+  document.getElementById('tbProd').innerHTML=l.length>0?l.map(function(r){var obs=r.insp_detectado?'<span style="color:#C9A84C;font-weight:600">Detectado: '+r.insp_detectado+'</span>':(r.observacoes||'—');return '<tr><td><strong>'+(r.colaborador||'—')+'</strong></td><td>'+(r.servico||'—')+'</td><td style="text-align:center;font-weight:700;color:#1E7145">'+(r.quantidade||0)+'</td><td>'+(r.local||'—')+'</td><td style="text-align:center">T'+(r.turno||'—')+'</td><td style="font-size:11px;max-width:200px">'+obs+'</td></tr>';}).join(''):'<tr><td colspan="6" class="empty">Nenhum registro para esta data</td></tr>';}
+  catch(e){document.getElementById('tbProd').innerHTML='<tr><td colspan="6" class="empty">Conecte ao Apps Script</td></tr>';}
+}
+async function salvarOcorrencia(){
+  var tipo=document.getElementById('oTipo').value,desc=document.getElementById('oDesc').value;
+  if(!tipo||!desc){alerta('alerta-reg','warn','Informe o tipo e a descricao.');return;}
+  var dados={data:getData(),turno:getTurno(),tipo:tipo,local:document.getElementById('oLocal').value,descricao:desc,acao:document.getElementById('oAcao').value,responsavel:document.getElementById('oResp').value,criticidade:document.getElementById('oCrit').value,status:document.getElementById('oStatus').value};
+  try{await apiPost('ocorrencia',dados);alerta('alerta-reg','success','Ocorrencia registrada!');['oTipo','oLocal','oDesc','oAcao','oResp'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('oCrit').value='Baixa';document.getElementById('oStatus').value='Aberta';carregarOcorr();}
+  catch(e){alerta('alerta-reg','error','Erro ao salvar.');}
+}
+async function carregarOcorr(){
+  try{var d=await apiGet('ocorrencias',{data:getData()});var l=Array.isArray(d)?d:[];
+  document.getElementById('tbOcorr').innerHTML=l.length>0?l.map(function(r){var cc=r.criticidade==='Critica'||r.criticidade==='Alta'?'badge-err':r.criticidade==='Media'?'badge-warn':'badge-ok';var sc=r.status==='Resolvida'?'badge-ok':r.status==='Em Andamento'?'badge-warn':'badge-err';return '<tr><td>'+(r.tipo||'—')+'</td><td>'+(r.local||'—')+'</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.descricao||'—')+'</td><td><span class="'+cc+'">'+(r.criticidade||'—')+'</span></td><td><span class="'+sc+'">'+(r.status||'—')+'</span></td></tr>';}).join(''):'<tr><td colspan="5" class="empty">Nenhuma ocorrencia para esta data</td></tr>';}
+  catch(e){document.getElementById('tbOcorr').innerHTML='<tr><td colspan="5" class="empty">Conecte ao Apps Script</td></tr>';}
+}
+async function salvarEfetivo(){
+  var dados={data:getData(),turno:document.getElementById('eTurno').value,previstos:parseInt(document.getElementById('ePrev').value)||0,presentes:parseInt(document.getElementById('ePres').value)||0,faltas:parseInt(document.getElementById('eFalt').value)||0,atestados:parseInt(document.getElementById('eAtest').value)||0};
+  try{await apiPost('efetivo',dados);alerta('alerta-reg','success','Efetivo registrado!');['ePrev','ePres','eFalt','eAtest'].forEach(function(id){document.getElementById(id).value=0;});carregarEfetivo();}
+  catch(e){alerta('alerta-reg','error','Erro ao salvar.');}
+}
+async function carregarEfetivo(){
+  try{var d=await apiGet('efetivo',{data:getData()});var l=Array.isArray(d)?d:[];
+  document.getElementById('tbEfetivo').innerHTML=l.length>0?l.map(function(r){var abs=r.previstos>0?((r.faltas||0)/r.previstos*100).toFixed(1)+'%':'0%';var cor=parseFloat(abs)>3?'color:#C00000':'color:#1E7145';return '<tr><td style="text-align:center;font-weight:700">T'+(r.turno||'—')+'</td><td style="text-align:center">'+(r.previstos||0)+'</td><td style="text-align:center;color:#1E7145;font-weight:700">'+(r.presentes||0)+'</td><td style="text-align:center;color:#C00000">'+(r.faltas||0)+'</td><td style="text-align:center;color:#C9A84C">'+(r.atestados||0)+'</td><td style="text-align:center;font-weight:700;'+cor+'">'+abs+'</td></tr>';}).join(''):'<tr><td colspan="6" class="empty">Nenhum efetivo para esta data</td></tr>';}
+  catch(e){document.getElementById('tbEfetivo').innerHTML='<tr><td colspan="6" class="empty">Conecte ao Apps Script</td></tr>';}
+}
+
+// ASSUNTOS GERAIS
+async function salvarAssunto(){
+  var assunto=document.getElementById('agAssunto').value,desc=document.getElementById('agDesc').value;
+  if(!assunto||!desc){alerta('alerta-reg','warn','Preencha o assunto e a descricao.');return;}
+  var dados={data:getData(),assunto:assunto,categoria:document.getElementById('agCategoria').value,descricao:desc};
+  try{await apiPost('assunto_geral',dados);alerta('alerta-reg','success','Assunto registrado!');document.getElementById('agAssunto').value='';document.getElementById('agDesc').value='';document.getElementById('agCategoria').value='';carregarAssuntos();}
+  catch(e){alerta('alerta-reg','error','Erro ao salvar.');}
+}
+async function carregarAssuntos(){
+  try{var d=await apiGet('assuntos_gerais',{data:getData()});var l=Array.isArray(d)?d:[];
+  document.getElementById('tbAssuntos').innerHTML=l.length>0?l.map(function(r,i){return '<tr><td style="text-align:center;font-weight:700;color:#5B2C8D">'+(i+1)+'</td><td><strong>'+(r.assunto||'—')+'</strong></td><td>'+(r.categoria||'—')+'</td><td>'+(r.descricao||'—')+'</td></tr>';}).join(''):'<tr><td colspan="4" class="empty">Nenhum assunto registrado para esta data</td></tr>';}
+  catch(e){document.getElementById('tbAssuntos').innerHTML='<tr><td colspan="4" class="empty">Conecte ao Apps Script</td></tr>';}
+}
+async function carregarHistorico(){
+  var ini=document.getElementById('hDataIni').value,fim=document.getElementById('hDataFim').value;
+  if(!ini||!fim){alerta('alerta-reg','warn','Selecione o periodo.');return;}
+  try{var d=await apiGet('registros',{data_ini:ini,data_fim:fim});var l=Array.isArray(d)?d:[];
+  document.getElementById('tbHistorico').innerHTML=l.length>0?l.map(function(r){return '<tr><td>'+fmtData(r.data)+'</td><td style="text-align:center">T'+(r.turno||'—')+'</td><td><strong>'+(r.colaborador||'—')+'</strong></td><td>'+(r.servico||'—')+'</td><td style="text-align:center;font-weight:700;color:#1E7145">'+(r.quantidade||0)+'</td><td>'+(r.local||'—')+'</td></tr>';}).join(''):'<tr><td colspan="6" class="empty">Nenhum registro no periodo</td></tr>';}
+  catch(e){document.getElementById('tbHistorico').innerHTML='<tr><td colspan="6" class="empty">Conecte ao Apps Script</td></tr>';}
+}
+
+// ── DASHBOARD ──
+async function carregarDashboard(){
+  var ini=document.getElementById('dIni').value,fim=document.getElementById('dFim').value;if(!ini||!fim)return;
+  try{
+    var [regs,ocorrs,efetivo,plan]=await Promise.all([apiGet('registros',{data_ini:ini,data_fim:fim}),apiGet('ocorrencias',{data_ini:ini,data_fim:fim}),apiGet('efetivo',{data_ini:ini,data_fim:fim}),apiGet('planejamento',{data_ini:ini,data_fim:fim})]);
+    var lr=Array.isArray(regs)?regs:[],lo=Array.isArray(ocorrs)?ocorrs:[],le=Array.isArray(efetivo)?efetivo:[],lp=Array.isArray(plan)?plan:[];
+    var totLimp=0,totLP=0,totSucc=0,totPrev=0,totFalt=0;
+    lr.forEach(function(r){if(r.servico==='Limpeza')totLimp+=(parseInt(r.quantidade)||0);if(r.servico==='Limpeza Pesada')totLP+=(parseInt(r.quantidade)||0);if(r.servico==='Succao')totSucc+=(parseInt(r.quantidade)||0);});
+    le.forEach(function(r){totPrev+=(parseInt(r.previstos)||0);totFalt+=(parseInt(r.faltas)||0);});
+    var abs=totPrev>0?(totFalt/totPrev*100).toFixed(1)+'%':'0%';
+    document.getElementById('kLimp').textContent=totLimp;document.getElementById('kLimpP').textContent=totLP;document.getElementById('kSucc').textContent=totSucc;document.getElementById('kOcorr').textContent=lo.length;document.getElementById('kAbs').textContent=abs;
+    var dias=Math.max(1,Math.round((new Date(fim)-new Date(ini))/(1000*60*60*24))+1);
+    function kpiRow(label,val,meta,menor){var ef=meta>0?Math.round(val/meta*100):0;var ok=menor?(val<=meta):(ef>=96);var cls=ok?'badge-ok':(ef>=75?'badge-warn':'badge-err');return '<div class="kpi-row"><span class="kpi-label">'+label+'</span><span class="kpi-val">'+val+'</span><span class="kpi-meta">Meta:'+meta+'</span><span class="kpi-status"><span class="'+cls+'">'+(ok?'&#10004; NA META':'&#10006; ABAIXO')+'</span></span></div>';}
+    document.getElementById('painelKpis').innerHTML=kpiRow('Total Limpezas',totLimp,dias*4,false)+kpiRow('Total Limp. Pesadas',totLP,dias*2,false)+kpiRow('Total Succoes',totSucc,dias*4,false)+kpiRow('Total Ocorrencias',lo.length,dias,true)+'<div class="kpi-row"><span class="kpi-label">Absenteismo</span><span class="kpi-val">'+abs+'</span><span class="kpi-meta">Meta:&le;3%</span><span class="kpi-status"><span class="'+(parseFloat(abs)<=3?'badge-ok':'badge-err')+'">'+(parseFloat(abs)<=3?'&#10004; NA META':'&#10006; ABAIXO')+'</span></span></div>';
+    var tipoMap={};lo.forEach(function(r){var t=r.tipo||'Outros';tipoMap[t]=(tipoMap[t]||0)+1;});
+    var tipoArr=Object.entries(tipoMap).sort(function(a,b){return b[1]-a[1];});var totalOc=lo.length||1;
+    document.getElementById('painelTiposOcorr').innerHTML=tipoArr.length>0?tipoArr.map(function(t){var pct=Math.round(t[1]/totalOc*100);var cls=pct>=30?'vermelho':pct>=15?'amarelo':'verde';return '<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:3px"><span>'+t[0]+'</span><span>'+t[1]+' ('+pct+'%)</span></div><div class="progress-wrap"><div class="progress-bar '+cls+'" style="width:'+pct+'%"></div></div></div>';}).join(''):'<div class="empty">Nenhuma ocorrencia no periodo</div>';
+    var colabMap={};lp.forEach(function(r){var c=r.colaborador||'?';if(!colabMap[c])colabMap[c]={meta:0,realizado:0};colabMap[c].meta+=(parseInt(r.meta)||0);});lr.forEach(function(r){var c=r.colaborador||'?';if(!colabMap[c])colabMap[c]={meta:0,realizado:0};colabMap[c].realizado+=(parseInt(r.quantidade)||0);});
+    var colabArr=Object.entries(colabMap).sort(function(a,b){return b[1].realizado-a[1].realizado;});
+    document.getElementById('painelColabsDash').innerHTML=colabArr.length>0?colabArr.map(function(e){var c=e[0],d=e[1];var ef=d.meta>0?Math.round(d.realizado/d.meta*100):100;var cls=ef>=96?'verde':ef>=75?'amarelo':'vermelho';return '<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:3px"><span>'+c+'</span><span>'+d.realizado+'/'+(d.meta||'—')+' ('+ef+'%)</span></div><div class="progress-wrap"><div class="progress-bar '+cls+'" style="width:'+Math.min(ef,100)+'%"></div></div></div>';}).join(''):'<div class="empty">Sem dados no periodo</div>';
+    var pend=lo.filter(function(r){return r.status!=='Resolvida';}).sort(function(a,b){var ord={Critica:0,Alta:1,Media:2,Baixa:3};return (ord[a.criticidade]||9)-(ord[b.criticidade]||9);});
+    document.getElementById('tbOcorrPend').innerHTML=pend.length>0?pend.map(function(r){var cc=r.criticidade==='Critica'||r.criticidade==='Alta'?'badge-err':r.criticidade==='Media'?'badge-warn':'badge-ok';var sc=r.status==='Em Andamento'?'badge-warn':'badge-err';return '<tr><td>'+fmtData(r.data)+'</td><td>'+(r.tipo||'—')+'</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.descricao||'—')+'</td><td><span class="'+cc+'">'+(r.criticidade||'—')+'</span></td><td><span class="'+sc+'">'+(r.status||'—')+'</span></td></tr>';}).join(''):'<tr><td colspan="5" style="text-align:center;padding:14px;color:#1E7145;font-weight:600">&#10003; Nenhuma ocorrencia pendente</td></tr>';
+  }catch(e){console.error(e);}
+}
+
+// ── COMPARATIVO ──
+var dadosExport=[];
+async function carregarComparativo(){
+  var ini=document.getElementById('cIni').value,fim=document.getElementById('cFim').value;if(!ini||!fim)return;
+  try{
+    var [regs,ocorrs,plan]=await Promise.all([apiGet('registros',{data_ini:ini,data_fim:fim}),apiGet('ocorrencias',{data_ini:ini,data_fim:fim}),apiGet('planejamento',{data_ini:ini,data_fim:fim})]);
+    var lr=Array.isArray(regs)?regs:[],lo=Array.isArray(ocorrs)?ocorrs:[],lp=Array.isArray(plan)?plan:[],mapa={};
+    lp.forEach(function(r){var k=(r.colaborador||'?')+'|'+(r.servico||'?');if(!mapa[k])mapa[k]={colaborador:r.colaborador,servico:r.servico,meta:0,realizado:0};mapa[k].meta+=(parseInt(r.meta)||0);});
+    lr.forEach(function(r){var k=(r.colaborador||'?')+'|'+(r.servico||'?');if(!mapa[k])mapa[k]={colaborador:r.colaborador,servico:r.servico,meta:0,realizado:0};mapa[k].realizado+=(parseInt(r.quantidade)||0);});
+    var rows=Object.values(mapa);dadosExport=rows;
+    var totMeta=0,totReal=0;rows.forEach(function(r){totMeta+=r.meta;totReal+=r.realizado;});
+    var efGeral=totMeta>0?Math.round(totReal/totMeta*100):0;
+    document.getElementById('cMetaTotal').textContent=totMeta;document.getElementById('cRealTotal').textContent=totReal;document.getElementById('cEfTotal').textContent=efGeral+'%';document.getElementById('cOcorrTotal').textContent=lo.length;
+    document.getElementById('cEfCard').className='card '+(efGeral>=96?'verde':efGeral>=75?'amarelo':'vermelho');
+    var colabMap={};rows.forEach(function(r){var c=r.colaborador||'?';if(!colabMap[c])colabMap[c]={meta:0,realizado:0};colabMap[c].meta+=r.meta;colabMap[c].realizado+=r.realizado;});
+    var colabArr=Object.entries(colabMap).sort(function(a,b){var ea=a[1].meta>0?a[1].realizado/a[1].meta:1,eb=b[1].meta>0?b[1].realizado/b[1].meta:1;return eb-ea;});
+    document.getElementById('painelColabsComp').innerHTML=colabArr.length>0?colabArr.map(function(e){var c=e[0],d=e[1];var ef=d.meta>0?Math.round(d.realizado/d.meta*100):100;var cls=ef>=96?'verde':ef>=75?'amarelo':'vermelho';return '<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:3px"><span>'+c+'</span><span>'+d.realizado+'/'+(d.meta||'—')+' <strong style="color:'+(ef>=96?'#1E7145':ef>=75?'#C9A84C':'#C00000')+'">'+ef+'%</strong></span></div><div class="progress-wrap"><div class="progress-bar '+cls+'" style="width:'+Math.min(ef,100)+'%"></div></div></div>';}).join(''):'<div class="empty">Sem dados no periodo</div>';
+    var servMap={};rows.forEach(function(r){var s=r.servico||'?';if(!servMap[s])servMap[s]={meta:0,realizado:0};servMap[s].meta+=r.meta;servMap[s].realizado+=r.realizado;});
+    document.getElementById('painelServicos').innerHTML=Object.entries(servMap).map(function(e){var s=e[0],d=e[1];var ef=d.meta>0?Math.round(d.realizado/d.meta*100):100;var cls=ef>=96?'verde':ef>=75?'amarelo':'vermelho';return '<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:3px"><span>'+s+'</span><span>'+d.realizado+'/'+(d.meta||'—')+' <strong style="color:'+(ef>=96?'#1E7145':ef>=75?'#C9A84C':'#C00000')+'">'+ef+'%</strong></span></div><div class="progress-wrap"><div class="progress-bar '+cls+'" style="width:'+Math.min(ef,100)+'%"></div></div></div>';}).join('')||'<div class="empty">Sem dados</div>';
+    document.getElementById('tbDetalhado').innerHTML=rows.length>0?rows.map(function(r){var ef=r.meta>0?Math.round(r.realizado/r.meta*100):100;var dif=r.realizado-r.meta;var cls=ef>=96?'badge-ok':ef>=75?'badge-warn':'badge-err';return '<tr><td><strong>'+(r.colaborador||'—')+'</strong></td><td>'+(r.servico||'—')+'</td><td style="text-align:center">'+r.meta+'</td><td style="text-align:center;font-weight:700;color:#1E7145">'+r.realizado+'</td><td style="text-align:center;font-weight:700;color:'+(dif>=0?'#1E7145':'#C00000')+'">'+(dif>=0?'+':'')+dif+'</td><td style="text-align:center;font-weight:700;color:'+(ef>=96?'#1E7145':ef>=75?'#C9A84C':'#C00000')+'">'+ef+'%</td><td><span class="'+cls+'">'+(ef>=96?'&#10004; NA META':ef>=75?'&#9888; ATENCAO':'&#10006; ABAIXO')+'</span></td></tr>';}).join(''):'<tr><td colspan="7" class="empty">Sem dados no periodo</td></tr>';
+  }catch(e){console.error(e);}
+}
+function exportarCSV(){if(!dadosExport.length){alert('Sem dados para exportar.');return;}var csv='Colaborador,Servico,Meta,Realizado,Eficiencia\n';dadosExport.forEach(function(r){var ef=r.meta>0?Math.round(r.realizado/r.meta*100):100;csv+='"'+(r.colaborador||'')+'","'+(r.servico||'')+'",'+r.meta+','+r.realizado+','+ef+'%\n';});var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='meta_realizado.csv';a.click();URL.revokeObjectURL(url);}
+
+// ── ESTOQUE ──
+var produtosCache=[];
+async function carregarEstoque(){
+  try{
+    var [prods,movs]=await Promise.all([apiGet('estoque_produtos'),apiGet('estoque_movimentacao')]);
+    produtosCache=Array.isArray(prods)?prods:[];
+    var movs2=Array.isArray(movs)?movs:[];
+    // Calcula saldo atual
+    produtosCache.forEach(function(p){
+      var saldo=parseInt(p.estoque_inicial)||0;
+      movs2.forEach(function(m){if(m.codigo===p.codigo){if(m.tipo==='Entrada')saldo+=(parseInt(m.quantidade)||0);else saldo-=(parseInt(m.quantidade)||0);}});
+      p.saldo_atual=saldo;
+    });
+    // KPIs
+    var semEst=produtosCache.filter(function(p){return p.saldo_atual<=0;}).length;
+    var abaixoMin=produtosCache.filter(function(p){return p.saldo_atual>0&&p.saldo_atual<(parseInt(p.estoque_minimo)||0);}).length;
+    var noMin=produtosCache.filter(function(p){return p.saldo_atual===(parseInt(p.estoque_minimo)||0)&&p.saldo_atual>0;}).length;
+    var baixo=produtosCache.filter(function(p){var min=parseInt(p.estoque_minimo)||0,rep=parseInt(p.ponto_reposicao)||0;return p.saldo_atual>min&&p.saldo_atual<=rep&&rep>0;}).length;
+    document.getElementById('esTotalProd').textContent=produtosCache.length;
+    document.getElementById('esSemEstoque').textContent=semEst;
+    document.getElementById('esAbaixoMin').textContent=abaixoMin;
+    document.getElementById('esEstoqueMin').textContent=noMin;
+    document.getElementById('esBaixo').textContent=baixo;
+    // Farol
+    var alertas=produtosCache.filter(function(p){var min=parseInt(p.estoque_minimo)||0,rep=parseInt(p.ponto_reposicao)||0;return p.saldo_atual<=rep||p.saldo_atual<=min||p.saldo_atual<=0;}).sort(function(a,b){return a.saldo_atual-b.saldo_atual;});
+    document.getElementById('tbFarol').innerHTML=alertas.length>0?alertas.map(function(p){
+      var min=parseInt(p.estoque_minimo)||0,rep=parseInt(p.ponto_reposicao)||0,s=p.saldo_atual;
+      var farol,txt;
+      if(s<=0){farol='farol-zero';txt='<span class="badge-err">&#11035; SEM ESTOQUE</span>';}
+      else if(s<min){farol='farol-abaixo';txt='<span class="badge-err">&#128308; ABAIXO DO MINIMO</span>';}
+      else if(s===min){farol='farol-minimo';txt='<span class="badge-warn">&#128993; ESTOQUE MINIMO</span>';}
+      else{farol='farol-baixo';txt='<span class="badge-warn">&#128997; ESTOQUE BAIXO</span>';}
+      return '<tr><td><strong>'+(p.codigo||'—')+'</strong></td><td>'+(p.nome||'—')+'</td><td style="text-align:center">'+(p.unidade||'—')+'</td><td style="text-align:center;font-weight:700;color:'+(s<=0?'#C00000':s<min?'#C00000':'#C9A84C')+'">'+s+'</td><td style="text-align:center">'+min+'</td><td style="text-align:center">'+rep+'</td><td><span class="estoque-farol '+farol+'"></span>'+txt+'</td></tr>';
+    }).join(''):'<tr><td colspan="7" style="text-align:center;padding:14px;color:#1E7145;font-weight:600">&#10003; Todos os produtos com estoque adequado</td></tr>';
+  }catch(e){console.error(e);}
+}
+async function salvarProduto(){
+  var cod=document.getElementById('esCod').value,nome=document.getElementById('esNome').value;
+  if(!cod||!nome){alerta('alerta-estoque','warn','Preencha codigo e nome do produto.');return;}
+  var dados={codigo:cod,nome:nome,categoria:document.getElementById('esCat').value,unidade:document.getElementById('esUnid').value,estoque_inicial:parseInt(document.getElementById('esEstIni').value)||0,estoque_minimo:parseInt(document.getElementById('esEstMin').value)||0,ponto_reposicao:parseInt(document.getElementById('esPontoRep').value)||0,observacoes:document.getElementById('esObsProd').value};
+  try{await apiPost('estoque_produto',dados);alerta('alerta-estoque','success','Produto cadastrado!');['esCod','esNome','esObsProd'].forEach(function(id){document.getElementById(id).value='';});['esEstIni','esEstMin','esPontoRep'].forEach(function(id){document.getElementById(id).value=0;});document.getElementById('esCat').value='';carregarEstoque();}
+  catch(e){alerta('alerta-estoque','error','Erro ao salvar.');}
+}
+function popularSelectProdutos(){
+  var sel=document.getElementById('esMvProd');sel.innerHTML='<option value="">Selecione...</option>';
+  produtosCache.forEach(function(p){var opt=document.createElement('option');opt.value=p.codigo;opt.textContent=p.nome+' ('+p.codigo+')';opt.dataset.cod=p.codigo;sel.appendChild(opt);});
+}
+function preencherCodigo(){var sel=document.getElementById('esMvProd');var opt=sel.options[sel.selectedIndex];document.getElementById('esMvCod').value=opt?opt.dataset.cod||'':'';}
+async function salvarMovimentacao(){
+  var prod=document.getElementById('esMvProd').value,qtd=parseInt(document.getElementById('esMvQtd').value)||0;
+  if(!prod||!qtd){alerta('alerta-estoque','warn','Selecione o produto e informe a quantidade.');return;}
+  var dados={data:document.getElementById('esMvData').value,codigo:document.getElementById('esMvCod').value,produto:prod,tipo:document.getElementById('esMvTipo').value,quantidade:qtd,responsavel:document.getElementById('esMvResp').value,observacoes:document.getElementById('esMvObs').value};
+  try{await apiPost('estoque_movimentacao',dados);alerta('alerta-estoque','success','Movimentacao registrada!');document.getElementById('esMvQtd').value=0;document.getElementById('esMvResp').value='';document.getElementById('esMvObs').value='';carregarMovimentacao();carregarEstoque();}
+  catch(e){alerta('alerta-estoque','error','Erro ao salvar.');}
+}
+async function carregarMovimentacao(){
+  try{var d=await apiGet('estoque_movimentacao');var l=Array.isArray(d)?d.slice(-30).reverse():[];
+  document.getElementById('tbMovimentacao').innerHTML=l.length>0?l.map(function(r){var cor=r.tipo==='Entrada'?'color:#1E7145':'color:#C00000';var seta=r.tipo==='Entrada'?'&#8593;':'&#8595;';return '<tr><td>'+fmtData(r.data)+'</td><td><strong>'+(r.produto||'—')+'</strong></td><td>'+(r.codigo||'—')+'</td><td style="font-weight:700;'+cor+'">'+seta+' '+(r.tipo||'—')+'</td><td style="text-align:center;font-weight:700;'+cor+'">'+(r.quantidade||0)+'</td><td>'+(r.responsavel||'—')+'</td><td style="font-size:11px">'+(r.observacoes||'—')+'</td></tr>';}).join(''):'<tr><td colspan="7" class="empty">Nenhuma movimentacao registrada</td></tr>';}
+  catch(e){document.getElementById('tbMovimentacao').innerHTML='<tr><td colspan="7" class="empty">Conecte ao Apps Script</td></tr>';}
+}
+async function carregarTodosProdutos(){
+  document.getElementById('tbTodosProd').innerHTML=produtosCache.length>0?produtosCache.map(function(p){
+    var min=parseInt(p.estoque_minimo)||0,rep=parseInt(p.ponto_reposicao)||0,s=p.saldo_atual||0;
+    var farol,txt;
+    if(s<=0){farol='farol-zero';txt='<span class="badge-err">SEM ESTOQUE</span>';}
+    else if(s<min){farol='farol-abaixo';txt='<span class="badge-err">ABAIXO MINIMO</span>';}
+    else if(s===min){farol='farol-minimo';txt='<span class="badge-warn">ESTOQUE MINIMO</span>';}
+    else if(s<=rep&&rep>0){farol='farol-baixo';txt='<span class="badge-warn">ESTOQUE BAIXO</span>';}
+    else{farol='farol-ok';txt='<span class="badge-ok">OK</span>';}
+    return '<tr><td><strong>'+(p.codigo||'—')+'</strong></td><td>'+(p.nome||'—')+'</td><td>'+(p.categoria||'—')+'</td><td style="text-align:center">'+(p.unidade||'—')+'</td><td style="text-align:center;font-weight:700">'+s+'</td><td style="text-align:center">'+min+'</td><td style="text-align:center">'+rep+'</td><td><span class="estoque-farol '+farol+'"></span>'+txt+'</td></tr>';
+  }).join(''):'<tr><td colspan="8" class="empty">Nenhum produto cadastrado</td></tr>';
+}
+
+// ── RELATORIO OPERACIONAL ──
+async function gerarRelatorio(){
+  var ini=document.getElementById('relIni').value,fim=document.getElementById('relFim').value;
+  if(!ini||!fim){alert('Selecione o periodo.');return;}
+  document.getElementById('relatorioVazio').style.display='none';
+  document.getElementById('relatorioConteudo').style.display='block';
+  document.getElementById('relPeriodoTxt').textContent=fmtData(ini)+' a '+fmtData(fim);
+  document.getElementById('relGeradoEm').textContent=new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  try{
+    var [regs,ocorrs,efetivo,plan,assuntos]=await Promise.all([
+      apiGet('registros',{data_ini:ini,data_fim:fim}),
+      apiGet('ocorrencias',{data_ini:ini,data_fim:fim}),
+      apiGet('efetivo',{data_ini:ini,data_fim:fim}),
+      apiGet('planejamento',{data_ini:ini,data_fim:fim}),
+      apiGet('assuntos_gerais',{data_ini:ini,data_fim:fim})
+    ]);
+    var lr=Array.isArray(regs)?regs:[],lo=Array.isArray(ocorrs)?ocorrs:[],le=Array.isArray(efetivo)?efetivo:[],lp=Array.isArray(plan)?plan:[],la=Array.isArray(assuntos)?assuntos:[];
+    // Totais
+    var totLimp=0,totLP=0,totSucc=0,totPrev=0,totPres=0,totFalt=0;
+    lr.forEach(function(r){if(r.servico==='Limpeza')totLimp+=(parseInt(r.quantidade)||0);if(r.servico==='Limpeza Pesada')totLP+=(parseInt(r.quantidade)||0);if(r.servico==='Succao')totSucc+=(parseInt(r.quantidade)||0);});
+    le.forEach(function(r){totPrev+=(parseInt(r.previstos)||0);totPres+=(parseInt(r.presentes)||0);totFalt+=(parseInt(r.faltas)||0);});
+    var abs=totPrev>0?(totFalt/totPrev*100).toFixed(1)+'%':'0%';
+    document.getElementById('relLimp').textContent=totLimp;document.getElementById('relLimpP').textContent=totLP;document.getElementById('relSucc').textContent=totSucc;document.getElementById('relOcorr').textContent=lo.length;
+    document.getElementById('relPrev').textContent=totPrev;document.getElementById('relPres').textContent=totPres;document.getElementById('relFalt').textContent=totFalt;
+    var absEl=document.getElementById('relAbs');absEl.textContent=abs;absEl.style.color=parseFloat(abs)<=3?'#1E7145':'#C00000';
+    // KPIs
+    var dias=Math.max(1,Math.round((new Date(fim)-new Date(ini))/(1000*60*60*24))+1);
+    function kpiRowRel(label,val,meta,menor,unid){var ef=meta>0?Math.round(val/meta*100):0;var ok=menor?(val<=meta):(ef>=96);var cor=ok?'#1E7145':ef>=75?'#C9A84C':'#C00000';var txt=ok?'&#10004; NA META':'&#10006; ABAIXO DA META';return '<div style="display:flex;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0"><span style="flex:1;font-size:12px;font-weight:600;color:#444">'+label+'</span><span style="font-size:14px;font-weight:800;color:#1F4E79;min-width:60px;text-align:right">'+(unid?val+unid:val)+'</span><span style="font-size:10px;color:#999;min-width:70px;text-align:right">Meta: '+(unid?meta+unid:meta)+'</span><span style="min-width:120px;text-align:right"><span style="background:'+(ok?'#C6EFCE':ef>=75?'#FFEB9C':'#FFC7CE')+';color:'+(ok?'#276221':ef>=75?'#9C5700':'#9C0006')+';padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700">'+txt+'</span></span></div>';}
+    document.getElementById('relKpis').innerHTML=kpiRowRel('Total Limpezas',totLimp,dias*4,false,'')+kpiRowRel('Total Limpezas Pesadas',totLP,dias*2,false,'')+kpiRowRel('Total Succoes',totSucc,dias*4,false,'')+kpiRowRel('Total Ocorrencias',lo.length,dias,true,'')+kpiRowRel('Absenteismo',parseFloat(abs).toFixed(1),3,true,'%');
+    // Meta x Realizado por colaborador
+    var mapa={};lp.forEach(function(r){var k=(r.colaborador||'?')+'|'+(r.servico||'?');if(!mapa[k])mapa[k]={colaborador:r.colaborador,servico:r.servico,meta:0,realizado:0};mapa[k].meta+=(parseInt(r.meta)||0);});lr.forEach(function(r){var k=(r.colaborador||'?')+'|'+(r.servico||'?');if(!mapa[k])mapa[k]={colaborador:r.colaborador,servico:r.servico,meta:0,realizado:0};mapa[k].realizado+=(parseInt(r.quantidade)||0);});
+    var rows=Object.values(mapa);
+    document.getElementById('relColabs').innerHTML=rows.length>0?rows.map(function(r){var ef=r.meta>0?Math.round(r.realizado/r.meta*100):100;var cls=ef>=96?'badge-ok':ef>=75?'badge-warn':'badge-err';return '<tr><td><strong>'+(r.colaborador||'—')+'</strong></td><td>'+(r.servico||'—')+'</td><td style="text-align:center">'+r.meta+'</td><td style="text-align:center;font-weight:700;color:#1E7145">'+r.realizado+'</td><td style="text-align:center;font-weight:700;color:'+(ef>=96?'#1E7145':ef>=75?'#C9A84C':'#C00000')+'">'+ef+'%</td><td><span class="'+cls+'">'+(ef>=96?'&#10004; NA META':ef>=75?'&#9888; ATENCAO':'&#10006; ABAIXO')+'</span></td></tr>';}).join(''):'<tr><td colspan="6" class="empty">Sem dados de planejamento no periodo</td></tr>';
+    // Manutencoes realizadas
+    var manuts=lr.filter(function(r){return r.servico==='Manutencao de Container/Banheiro'||r.servico==='Manutencao Geral';});
+    document.getElementById('relManutencoes').innerHTML=manuts.length>0?manuts.map(function(r){return '<tr><td>'+fmtData(r.data)+'</td><td><strong>'+(r.colaborador||'—')+'</strong></td><td>'+(r.local||'—')+'</td><td>'+(r.observacoes||r.insp_detectado||'—')+'</td><td style="text-align:center">T'+(r.turno||'—')+'</td></tr>';}).join(''):'<tr><td colspan="5" class="empty">Nenhuma manutencao realizada no periodo</td></tr>';
+    // Ocorrencias
+    document.getElementById('relOcorrencias').innerHTML=lo.length>0?lo.map(function(r){var cc=r.criticidade==='Critica'||r.criticidade==='Alta'?'badge-err':r.criticidade==='Media'?'badge-warn':'badge-ok';var sc=r.status==='Resolvida'?'badge-ok':r.status==='Em Andamento'?'badge-warn':'badge-err';return '<tr><td>'+fmtData(r.data)+'</td><td>'+(r.tipo||'—')+'</td><td>'+(r.local||'—')+'</td><td style="max-width:180px">'+(r.descricao||'—')+'</td><td style="max-width:150px">'+(r.acao||'—')+'</td><td><span class="'+cc+'">'+(r.criticidade||'—')+'</span></td><td><span class="'+sc+'">'+(r.status||'—')+'</span></td></tr>';}).join(''):'<tr><td colspan="7" class="empty">Nenhuma ocorrencia no periodo</td></tr>';
+    // Inspecoes
+    var insps=lr.filter(function(r){return r.servico==='Inspecao';});
+    document.getElementById('relInspecoes').innerHTML=insps.length>0?insps.map(function(r){return '<tr><td>'+fmtData(r.data)+'</td><td><strong>'+(r.colaborador||'—')+'</strong></td><td>'+(r.local||'—')+'</td><td>'+(r.insp_detectado||r.observacoes||'—')+'</td><td>'+(r.insp_data_manut?'Agendada para '+fmtData(r.insp_data_manut):'Nao necessaria')+'</td></tr>';}).join(''):'<tr><td colspan="5" class="empty">Nenhuma inspecao no periodo</td></tr>';
+    // Assuntos gerais
+    document.getElementById('relAssuntos').innerHTML=la.length>0?la.map(function(r){return '<tr><td>'+fmtData(r.data)+'</td><td><strong>'+(r.assunto||'—')+'</strong></td><td>'+(r.categoria||'—')+'</td><td>'+(r.descricao||'—')+'</td></tr>';}).join(''):'<tr><td colspan="4" class="empty">Nenhum assunto geral no periodo</td></tr>';
+  }catch(e){console.error(e);}
+}
+</script>
+</body>
+</html>
