@@ -110,6 +110,17 @@ tbody tr:nth-child(even){background:#FAFBFC}
 .fok{background:#1E7145}.fbx2{background:#C9A84C}.fmn{background:#E67E22}.fab{background:#C00000}.fzr{background:#333}
 @media print{.header,.nav,.fb,.btn-group,.tabs,.tab-btn,.fe,.no-print{display:none!important}.page{display:block!important}#page-rel{display:block!important}body{background:#fff}.section{box-shadow:none;border:1px solid #ddd}.rh{background:#1F4E79!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style>
+
+<script>
+// DEBUG - confirma que JS esta rodando - TS:1783100518
+console.log('GESTAO V16 - JS carregado - TS:1783100518');
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM pronto');
+  var home = document.getElementById('page-home');
+  console.log('page-home encontrado:', home ? 'SIM' : 'NAO');
+  if(home) console.log('page-home classes:', home.className);
+});
+</script>
 </head>
 <body>
 <header class="header">
